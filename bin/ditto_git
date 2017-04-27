@@ -1,0 +1,26 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+usage()
+{
+  echo "Usage:"
+  echo ""
+  echo "  $0 UPDATEMESSAGE"
+  echo ""
+  echo ""
+}
+
+if [ -z $1 ]; then usage; fi
+
+ditto_setup_check
+
+cd $DITTOPATH
+git commit -a -m "$1"
+git push
+git status
+
+cd $PACKAGEPATH
+git commit -a -m "$1"
+git push
+git status
