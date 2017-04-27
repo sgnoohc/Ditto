@@ -1,5 +1,4 @@
 #include "BINARYNAME.h"
-#include "Ditto.h"
 
 int main(int argc, char* argv[])
 {
