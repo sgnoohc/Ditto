@@ -31,11 +31,18 @@ fi
 
 echo "copying template tree loopers to the package directory..."
 
+# Copy TREELooper
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.cxx > /tmp/tmp.cxx
 sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx
+
+# Copy Binary
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/BINARYNAME.h   > /tmp/tmp.cxx
 sed "s/BINARYNAME/${BINARYNAME}/"          /tmp/tmp.cxx                    > ${PACKAGEPATH}/src/${BINARYNAME}.h
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/BINARYNAME.cxx > /tmp/tmp.cxx
 sed "s/BINARYNAME/${BINARYNAME}/"          /tmp/tmp.cxx                    > /tmp/tmp2.cxx
 sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp2.cxx         > ${PACKAGEPATH}/src/${BINARYNAME}.cxx
+
+# Copy TREEConnector
+sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.h
+sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx

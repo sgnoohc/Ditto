@@ -35,12 +35,6 @@
 // For simplicity use namespace. (I generally avoid this.)
 using namespace std;
 
-//#################################################################################################
-// TOC
-//   + PlotUtil namespace
-//
-//#################################################################################################
-
 namespace Ditto
 {
 
@@ -133,6 +127,30 @@ namespace Ditto
     void loadFractionOfBookedNEvents();
     double getFractionOfBookedNEvents();
 
+  }
+
+  namespace ObjUtil
+  {
+
+    struct Lepton
+    {
+      TLorentzVector p4;
+    }
+    typedef std::vector<Lepton> Leptons;
+
+    struct Jet
+    {
+      TLorentzVector p4;
+    }
+    typedef std::vector<Jet> Jets;
+
+    struct MET
+    {
+      TLorentzVector p4;
+    }
+    /// I don't expect to use the above very often.
+    /// I only plan to use this when there are multiple flavors of MET
+    typedef std::vector<MET> METs;
   }
 
 }
