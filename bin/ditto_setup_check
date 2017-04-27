@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+error()
+{
+  echo "Error: DITTOPATH variable is not set!"
+  echo "Please run, source $DIR/setup.sh PACKAGENAME first!"
+  echo ""
+  exit
+}
+
+if [ "x${DITTOPATH}" == "x" ]; then error; fi

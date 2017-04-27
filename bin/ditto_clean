@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ditto_setup_check
+cd $DITTOPATH/../$PACKAGENAME
+cp $DITTOPATH/bin/makefile .
+make clean
+rm makefile
