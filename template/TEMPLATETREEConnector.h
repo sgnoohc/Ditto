@@ -11,9 +11,9 @@
 
 using namespace Ditto;
 
-ObjUtil::Leptons getLeptons();
-ObjUtil::Jets getJets();
-ObjUtil::METs getMETs();
+ObjUtil::Leptons getLeptons(TREECLASSNAME& mytree);
+ObjUtil::Jets getJets(TREECLASSNAME& mytree);
+ObjUtil::METs getMETs(TREECLASSNAME& mytree);
 
 #endif
 //eof

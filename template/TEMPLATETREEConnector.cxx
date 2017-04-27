@@ -5,15 +5,15 @@
 
 #include "TREECLASSNAMEConnector.h"
 
-ObjUtil::Leptons getLeptons()
+ObjUtil::Leptons getLeptons(TREECLASSNAME& mytree)
 {
 }
 
-ObjUtil::Jets getJets()
+ObjUtil::Jets getJets(TREECLASSNAME& mytree)
 {
 }
 
-ObjUtil::METs getMETs()
+ObjUtil::METs getMETs(TREECLASSNAME& mytree)
 {
 }
 
