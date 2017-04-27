@@ -33,4 +33,9 @@ echo "copying template tree loopers to the package directory..."
 
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.cxx > /tmp/tmp.cxx
-sed "s/TEMPLATETREENAMESHORT/${TREECLASSNAMESHORT}/" /tmp/tmp.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx
+sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx
+
+sed "s/BINARYNAME/${BINARYNAME}/" $DIR/../template/BINARYNAME.h > ${PACKAGEPATH}/src/${BINARYNAME}.h
+sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/BINARYNAME.cxx > /tmp/tmp.cxx
+sed "s/BINARYNAME/${BINARYNAME}/" /tmp/tmp.cxx > /tmp/tmp2.cxx
+sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp2.cxx > ${PACKAGEPATH}/src/${BINARYNAME}.cxx
