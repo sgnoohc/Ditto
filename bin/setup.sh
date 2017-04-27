@@ -9,14 +9,14 @@ usage()
   echo "   $0 PACKAGENAME BINARYNAME"
   echo ""
   echo ""
-  exit
+  return
 }
 
 # Parse arguments
 if [ -z $1 ]; then usage; fi
 if [ -z $2 ]; then usage; fi
 PACKAGENAME=$1
-BINARYNAME=$1
+BINARYNAME=$2
 PACKAGEPATH=$DIR/../../${PACKAGENAME}
 
 # Check that the analysis code exists
