@@ -37,7 +37,8 @@ echo "PACKAGEPATH    : ${DIR}/../../${PACKAGENAME}"
 echo "================================================"
 
 # Set the variables
-export PACKAGENAME=$1;
-export BINARYNAME=$2;
+export PACKAGENAME=${PACKAGENAME}
+export BINARYNAME=${BINARYNAME}
+export PACKAGEPATH=${PACKAGEPATH}
 export PATH=$DIR:$PATH;
 export DITTOPATH=$DIR/../;

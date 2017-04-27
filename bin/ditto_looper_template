@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+usage()
+{
+  echo "Usage:"
+  echo ""
+  echo "   $0 TREECLASSNAME TREEINSTANCENAMEINROOTFILE"
+  echo ""
+  echo "   e.g. MT2Tree mt2"
+  exit
+}
+
+ditto_setup_check
+if [ -z $1 ]; then usage; fi
+if [ -z $2 ]; then usage; fi
+
+TREECLASSNAME=$1
+TREECLASSNAMESHORT=$2
+
+if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
+  echo "A looper already exists! exiting..."
+  exit
+fi
+
+if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
+  echo "A looper already exists! exiting..."
+  exit
+fi
+
+echo "copying template tree loopers to the package directory..."
+
+sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h
+sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.cxx > /tmp/tmp.cxx
+sed "s/TREECLASSNAMESHORT/${TREECLASSNAMESHORT}/" /tmp/tmp.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx

@@ -202,7 +202,7 @@ namespace Ditto
     {
       /// printf replacement
       if (flush_before) printf("\n");
-      printf("AnaUtil:: %s\n", msg.Data());
+      printf("Ditto:: %s\n", msg.Data());
       if (flush_after) printf("\n");
       fflush(stdout);
     }
