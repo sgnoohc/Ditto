@@ -67,6 +67,7 @@ namespace Ditto
     void plot2D(
         string name, float xval, float yval, double weight, Hist_DB &allhistos);
     void savePlots(Hist_DB&, const char*);
+    void savePlots2D(Hist_DB &h_1d, const char* outfilename);
   }
 
   namespace PrintUtil
