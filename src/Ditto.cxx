@@ -796,7 +796,6 @@ namespace Ditto
       return fabs(jets[0].p4.Eta() - jets[1].p4.Eta());
     }
 
-
   }
 
 }
