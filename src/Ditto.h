@@ -209,16 +209,17 @@ namespace Ditto
       double wgt;
     };
 
+    /// SM physics
     void SM_WWW_3l0SFOS(AnalysisData& ana_db);
     void SM_WWW_3l1SFOS(AnalysisData& ana_db);
     void SM_WWW_3l2SFOS(AnalysisData& ana_db);
-
     void SM_WWW_SSee(AnalysisData& ana_db);
     void SM_WWW_SSem(AnalysisData& ana_db);
     void SM_WWW_SSmm(AnalysisData& ana_db);
-
     void SM_Triboson_4l(AnalysisData& ana_db);
     void SM_Triboson_5l(AnalysisData& ana_db);
+
+    /// SUSY physics
 
   }
 
