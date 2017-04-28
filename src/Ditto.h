@@ -194,6 +194,8 @@ namespace Ditto
     float MjjWmass(ObjUtil::Jets& jets);
     float Mjj(ObjUtil::Jets& jets);
     float DEtajj(ObjUtil::Jets& jets);
+    float Mll(ObjUtil::Leptons& leptons);
+    float DPhill(ObjUtil::Leptons& leptons);
 
   }
 
@@ -231,6 +233,7 @@ namespace Ditto
     void fillLepPt0    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillLepPt1    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillNBjet     (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
