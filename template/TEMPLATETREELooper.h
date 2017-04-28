@@ -25,6 +25,9 @@
 using namespace Ditto;
 
 extern TEMPLATETREENAME mytree;
+//extern ObjUtil::Leptons leptons;
+//extern ObjUtil::Jets jets;
+//extern ObjUtil::MET met;
 
 int TEMPLATETREENAMELooper(TChain* chain, TString output_name, int nEvents);
 void loop();
@@ -33,6 +36,7 @@ void afterLoop();
 void initTEMPLATETREENAME();
 void loadTEMPLATETREENAMEEvent();
 void processTEMPLATETREENAMEEvent();
+void setObjects();
 
 #endif
 //eof
