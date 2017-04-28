@@ -44,5 +44,5 @@ sed "s/BINARYNAME/${BINARYNAME}/"          /tmp/tmp.cxx                    > /tm
 sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp2.cxx         > ${PACKAGEPATH}/src/${BINARYNAME}.cxx
 
 # Copy TREEConnector
-sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.h
-sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx
+sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.h
+sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx
