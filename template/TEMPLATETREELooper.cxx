@@ -6,10 +6,7 @@
 #include "TEMPLATETREENAMELooper.h"
 
 TEMPLATETREENAME mytree;
-//ObjUtil::Leptons leptons;
-//ObjUtil::Jets jets;
-//ObjUtil::Jets bjets;
-//ObjUtil::MET met;
+Analyses::AnalysisData ana_data;
 
 //______________________________________________________________________________________
 int TEMPLATETREENAMELooper(TChain* chain, TString output_name, int nevents)
@@ -95,9 +92,10 @@ void processTEMPLATETREENAMEEvent()
 void setObjects()
 {
   /// Get and set objects
-  //leptons = getLeptons(mytree);
-  //jets = getJets(mytree);
-  //met = getMET(mytree);
+  //ana_data.leptons = getLeptons(mytree);
+  //ana_data.jets    = getJets(mytree);
+  //ana_data.met     = getMET(mytree);
+  //ana_data.wgt     = mytree.evt_scale1fb;
 }
 
 //______________________________________________________________________________________

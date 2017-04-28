@@ -798,6 +798,136 @@ namespace Ditto
 
   }
 
+  namespace Analyses
+  {
+
+    //______________________________________________________________________________________
+    void SM_WWW_3l0SFOS(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 3) ) return;
+      if ( !(a.leptons[0].p4.Pt() > 20.) ) return;
+      if ( !(a.leptons[1].p4.Pt() > 20.) ) return;
+      if ( !(a.leptons[2].p4.Pt() > 20.) ) return;
+      std::sort(a.leptons.begin(), a.leptons.end(), ObjUtil::comparator_pdgId);
+      // Leptons must be in one of following configurations:
+      // +13, -11, -11
+      // +13, +13, -11
+      // +11, -13, -13
+      // +11, +11, -13
+      if (
+          !(
+            (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) ||
+            (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId == -11) ||
+            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -13 && a.leptons[2].pdgId == -13) ||
+            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13)
+           )
+         ) return;
+      //// Mll > 20 GeV
+      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId == -11 && leptons[2].pdgId == -11) if ( !( (leptons[1].p4 + leptons[2].p4).M() > 20.) ) return;
+      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId ==  13 && leptons[2].pdgId == -11) if ( !( (leptons[0].p4 + leptons[1].p4).M() > 20.) ) return;
+      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId == -13 && leptons[2].pdgId == -13) if ( !( (leptons[1].p4 + leptons[2].p4).M() > 20.) ) return;
+      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId ==  11 && leptons[2].pdgId == -13) if ( !( (leptons[0].p4 + leptons[1].p4).M() > 20.) ) return;
+      //// Z veto
+      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId == -11 && leptons[2].pdgId == -11) if ( !( fabs( (leptons[1].p4 + leptons[2].p4).M() - 91.1876 ) < 15. ) ) return;
+      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId ==  11 && leptons[2].pdgId == -13) if ( !( fabs( (leptons[0].p4 + leptons[1].p4).M() - 91.1876 ) < 15. ) ) return;
+      //// Jet veto
+      //if ( !(jets.size() < 2) ) return;
+      //// B-Jet veto
+      //if ( !(bjets.size() == 0) ) return;
+      //// Angle between trilepton and MET
+      //if ( !( fabs((leptons[0].p4 + leptons[1].p4 + leptons[2].p4).DeltaPhi(met.p4)) > 2.5 ) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+    //______________________________________________________________________________________
+    void SM_WWW_3l1SFOS(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 3) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+    //______________________________________________________________________________________
+    void SM_WWW_3l2SFOS(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 3) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+
+    //______________________________________________________________________________________
+    void SM_WWW_SSee(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 2) ) return;
+      if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 121) ) return;
+      if ( !(a.met.p4.Pt() > 60.) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+    //______________________________________________________________________________________
+    void SM_WWW_SSem(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 2) ) return;
+      if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 143) ) return;
+      if ( !(a.met.p4.Pt() > 60.) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+    //______________________________________________________________________________________
+    void SM_WWW_SSmm(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 2) ) return;
+      if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 169) ) return;
+      if ( !(a.leptons[0].p4.Pt() > 30.) ) return;
+      if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
+      if ( !(VarUtil::Mjj(a.jets) < 105.) ) return;
+      if ( !(VarUtil::Mjj(a.jets) > 65.) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+
+    //______________________________________________________________________________________
+    void SM_Triboson_5l(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 5) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+
+    //______________________________________________________________________________________
+    void SM_Triboson_4l(AnalysisData& a)
+    {
+      if ( !(a.leptons.size() == 4) ) return;
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+
+  }
+
+  namespace HistUtil
+  {
+
+    //______________________________________________________________________________________
+    void fillHistograms(const char* prefix, Analyses::AnalysisData& a)
+    {
+      /// fill all histogram types
+                                 fillNLep  (prefix, a);
+                                 fillMET   (prefix, a);
+      if (a.leptons.size() >= 1) fillLepPt0(prefix, a);
+      if (a.leptons.size() >= 2) fillLepPt1(prefix, a);
+                                 fillNBjet (prefix, a);
+      if (a.jets   .size() >= 2) fillMjjW  (prefix, a);
+      if (a.jets   .size() >= 2) fillMjj   (prefix, a);
+      if (a.jets   .size() >= 2) fillDEtajj(prefix, a);
+      if (a.leptons.size() >= 2) fillMll   (prefix, a);
+                                 fillNJet  (prefix, a);
+    }
+
+    //______________________________________________________________________________________
+    void fillNLep  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"   , a.leptons.size()                        , a.wgt , a.hist_db , "" , 5   , 0. , 5.   , prefix); }
+    void fillMET   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"    , a.met.p4.Pt()                           , a.wgt , a.hist_db , "" , 180 , 0. , 200. , prefix); }
+    void fillLepPt0(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt0" , a.leptons[0].p4.Pt()                    , a.wgt , a.hist_db , "" , 180 , 0. , 200. , prefix); }
+    void fillLepPt1(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt1" , a.leptons[1].p4.Pt()                    , a.wgt , a.hist_db , "" , 180 , 0. , 200. , prefix); }
+    void fillNBjet (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet"  , a.bjets.size()                          , a.wgt , a.hist_db , "" , 5   , 0. , 5.   , prefix); }
+    void fillMll   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mll"    , (a.leptons[0].p4 + a.leptons[1].p4).M() , a.wgt , a.hist_db , "" , 180 , 0. , 180. , prefix); }
+    void fillMjj   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"   , VarUtil::MjjWmass(a.jets)               , a.wgt , a.hist_db , "" , 180 , 0. , 180. , prefix); }
+    void fillMjjW  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"    , VarUtil::Mjj(a.jets)                    , a.wgt , a.hist_db , "" , 180 , 0. , 180. , prefix); }
+    void fillDEtajj(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("detajj" , VarUtil::DEtajj(a.jets)                 , a.wgt , a.hist_db , "" , 180 , 0. , 9.   , prefix); }
+    void fillNJet  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"   , a.jets.size()                           , a.wgt , a.hist_db , "" , 5   , 0. , 5.   , prefix); }
+
+  }
+
 }
 
 //eof

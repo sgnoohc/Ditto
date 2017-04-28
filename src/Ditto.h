@@ -197,6 +197,46 @@ namespace Ditto
 
   }
 
+  namespace Analyses
+  {
+
+    struct AnalysisData {
+      ObjUtil::Leptons leptons;
+      ObjUtil::Jets jets;
+      ObjUtil::Jets bjets;
+      ObjUtil::MET met;
+      PlotUtil::Hist_DB hist_db;
+      double wgt;
+    };
+
+    void SM_WWW_3l0SFOS(AnalysisData& ana_db);
+    void SM_WWW_3l1SFOS(AnalysisData& ana_db);
+    void SM_WWW_3l2SFOS(AnalysisData& ana_db);
+
+    void SM_WWW_SSee(AnalysisData& ana_db);
+    void SM_WWW_SSem(AnalysisData& ana_db);
+    void SM_WWW_SSmm(AnalysisData& ana_db);
+
+    void SM_Triboson_4l(AnalysisData& ana_db);
+    void SM_Triboson_5l(AnalysisData& ana_db);
+
+  }
+
+  namespace HistUtil
+  {
+    void fillHistograms(const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillNLep      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMET       (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepPt0    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepPt1    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillNBjet     (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillNJet      (const char* prefix, Analyses::AnalysisData& ana_db);
+  }
+
 }
 
 
