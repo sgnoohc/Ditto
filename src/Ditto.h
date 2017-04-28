@@ -135,13 +135,41 @@ namespace Ditto
 
     struct Lepton
     {
-      int pdgId;
+      int   charge;
+      int   pdgId;
+      float dxy;
+      float dz;
+      int   tightId;
+      int   heepId;
+      float relIso03;
+      float relIso04;
+      float miniRelIso;
+      float relIsoAn04;
+      int   mcMatchId;
+      int   lostHits;
+      int   convVeto;
+      int   tightCharge;
+      float mva;
+      float ptRatio;
+      float ptRel;
+      int   tightIdNoIso;
+      float sip3d;
       TLorentzVector p4;
     };
     typedef std::vector<Lepton> Leptons;
 
     struct Jet
     {
+
+      float btagCSV;
+      float rawPt;
+      float mcPt;
+      int   mcFlavour;
+      int   hadronFlavour;
+      float qgl;
+      float area;
+      int   id;
+      int   puId;
       TLorentzVector p4;
     };
     typedef std::vector<Jet> Jets;

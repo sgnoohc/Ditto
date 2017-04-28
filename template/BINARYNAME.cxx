@@ -21,6 +21,6 @@ int main(int argc, char* argv[])
 
   TChain *chsig = new TChain("TEMPLATETREESHORTNAME");
   chsig->Add(input_file_path);
-  WWWTreeLooper(chsig, output_file_path, max_nevents);
+  TEMPLATETREENAMELooper(chsig, output_file_path, max_nevents);
 
 }
