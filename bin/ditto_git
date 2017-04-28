@@ -9,6 +9,7 @@ usage()
   echo "  $0 UPDATEMESSAGE"
   echo ""
   echo ""
+  exit
 }
 
 if [ -z $1 ]; then usage; fi
