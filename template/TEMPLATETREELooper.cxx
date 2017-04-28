@@ -6,6 +6,9 @@
 #include "TEMPLATETREENAMELooper.h"
 
 TEMPLATETREENAME mytree;
+//ObjUtil::Leptons leptons;
+//ObjUtil::Jets jets;
+//ObjUtil::MET met;
 
 //______________________________________________________________________________________
 int TEMPLATETREENAMELooper(TChain* chain, TString output_name, int nevents)
