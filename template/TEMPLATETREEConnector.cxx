@@ -17,6 +17,12 @@ ObjUtil::Jets getJets(TREECLASSNAME& mytree)
   return jets;
 }
 
+ObjUtil::Jets getBJets(TREECLASSNAME& mytree)
+{
+  ObjUtil::Jets jets;
+  return jets;
+}
+
 ObjUtil::METs getMETs(TREECLASSNAME& mytree)
 {
   ObjUtil::METs mets;

@@ -13,6 +13,7 @@ using namespace Ditto;
 
 ObjUtil::Leptons getLeptons(TREECLASSNAME& mytree);
 ObjUtil::Jets getJets(TREECLASSNAME& mytree);
+ObjUtil::Jets getBJets(TREECLASSNAME& mytree);
 ObjUtil::METs getMETs(TREECLASSNAME& mytree);
 ObjUtil::MET getMET(TREECLASSNAME& mytree);
 

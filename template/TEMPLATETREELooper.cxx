@@ -8,6 +8,7 @@
 TEMPLATETREENAME mytree;
 //ObjUtil::Leptons leptons;
 //ObjUtil::Jets jets;
+//ObjUtil::Jets bjets;
 //ObjUtil::MET met;
 
 //______________________________________________________________________________________
