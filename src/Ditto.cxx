@@ -736,84 +736,6 @@ namespace Ditto
     bool comparator_pt   (Lepton lep0, Lepton lep1) { return lep0.p4.Pt() > lep1.p4.Pt(); }
   }
 
-  namespace VarUtil
-  {
-
-    float MjjCloseToX(ObjUtil::Jets& jets, float X)
-    {
-      /// Compute the Mjj that is closes to "X"
-      /// Return -999 if there are not enough number of jets
-
-      float mjj_closest = -999;
-
-      // if less than 2 jets just skip
-      if (jets.size() < 2)
-        return mjj_closest;
-
-      for (unsigned int ijet = 0; ijet < jets.size()-1; ++ijet)
-      {
-        for (unsigned int jjet = ijet+1; jjet < jets.size(); ++jjet)
-        {
-
-          float mjj_tmp = (jets[ijet].p4 + jets[jjet].p4).M();
-
-          if (mjj_closest < 0)
-          {
-            mjj_closest = mjj_tmp;
-          }
-          else if (mjj_closest > 0)
-          {
-            if (fabs(mjj_tmp - X) < fabs(mjj_closest - X))
-              mjj_closest = mjj_tmp;
-          }
-
-        }
-      }
-
-      return mjj_closest;
-
-    }
-
-    float MjjWmass(ObjUtil::Jets& jets)
-    {
-      /// Compute the Mjj that is closest to the W mass
-      return MjjCloseToX(jets, 80.385);
-    }
-
-    float Mjj(ObjUtil::Jets& jets)
-    {
-      // If less than 2 jets just skip
-      if (jets.size() < 2)
-        return -999;
-      return (jets[0].p4 + jets[1].p4).M();
-    }
-
-    float DEtajj(ObjUtil::Jets& jets)
-    {
-      // If less than 2 jets just skip
-      if (jets.size() < 2)
-        return -999;
-      return fabs(jets[0].p4.Eta() - jets[1].p4.Eta());
-    }
-
-    float Mll(ObjUtil::Leptons& leps)
-    {
-      // If less than 2 jets just skip
-      if (leps.size() < 2)
-        return -999;
-      return (leps[0].p4+leps[1].p4).M();
-    }
-
-    float DPhill(ObjUtil::Leptons& leps)
-    {
-      // If less than 2 jets just skip
-      if (leps.size() < 2)
-        return -999;
-      return fabs(leps[0].p4.DeltaPhi(leps[1].p4));
-    }
-
-  }
-
   namespace Analyses
   {
 
@@ -890,8 +812,8 @@ namespace Ditto
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 169) ) return;
       if ( !(a.leptons[0].p4.Pt() > 30.) ) return;
       if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
-      if ( !(VarUtil::Mjj(a.jets) < 105.) ) return;
-      if ( !(VarUtil::Mjj(a.jets) > 65.) ) return;
+      if ( !(VarUtil::Mjj(a) < 105.) ) return;
+      if ( !(VarUtil::Mjj(a) > 65.) ) return;
       HistUtil::fillHistograms(__FUNCTION__, a);
     }
 
@@ -909,6 +831,97 @@ namespace Ditto
       HistUtil::fillHistograms(__FUNCTION__, a);
     }
 
+    //______________________________________________________________________________________
+    void SUSY_VBF_Soft1l(AnalysisData& a)
+    {
+    }
+
+  }
+
+  namespace VarUtil
+  {
+
+    float MjjCloseToX(ObjUtil::Jets& jets, float X)
+    {
+      /// Compute the Mjj that is closes to "X"
+      /// Return -999 if there are not enough number of jets
+
+      float mjj_closest = -999;
+
+      // if less than 2 jets just skip
+      if (jets.size() < 2)
+        return mjj_closest;
+
+      for (unsigned int ijet = 0; ijet < jets.size()-1; ++ijet)
+      {
+        for (unsigned int jjet = ijet+1; jjet < jets.size(); ++jjet)
+        {
+
+          float mjj_tmp = (jets[ijet].p4 + jets[jjet].p4).M();
+
+          if (mjj_closest < 0)
+          {
+            mjj_closest = mjj_tmp;
+          }
+          else if (mjj_closest > 0)
+          {
+            if (fabs(mjj_tmp - X) < fabs(mjj_closest - X))
+              mjj_closest = mjj_tmp;
+          }
+
+        }
+      }
+
+      return mjj_closest;
+
+    }
+
+    float MjjWmass(Analyses::AnalysisData& a)
+    {
+      /// Compute the Mjj that is closest to the W mass
+      return MjjCloseToX(a.jets, 80.385);
+    }
+
+    float Mjj(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.jets.size() < 2)
+        return -999;
+      return (a.jets[0].p4+a.jets[1].p4).M();
+    }
+
+    float DEtajj(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.jets.size() < 2)
+        return -999;
+      return fabs(a.jets[0].p4.Eta()-a.jets[1].p4.Eta());
+    }
+
+    float Mll(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.leptons.size() < 2)
+        return -999;
+      return (a.leptons[0].p4+a.leptons[1].p4).M();
+    }
+
+    float DPhill(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.leptons.size() < 2)
+        return -999;
+      return fabs(a.leptons[0].p4.DeltaPhi(a.leptons[1].p4));
+    }
+
+    float DPhiLepMET(Analyses::AnalysisData& a)
+    {
+      // If less than 1 lepton just skip
+      if (a.leptons.size() < 1)
+        return -999;
+      return fabs(a.leptons[0].p4.DeltaPhi(a.met.p4));
+    }
+
   }
 
   namespace HistUtil
@@ -918,31 +931,33 @@ namespace Ditto
     void fillHistograms(const char* prefix, Analyses::AnalysisData& a)
     {
       /// fill all histogram types
-                                 fillNLep  (prefix, a);
-                                 fillMET   (prefix, a);
-      if (a.leptons.size() >= 1) fillLepPt0(prefix, a);
-      if (a.leptons.size() >= 2) fillLepPt1(prefix, a);
-                                 fillNBjet (prefix, a);
-      if (a.jets   .size() >= 2) fillMjjW  (prefix, a);
-      if (a.jets   .size() >= 2) fillMjj   (prefix, a);
-      if (a.jets   .size() >= 2) fillDEtajj(prefix, a);
-      if (a.leptons.size() >= 2) fillMll   (prefix, a);
-      if (a.leptons.size() >= 2) fillDPhill(prefix, a);
-                                 fillNJet  (prefix, a);
+                                 fillNLep      (prefix, a);
+                                 fillMET       (prefix, a);
+      if (a.leptons.size() >= 1) fillLepPt0    (prefix, a);
+      if (a.leptons.size() >= 2) fillLepPt1    (prefix, a);
+                                 fillNBjet     (prefix, a);
+      if (a.jets   .size() >= 2) fillMjjW      (prefix, a);
+      if (a.jets   .size() >= 2) fillMjj       (prefix, a);
+      if (a.jets   .size() >= 2) fillDEtajj    (prefix, a);
+      if (a.leptons.size() >= 2) fillMll       (prefix, a);
+      if (a.leptons.size() >= 2) fillDPhill    (prefix, a);
+                                 fillNJet      (prefix, a);
+      if (a.leptons.size() >= 1) fillDPhiLepMET(prefix, a);
     }
 
     //______________________________________________________________________________________
-    void fillNLep  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"   , a.leptons.size()                        , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
-    void fillMET   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"    , a.met.p4.Pt()                           , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillLepPt0(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt0" , a.leptons[0].p4.Pt()                    , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillLepPt1(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt1" , a.leptons[1].p4.Pt()                    , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillNBjet (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet"  , a.bjets.size()                          , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
-    void fillMll   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mll"    , VarUtil::Mll(a.leptons)                 , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillDPhill(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphill" , VarUtil::DPhill(a.leptons)              , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
-    void fillMjj   (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"   , VarUtil::MjjWmass(a.jets)               , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillMjjW  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"    , VarUtil::Mjj(a.jets)                    , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillDEtajj(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("detajj" , VarUtil::DEtajj(a.jets)                 , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
-    void fillNJet  (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"   , a.jets.size()                           , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
+    void fillNLep      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"      , a.leptons.size()       , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
+    void fillMET       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
+    void fillLepPt0    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt0"    , a.leptons[0].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
+    void fillLepPt1    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt1"    , a.leptons[1].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
+    void fillNBjet     (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet"     , a.bjets.size()         , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
+    void fillMll       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillDPhill    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
+    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"      , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"       , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillDEtajj    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
+    void fillNJet      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"      , a.jets.size()          , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
+    void fillDPhiLepMET(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }
 
   }
 

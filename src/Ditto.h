@@ -187,18 +187,6 @@ namespace Ditto
 
   }
 
-  namespace VarUtil
-  {
-
-    float MjjCloseToX(ObjUtil::Jets& jets, float X);
-    float MjjWmass(ObjUtil::Jets& jets);
-    float Mjj(ObjUtil::Jets& jets);
-    float DEtajj(ObjUtil::Jets& jets);
-    float Mll(ObjUtil::Leptons& leptons);
-    float DPhill(ObjUtil::Leptons& leptons);
-
-  }
-
   namespace Analyses
   {
 
@@ -222,6 +210,20 @@ namespace Ditto
     void SM_Triboson_5l(AnalysisData& ana_db);
 
     /// SUSY physics
+    void SUSY_VBF_Soft1l(AnalysisData& ana_db);
+
+  }
+
+  namespace VarUtil
+  {
+
+    float MjjCloseToX(Analyses::AnalysisData& a, float X);
+    float MjjWmass(Analyses::AnalysisData& a);
+    float Mjj(Analyses::AnalysisData& a);
+    float DEtajj(Analyses::AnalysisData& a);
+    float Mll(Analyses::AnalysisData& a);
+    float DPhill(Analyses::AnalysisData& a);
+    float DPhiLepMET(Analyses::AnalysisData& a);
 
   }
 
@@ -239,6 +241,7 @@ namespace Ditto
     void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillNJet      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillDPhiLepMET(const char* prefix, Analyses::AnalysisData& ana_db);
   }
 
 }
