@@ -20,6 +20,7 @@
 // Ditto
 #include "Ditto.h"
 #include "TEMPLATETREENAME.h"
+#include "TEMPLATETREENAMEConnector.h"
 
 using namespace Ditto;
 

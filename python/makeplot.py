@@ -924,7 +924,7 @@ class HistogramPainter:
             latex.SetTextFont(42)
             latex.SetTextSize(0.062*self.args.labeltextsize)
             latex.SetTextAlign(11)
-            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'36 fb^{-1} (13 TeV)')
+            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'70 fb^{-1} (13 TeV)')
 
 
 
@@ -1361,7 +1361,7 @@ class HistogramPainter:
                 self.histmanager.set_histaxis_settings(sig_scan_lower_hist, 2.0)
                 self.histmanager.set_histaxis_labels(sig_scan_lower_hist)
                 if option == "s/sqrt(b)":
-                    sig_scan_lower_hist.GetYaxis().SetTitle('s/sqrt(b)')
+                    sig_scan_lower_hist.GetYaxis().SetTitle('s/sqrt(b) improv.')
                 else:
                     sig_scan_lower_hist.GetYaxis().SetTitle('Z / Z_{0}')
                 #sig_scan_lower_hist.Print("all")

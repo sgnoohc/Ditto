@@ -11,7 +11,7 @@ namespace Ditto
   namespace PlotUtil
   {
 
-    bool plot1D(string name, float xval, double weight, Hist_DB &allhistos, string title, int numbinsx, float xmin, float xmax)
+    bool plot1D(string name, float xval, double weight, Hist_DB &allhistos, string title, int numbinsx, float xmin, float xmax, string prefix)
     {
 
       /// Plot 1D histogram. If a histogram doesn't exist book first and fill.
@@ -19,6 +19,10 @@ namespace Ditto
 
       // If no title given, set title to name
       if (title == "") title = name;
+
+      // If prefix exists add prefix
+      if (prefix != "") title = TString::Format("%s_%s", prefix.c_str(), title.c_str()).Data();
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
 
       // Find whether a histogram with the name already exists
       map<string, TH1*>::iterator iter= allhistos.find(name);
@@ -42,13 +46,17 @@ namespace Ditto
 
     }
 
-    bool plot1D(string name, float xval, double weight, std::map<string, TH1*> &allhistos, string title, int numbinsx, const float * xbins)
+    bool plot1D(string name, float xval, double weight, std::map<string, TH1*> &allhistos, string title, int numbinsx, const float * xbins, string prefix)
     {
 
       /// Plot 1D histogram. If a histogram doesn't exist book first and fill. (with variable binning)
 
       // If no title given, set title to name
       if (title=="") title=name;
+
+      // If prefix exists add prefix
+      if (prefix != "") title = TString::Format("%s_%s", prefix.c_str(), title.c_str()).Data();
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
 
       // Find whether a histogram with the name already exists
       std::map<string, TH1*>::iterator iter= allhistos.find(name);
@@ -71,19 +79,26 @@ namespace Ditto
 
     }
 
-    void plot1D(string name, float xval, double weight, Hist_DB &allhistos)
+    void plot1D(string name, float xval, double weight, Hist_DB &allhistos, string prefix)
     {
+      // If prefix exists add prefix
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
+
       /// Plot 1D histogram. If a histogram doesn't exist throw an error
       allhistos[name]->Fill(xval, weight);
       return;
     }
 
-    bool plot2D(string name, float xval, float yval, double weight, Hist_DB &allhistos, string title, int numbinsx, float xmin, float xmax, int numbinsy, float ymin, float ymax)
+    bool plot2D(string name, float xval, float yval, double weight, Hist_DB &allhistos, string title, int numbinsx, float xmin, float xmax, int numbinsy, float ymin, float ymax, string prefix)
     {
       /// Plot 1D histogram. If a histogram doesn't exist book first and fill.
       /// if the histogram exists, return true
       // If no title given, set title to name
       if (title == "") title = name;
+
+      // If prefix exists add prefix
+      if (prefix != "") title = TString::Format("%s_%s", prefix.c_str(), title.c_str()).Data();
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
 
       // Find whether a histogram with the name already exists
       map<string, TH1*>::iterator iter= allhistos.find(name);
@@ -106,11 +121,15 @@ namespace Ditto
       }
     }
 
-    bool plot2D(string name, float xval, float yval, double weight, std::map<string, TH1*> &allhistos, string title, int numbinsx, const float * xbins, int numbinsy, const float* ybins)
+    bool plot2D(string name, float xval, float yval, double weight, std::map<string, TH1*> &allhistos, string title, int numbinsx, const float * xbins, int numbinsy, const float* ybins, string prefix)
     {
       /// Plot 1D histogram. If a histogram doesn't exist book first and fill. (with variable binning)
       // If no title given, set title to name
       if (title=="") title=name;
+
+      // If prefix exists add prefix
+      if (prefix != "") title = TString::Format("%s_%s", prefix.c_str(), title.c_str()).Data();
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
 
       // Find whether a histogram with the name already exists
       std::map<string, TH1*>::iterator iter= allhistos.find(name);
@@ -132,8 +151,11 @@ namespace Ditto
       }
     }
 
-    void plot2D(string name, float xval, float yval, double weight, Hist_DB &allhistos)
+    void plot2D(string name, float xval, float yval, double weight, Hist_DB &allhistos, string prefix)
     {
+      // If prefix exists add prefix
+      if (prefix != "") name  = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
+
       // Plot 1D histogram. If a histogram doesn't exist throw an error
       ((TH2D*) allhistos[name])->Fill(xval, yval, weight);
       return;
@@ -705,6 +727,75 @@ namespace Ditto
       /// Return the fraction of number of events being processed
       return fraction_of_booked_nevents;
     }
+
+  }
+
+  namespace ObjUtil
+  {
+    bool comparator_pdgId(Lepton lep0, Lepton lep1) { return lep0.pdgId > lep1.pdgId; }
+    bool comparator_pt   (Lepton lep0, Lepton lep1) { return lep0.p4.Pt() > lep1.p4.Pt(); }
+  }
+
+  namespace VarUtil
+  {
+
+    float MjjCloseToX(ObjUtil::Jets& jets, float X)
+    {
+      /// Compute the Mjj that is closes to "X"
+      /// Return -999 if there are not enough number of jets
+
+      float mjj_closest = -999;
+
+      // if less than 2 jets just skip
+      if (jets.size() < 2)
+        return mjj_closest;
+
+      for (unsigned int ijet = 0; ijet < jets.size()-1; ++ijet)
+      {
+        for (unsigned int jjet = ijet+1; jjet < jets.size(); ++jjet)
+        {
+
+          float mjj_tmp = (jets[ijet].p4 + jets[jjet].p4).M();
+
+          if (mjj_closest < 0)
+          {
+            mjj_closest = mjj_tmp;
+          }
+          else if (mjj_closest > 0)
+          {
+            if (fabs(mjj_tmp - X) < fabs(mjj_closest - X))
+              mjj_closest = mjj_tmp;
+          }
+
+        }
+      }
+
+      return mjj_closest;
+
+    }
+
+    float MjjWmass(ObjUtil::Jets& jets)
+    {
+      /// Compute the Mjj that is closest to the W mass
+      return MjjCloseToX(jets, 80.385);
+    }
+
+    float Mjj(ObjUtil::Jets& jets)
+    {
+      // If less than 2 jets just skip
+      if (jets.size() < 2)
+        return -999;
+      return (jets[0].p4 + jets[1].p4).M();
+    }
+
+    float DEtajj(ObjUtil::Jets& jets)
+    {
+      // If less than 2 jets just skip
+      if (jets.size() < 2)
+        return -999;
+      return fabs(jets[0].p4.Eta() - jets[1].p4.Eta());
+    }
+
 
   }
 

@@ -3,5 +3,6 @@
 ditto_setup_check
 cd $DITTOPATH/../$PACKAGENAME
 cp $DITTOPATH/bin/makefile .
+sleep 1
 make -j4
 rm makefile

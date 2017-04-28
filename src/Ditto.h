@@ -16,6 +16,7 @@
 #include <time.h>  // rand seed
 #include <unistd.h> // sleep
 #include <iostream>
+#include <vector>
 
 // ROOT
 #include <TCanvas.h>
@@ -46,20 +47,20 @@ namespace Ditto
     // Plot Utilities
     bool plot1D(
         string name, float xval, double weight, Hist_DB &allhistos,
-        string title, int numbinsx, float xmin, float xmax);
+        string title, int numbinsx, float xmin, float xmax, string prefix="");
     bool plot1D(
         string name, float xval, double weight, Hist_DB &allhistos,
-        string title, int numbinsx, const float* xbins);
+        string title, int numbinsx, const float* xbins, string prefix="");
     void plot1D(
-        string name, float xval, double weight, Hist_DB &allhistos);
+        string name, float xval, double weight, Hist_DB &allhistos, string prefix="");
     bool plot2D(
         string name, float xval, float yval, double weight, Hist_DB &allhistos,
-        string title, int numbinsx, float xmin, float xmax, int numbinsy, float ymin, float ymax);
+        string title, int numbinsx, float xmin, float xmax, int numbinsy, float ymin, float ymax, string prefix="");
     bool plot2D(
         string name, float xval, float yval, double weight, Hist_DB &allhistos,
-        string title, int numbinsx, const float* xbins, int numbinsy, const float* ybins);
+        string title, int numbinsx, const float* xbins, int numbinsy, const float* ybins, string prefix="");
     void plot2D(
-        string name, float xval, float yval, double weight, Hist_DB &allhistos);
+        string name, float xval, float yval, double weight, Hist_DB &allhistos, string prefix="");
     void savePlots(Hist_DB&, const char*);
     void savePlots2D(Hist_DB &h_1d, const char* outfilename);
   }
@@ -134,23 +135,38 @@ namespace Ditto
 
     struct Lepton
     {
+      int pdgId;
       TLorentzVector p4;
-    }
+    };
     typedef std::vector<Lepton> Leptons;
 
     struct Jet
     {
       TLorentzVector p4;
-    }
+    };
     typedef std::vector<Jet> Jets;
 
     struct MET
     {
       TLorentzVector p4;
-    }
+    };
     /// I don't expect to use the above very often.
     /// I only plan to use this when there are multiple flavors of MET
     typedef std::vector<MET> METs;
+
+    bool comparator_pdgId(Lepton lep0, Lepton lep1);
+    bool comparator_pt   (Lepton lep0, Lepton lep1);
+
+  }
+
+  namespace VarUtil
+  {
+
+    float MjjCloseToX(ObjUtil::Jets& jets, float X);
+    float MjjWmass(ObjUtil::Jets& jets);
+    float Mjj(ObjUtil::Jets& jets);
+    float DEtajj(ObjUtil::Jets& jets);
+
   }
 
 }
