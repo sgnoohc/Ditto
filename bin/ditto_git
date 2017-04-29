@@ -17,8 +17,11 @@ if [ -z $1 ]; then usage; fi
 ditto_setup_check
 
 cd $DITTOPATH
+echo "Ditto:: Committing changes ..."
 git commit -a -m "$1"
+echo "Ditto:: Pulling changes from the master ... "
 git pull --rebase
+echo "Ditto:: Pushing changes to the master ... "
 git push --quiet
 #git status
 
