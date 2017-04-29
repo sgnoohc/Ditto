@@ -211,6 +211,7 @@ namespace Ditto
 
     /// SUSY physics
     void SUSY_VBF_Soft1l(AnalysisData& ana_db);
+    void SUSY_VBF_MG5_Validation(AnalysisData& ana_db);
 
   }
 
@@ -237,6 +238,7 @@ namespace Ditto
     void fillNBjet     (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillVBFMjj    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);

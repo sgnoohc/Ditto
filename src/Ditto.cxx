@@ -836,6 +836,12 @@ namespace Ditto
     {
     }
 
+    //______________________________________________________________________________________
+    void SUSY_VBF_MG5_Validation(AnalysisData& a)
+    {
+      HistUtil::fillHistograms(__FUNCTION__, a);
+    }
+
   }
 
   namespace VarUtil
@@ -953,8 +959,8 @@ namespace Ditto
     void fillNBjet     (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet"     , a.bjets.size()         , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
     void fillMll       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
     void fillDPhill    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
-    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"      , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"       , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"       , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"      , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
     void fillDEtajj    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
     void fillNJet      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"      , a.jets.size()          , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
     void fillDPhiLepMET(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }

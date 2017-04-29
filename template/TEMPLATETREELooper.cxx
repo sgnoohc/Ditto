@@ -7,6 +7,7 @@
 
 TEMPLATETREENAME mytree;
 Analyses::AnalysisData ana_data;
+TString output_name;
 
 //______________________________________________________________________________________
 int TEMPLATETREENAMELooper(TChain* chain, TString output_name, int nevents)
@@ -25,7 +26,7 @@ int TEMPLATETREENAMELooper(TChain* chain, TString output_name, int nevents)
 }
 
 //______________________________________________________________________________________
-void beforeLoop(TChain* chain, TString output_name, int nevents)
+void beforeLoop(TChain* chain, TString output_name_, int nevents)
 {
 
   // Fun start ASCII art
@@ -33,6 +34,8 @@ void beforeLoop(TChain* chain, TString output_name, int nevents)
 
   // Initialize configurations for event looping
   LoopUtil::resetLoopCondition(chain, nevents);
+
+  output_name = output_name_;
 
 }
 

@@ -13,8 +13,8 @@ usage()
 }
 
 # Parse arguments
-if [ -z $1 ]; then usage; fi
-if [ -z $2 ]; then usage; fi
+if [ -z $1 ]; then usage; return; fi
+if [ -z $2 ]; then usage; return; fi
 PACKAGENAME=$1
 BINARYNAME=$2
 PACKAGEPATH=$DIR/../../${PACKAGENAME}
