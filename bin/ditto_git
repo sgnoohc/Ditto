@@ -25,19 +25,19 @@ ditto_setup_check
 
 cd $DITTOPATH
 if [ "$LOGINEXISTS" = true ]; then
-  e_arrow "Ditto:: Committing changes ..."
+  e_success "Ditto:: Committing changes ..."
 else
   echo "Ditto:: Committing changes ..."
 fi
 git commit -a -m "$1"
 if [ "$LOGINEXISTS" = true ]; then
-  e_arrow "Ditto:: Pulling changes from the master ... "
+  e_success "Ditto:: Pulling changes from the master ... "
 else
   echo "Ditto:: Pulling changes from the master ... "
 fi
 git pull --rebase
 if [ "$LOGINEXISTS" = true ]; then
-  e_arrow "Ditto:: Pushing changes to the master ... "
+  e_success "Ditto:: Pushing changes to the master ... "
 else
   echo "Ditto:: Pushing changes to the master ... "
 fi
