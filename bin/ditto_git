@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -d "~/login/" ]; then
+if [ -d "$HOME/login" ]; then
   echo "LOGINEXISTS"
   LOGINEXISTS=true;
   source ~/login/bash/utils.sh
