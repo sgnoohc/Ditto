@@ -19,7 +19,7 @@ ditto_setup_check
 cd $DITTOPATH
 git commit -a -m "$1"
 git pull --rebase
-git push
+git push --quiet
 git status
 
 #cd $PACKAGEPATH
