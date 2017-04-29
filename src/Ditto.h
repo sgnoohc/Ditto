@@ -182,6 +182,14 @@ namespace Ditto
     /// I only plan to use this when there are multiple flavors of MET
     typedef std::vector<MET> METs;
 
+    struct Truth
+    {
+      int pdgId;
+      int status;
+      TLorentzVector p4;
+    };
+    typedef std::vector<Truth> Truths;
+
     bool comparator_pdgId(Lepton lep0, Lepton lep1);
     bool comparator_pt   (Lepton lep0, Lepton lep1);
 
@@ -195,6 +203,7 @@ namespace Ditto
       ObjUtil::Jets jets;
       ObjUtil::Jets bjets;
       ObjUtil::MET met;
+      ObjUtil::Truths truths;
       PlotUtil::Hist_DB hist_db;
       double wgt;
     };
@@ -224,7 +233,11 @@ namespace Ditto
     /// calculator with just analysis data
     float MjjWmass(Analyses::AnalysisData& a);
     float Mjj(Analyses::AnalysisData& a);
+    float Ptjj(Analyses::AnalysisData& a);
+    float Mbb(Analyses::AnalysisData& a);
+    float Ptbb(Analyses::AnalysisData& a);
     float DEtajj(Analyses::AnalysisData& a);
+    float DEtabb(Analyses::AnalysisData& a);
     float Mll(Analyses::AnalysisData& a);
     float DPhill(Analyses::AnalysisData& a);
     float DPhiLepMET(Analyses::AnalysisData& a);
@@ -251,12 +264,16 @@ namespace Ditto
     /// Di object kinematics (GeV scales)
     void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillVBFMjj    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillVBFMbb    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillPtjj      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillPtbb      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMT        (const char* prefix, Analyses::AnalysisData& ana_db);
     /// Di object kinematics (angular)
     void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillDEtabb    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDPhiLepMET(const char* prefix, Analyses::AnalysisData& ana_db);
     /// Single object ID-related
     void fillLepDz      (const char* prefix, Analyses::AnalysisData& ana_db);
