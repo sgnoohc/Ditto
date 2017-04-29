@@ -217,31 +217,53 @@ namespace Ditto
   namespace VarUtil
   {
 
+    /// calculator with some additional arguments
     float MjjCloseToX(Analyses::AnalysisData& a, float X);
+    float MTNthLep(Analyses::AnalysisData& a, int lep_idx);
+    /// calculator with just analysis data
     float MjjWmass(Analyses::AnalysisData& a);
     float Mjj(Analyses::AnalysisData& a);
     float DEtajj(Analyses::AnalysisData& a);
     float Mll(Analyses::AnalysisData& a);
     float DPhill(Analyses::AnalysisData& a);
     float DPhiLepMET(Analyses::AnalysisData& a);
+    float MT(Analyses::AnalysisData& a);
 
   }
 
   namespace HistUtil
   {
+
     void fillHistograms(const char* prefix, Analyses::AnalysisData& ana_db);
+    /// Multiplicity variables
     void fillNLep      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillMET       (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepPt0    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepPt1    (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillNJet      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillNBjet     (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
+    /// Single object kinematics
+    void fillMET       (const char* prefix , Analyses::AnalysisData& a);
+    void fillLepPt     (const char* prefix , Analyses::AnalysisData& a);
+    void fillJetPt     (const char* prefix , Analyses::AnalysisData& a);
+    void fillLepEta    (const char* prefix , Analyses::AnalysisData& a);
+    void fillJetEta    (const char* prefix , Analyses::AnalysisData& a);
+    void fillLepPhi    (const char* prefix , Analyses::AnalysisData& a);
+    void fillJetPhi    (const char* prefix , Analyses::AnalysisData& a);
+    /// Di object kinematics (GeV scales)
     void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMT        (const char* prefix, Analyses::AnalysisData& ana_db);
+    /// Di object kinematics (angular)
+    void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillNJet      (const char* prefix, Analyses::AnalysisData& ana_db);
     void fillDPhiLepMET(const char* prefix, Analyses::AnalysisData& ana_db);
+    /// Single object ID-related
+    void fillLepDz      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepDxy     (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepSip3d   (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepRelIso03(const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepAbsIso03(const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepID      (const char* prefix, Analyses::AnalysisData& ana_db);
+
   }
 
 }
