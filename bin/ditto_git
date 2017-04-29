@@ -20,7 +20,7 @@ cd $DITTOPATH
 git commit -a -m "$1"
 git pull --rebase
 git push --quiet
-git status
+#git status
 
 #cd $PACKAGEPATH
 #git commit -a -m "$1"
