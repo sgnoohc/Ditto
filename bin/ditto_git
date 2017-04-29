@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ -d "~/login/" ]; then
+  echo "LOGINEXISTS"
   LOGINEXISTS=true;
   source ~/login/bash/utils.sh
 fi
