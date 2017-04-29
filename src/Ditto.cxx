@@ -882,6 +882,15 @@ namespace Ditto
 
     }
 
+    float MTNthLep(Analyses::AnalysisData& a, int lep_idx)
+    {
+      /// Compute MT with the Nth lepton provided by the lepton index argument
+      if (a.leptons.size() <= (unsigned int) lep_idx) return -999;
+      float mt = sqrt(2 * a.leptons[lep_idx].p4.Pt() * ( 1 - cos(a.met.p4.DeltaPhi(a.leptons[lep_idx].p4) ) ));
+      return mt;
+    }
+
+
     float MjjWmass(Analyses::AnalysisData& a)
     {
       /// Compute the Mjj that is closest to the W mass
@@ -928,6 +937,13 @@ namespace Ditto
       return fabs(a.leptons[0].p4.DeltaPhi(a.met.p4));
     }
 
+    float MT(Analyses::AnalysisData& a)
+    {
+      if (a.leptons.size() == 0)
+        return -999;
+      return MTNthLep(a, 0);
+    }
+
   }
 
   namespace HistUtil
@@ -937,33 +953,60 @@ namespace Ditto
     void fillHistograms(const char* prefix, Analyses::AnalysisData& a)
     {
       /// fill all histogram types
-                                 fillNLep      (prefix, a);
-                                 fillMET       (prefix, a);
-      if (a.leptons.size() >= 1) fillLepPt0    (prefix, a);
-      if (a.leptons.size() >= 2) fillLepPt1    (prefix, a);
-                                 fillNBjet     (prefix, a);
-      if (a.jets   .size() >= 2) fillMjjW      (prefix, a);
-      if (a.jets   .size() >= 2) fillMjj       (prefix, a);
-      if (a.jets   .size() >= 2) fillDEtajj    (prefix, a);
-      if (a.leptons.size() >= 2) fillMll       (prefix, a);
-      if (a.leptons.size() >= 2) fillDPhill    (prefix, a);
-                                 fillNJet      (prefix, a);
-      if (a.leptons.size() >= 1) fillDPhiLepMET(prefix, a);
+      fillNLep       (prefix, a);
+      fillNJet       (prefix, a);
+      fillNBjet      (prefix, a);
+      fillMET        (prefix, a);
+      fillLepPt      (prefix, a);
+      fillJetPt      (prefix, a);
+      fillLepEta     (prefix, a);
+      fillJetEta     (prefix, a);
+      fillLepPhi     (prefix, a);
+      fillJetPhi     (prefix, a);
+      fillMjjW       (prefix, a);
+      fillMll        (prefix, a);
+      fillMjj        (prefix, a);
+      fillMT         (prefix, a);
+      fillDPhill     (prefix, a);
+      fillDEtajj     (prefix, a);
+      fillDPhiLepMET (prefix, a);
+      fillLepDz      (prefix, a);
+      fillLepDxy     (prefix, a);
+      fillLepSip3d   (prefix, a);
+      fillLepRelIso03(prefix, a);
+      fillLepAbsIso03(prefix, a);
+      fillLepID      (prefix, a);
     }
 
     //______________________________________________________________________________________
-    void fillNLep      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"      , a.leptons.size()       , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
+    /// Multiplicity variables
+    void fillNLep      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    void fillNJet      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    void fillNBjet     (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    /// Single object kinematics
     void fillMET       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillLepPt0    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt0"    , a.leptons[0].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillLepPt1    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("lepPt1"    , a.leptons[1].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 200.   , prefix); }
-    void fillNBjet     (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet"     , a.bjets.size()         , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
-    void fillMll       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillDPhill    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
-    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjj"       , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("mjjw"      , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillDEtajj    (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
-    void fillNJet      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"      , a.jets.size()          , a.wgt , a.hist_db , "" , 5   , 0. , 5.     , prefix); }
-    void fillDPhiLepMET(const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }
+    void fillLepPt     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dpt"  , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ilep * 20 , prefix); }
+    void fillJetPt     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dpt"  , ijet).Data() , a.jets   [ijet].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ijet * 20 , prefix); }
+    void fillLepEta    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%deta" , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -3.     ,   3.             , prefix); }
+    void fillJetEta    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%deta" , ijet).Data() , a.jets   [ijet].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -5.     ,   5.             , prefix); }
+    void fillLepPhi    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dphi" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
+    void fillJetPhi    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dphi" , ijet).Data() , a.jets   [ijet].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
+    /// Di object kinematics (GeV scales)
+    void fillMll       (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMT        (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    /// Di object kinematics (angular)
+    void fillDPhill    (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
+    void fillDEtajj    (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
+    void fillDPhiLepMET(const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }
+    /// Single object ID-related
+    void fillLepDz      (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
+    void fillLepDxy     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
+    void fillLepSip3d   (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                              , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
+    void fillLepRelIso03(const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                           , a.wgt , a.hist_db , "" , 180 , 0. , 0.2, prefix); }
+    void fillLepAbsIso03(const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 5. , prefix); }
+    void fillLepID      (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].tightId                            , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
 
   }
 
