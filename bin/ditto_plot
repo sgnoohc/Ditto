@@ -1,0 +1,154 @@
+#!/bin/bash
+
+##############################################################################
+#
+#
+# Ditto automatic plot dumper
+#
+#
+##############################################################################
+
+EOSCOMMAND="/afs/cern.ch/project/eos/installation/0.2.31/bin/eos.select"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Help
+usage()
+{
+  echo "ERROR - Usage:"
+  echo
+  echo "      sh $(basename $0) OPTIONSTRINGS ..."
+  echo
+  echo "Options with arguments:"
+  echo "  -h    Help                   (Display this message)"
+  echo "  -v    Var histogram name     (e.g. -v nlep)"
+  echo "  -p    Plot options           (e.g. -p plot1d)"
+  echo "  -o    Plot output prefix     (e.g. -o Prefix)"
+  echo "  -e    Extra plot option      (e.g. -e '--autostack')"
+  echo "  -f    Filter pattern         (e.g. -f '10.root')"
+  echo
+  exit
+}
+
+too_many_entries()
+{
+  echo "ERROR - Too many to plot! (more than 7) I do not recommend putting more than 7 items on a plot!"
+  echo ""
+  echo "Asked for following root files to be plotted"
+  for item in $@; do
+    echo $item
+  done
+  echo ""
+  echo ""
+  exit
+}
+
+# Command-line opts
+while getopts ":e:v:p:o:f:h" OPTION; do
+  case $OPTION in
+    e) EXTRAOPTION=${OPTARG};;
+    v) VAR=${OPTARG};;
+    p) PLOTOPTION=${OPTARG};;
+    o) OUTPUTPREFIX=${OPTARG};;
+    f) FILTERPATTERN=${OPTARG};;
+    h) usage;;
+    :) usage;;
+  esac
+done
+
+# argument = plot dir
+# hist files naming scheme (e.g, hist_bkg_name.root, hist_sig_name.root)
+# hist files pretty name in histogram title?
+# options to exclude pattern (multiple? comma separated?)
+# options to include pattern (multiple? comma separated?)
+
+if [ -z ${VAR} ]; then usage; fi
+if [ -z ${PLOTOPTION} ]; then PLOTOPTION=plot1d; fi
+if [ -z ${OUTPUTPREFIX}  ]; then OUTPUTPREFIX=""; fi
+
+shift $(($OPTIND - 1))
+
+# Verbose
+date
+echo "================================================"
+echo "$(basename $0) $*"
+echo "------------------------------------------------"
+echo "VAR            : ${VAR}"
+echo "PLOTOPTION     : ${PLOTOPTION}"
+echo "OUTPUTPREFIX   : ${OUTPUTPREFIX}"
+echo "================================================"
+
+#
+#
+# function
+#
+#
+
+# check if it's a number
+function is_number() {
+  re='^[0-9]+$'
+  if [[ $1 =~ $re ]]; then echo 1; else echo 0; fi
+}
+
+# extract a string
+# grep -Po '13TeV.\K[^.]+' <<<'....string...'
+#           ^^^^^^    ^
+#           keyword   to next .
+# http://askubuntu.com/questions/697120/extract-word-from-string-using-grep-sed-awk
+
+# $ echo "a b c d e" | tr ' ' '\n' | tail -1
+# e
+
+COLORARRAY=(7001 7002 7003 7004 7005 7006 7007)
+
+SIGCOUNTER=0
+BKGCOUNTER=0
+PROCESSSTRING="  "
+for item in $@; do
+  if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
+  CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+  NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
+  if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
+  if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
+  if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
+  if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
+  if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORARRAY[${BKGCOUNTER}]}; fi
+  if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORARRAY[${SIGCOUNTER}]}; fi
+  if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+  if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+  if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
+  if [ -z ${SCALE} ]; then SCALE=1; fi
+  TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
+  echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
+  PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${VAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
+done
+
+# if no bkg, then add a sig to bkg
+if [ "x${BKGCOUNTER}" == "x0" ]; then
+  for item in $@; do
+    if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
+    CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+    NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
+    if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
+    if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
+    if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
+    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORARRAY[${BKGCOUNTER}]}; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORARRAY[${SIGCOUNTER}]}; fi
+    if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+    if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+    if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
+    if [ -z ${SCALE} ]; then SCALE=1; fi
+    TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
+    CATEGORY=bkg
+    PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${VAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
+    break
+  done
+fi
+
+python $DITTOPATH/python/makeplot.py \
+  --plottype ${PLOTOPTION} \
+  --plotname plots/${OUTPUTPREFIX}_${VAR} \
+  $PROCESSSTRING \
+  ${EXTRAOPTION}
+
+#eof
