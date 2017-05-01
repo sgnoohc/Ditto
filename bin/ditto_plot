@@ -61,7 +61,6 @@ done
 # options to exclude pattern (multiple? comma separated?)
 # options to include pattern (multiple? comma separated?)
 
-if [ -z ${VAR} ]; then usage; fi
 if [ -z ${PLOTOPTION} ]; then PLOTOPTION=plot1d; fi
 if [ -z ${OUTPUTPREFIX}  ]; then OUTPUTPREFIX=""; fi
 
@@ -98,32 +97,30 @@ function is_number() {
 # $ echo "a b c d e" | tr ' ' '\n' | tail -1
 # e
 
-COLORARRAY=(7001 7002 7003 7004 7005 7006 7007)
+BKGCOLORARRAY=(7001 7002 7003 7004 7005 7006 7007)
+SIGCOLORARRAY=(1 2 4 8 9 6 7)
 
-SIGCOUNTER=0
-BKGCOUNTER=0
-PROCESSSTRING="  "
+echo "" > /tmp/plotjobs.txt
+
+REFFILE=""
 for item in $@; do
-  if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
   CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
-  NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
-  if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
-  if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
-  if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
-  if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
-  if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORARRAY[${BKGCOUNTER}]}; fi
-  if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORARRAY[${SIGCOUNTER}]}; fi
-  if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
-  if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
-  if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
-  if [ -z ${SCALE} ]; then SCALE=1; fi
-  TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
-  echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
-  PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${VAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
+  if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
 done
 
-# if no bkg, then add a sig to bkg
-if [ "x${BKGCOUNTER}" == "x0" ]; then
+for vars in $(root -l -b -q ../Ditto/macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
+
+  THISVAR=${vars//;1}
+
+  if [ "x${VAR}" != "x" ]; then
+    if [ "x${VAR}" != "x${THISVAR}" ]; then
+      continue
+    fi
+  fi
+
+  SIGCOUNTER=0
+  BKGCOUNTER=0
+  PROCESSSTRING="  "
   for item in $@; do
     if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
     CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
@@ -132,23 +129,49 @@ if [ "x${BKGCOUNTER}" == "x0" ]; then
     if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
     if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
     if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
-    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORARRAY[${BKGCOUNTER}]}; fi
-    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORARRAY[${SIGCOUNTER}]}; fi
+    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
     if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
     if [ -z ${SCALE} ]; then SCALE=1; fi
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
-    CATEGORY=bkg
-    PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${VAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
-    break
+    #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
+    if [ "x${CATEGORY}" == "xbkg" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetFillColor=>${COLOR},SetLineWidth=>0,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
   done
-fi
 
-python $DITTOPATH/python/makeplot.py \
-  --plottype ${PLOTOPTION} \
-  --plotname plots/${OUTPUTPREFIX}_${VAR} \
-  $PROCESSSTRING \
-  ${EXTRAOPTION}
+  # if no bkg, then add a sig to bkg
+  if [ "x${BKGCOUNTER}" == "x0" ]; then
+    for item in $@; do
+      if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
+      CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+      NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
+      if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
+      if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
+      if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
+      if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
+      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
+      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
+      if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+      if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+      if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
+      if [ -z ${SCALE} ]; then SCALE=1; fi
+      TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
+      CATEGORY=bkg
+      PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
+      break
+    done
+  fi
+
+  echo python $DITTOPATH/python/makeplot.py \
+    --plottype ${PLOTOPTION} \
+    --plotname plots/${OUTPUTPREFIX}${THISVAR} \
+    $PROCESSSTRING \
+    ${EXTRAOPTION} >> /tmp/plotjobs.txt
+
+done
+
+ditto_xargs /tmp/plotjobs.txt
 
 #eof
