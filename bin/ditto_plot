@@ -25,6 +25,8 @@ usage()
   echo "  -o    Plot output prefix     (e.g. -o Prefix)"
   echo "  -e    Extra plot option      (e.g. -e '--autostack')"
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
+  echo "Options without arguments:"
+  echo "  -s    Shape comparison"
   echo
   exit
 }
@@ -43,13 +45,14 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":e:v:p:o:f:h" OPTION; do
+while getopts ":e:v:p:o:f:hs" OPTION; do
   case $OPTION in
     e) EXTRAOPTION=${OPTARG};;
     v) VAR=${OPTARG};;
     p) PLOTOPTION=${OPTARG};;
     o) OUTPUTPREFIX=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
+    s) SHAPECOMPARISON="TRUE";;
     h) usage;;
     :) usage;;
   esac
@@ -74,6 +77,7 @@ echo "------------------------------------------------"
 echo "VAR            : ${VAR}"
 echo "PLOTOPTION     : ${PLOTOPTION}"
 echo "OUTPUTPREFIX   : ${OUTPUTPREFIX}"
+echo "EXTRAOPTION    : ${EXTRAOPTION}"
 echo "================================================"
 
 #
@@ -105,6 +109,7 @@ echo "" > /tmp/plotjobs.txt
 REFFILE=""
 for item in $@; do
   CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+  if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
   if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
 done
 
@@ -113,7 +118,7 @@ for vars in $(root -l -b -q ../Ditto/macros/print_th1s.C\(\"$REFFILE\"\) | grep 
   THISVAR=${vars//;1}
 
   if [ "x${VAR}" != "x" ]; then
-    if [ "x${VAR}" != "x${THISVAR}" ]; then
+    if [[ ${THISVAR} != *"${VAR}"* ]]; then
       continue
     fi
   fi
@@ -135,6 +140,7 @@ for vars in $(root -l -b -q ../Ditto/macros/print_th1s.C\(\"$REFFILE\"\) | grep 
     if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
     if [ -z ${SCALE} ]; then SCALE=1; fi
+    if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
     if [ "x${CATEGORY}" == "xbkg" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetFillColor=>${COLOR},SetLineWidth=>0,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
@@ -157,9 +163,10 @@ for vars in $(root -l -b -q ../Ditto/macros/print_th1s.C\(\"$REFFILE\"\) | grep 
       if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
       if [ -z ${SCALE} ]; then SCALE=1; fi
+      if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
       TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
       CATEGORY=bkg
-      PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist ${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}"
+      PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"
       break
     done
   fi

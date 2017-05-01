@@ -189,10 +189,6 @@ namespace Ditto
       TLorentzVector p4;
     };
     typedef std::vector<Truth> Truths;
-
-    bool comparator_pdgId(Lepton lep0, Lepton lep1);
-    bool comparator_pt   (Lepton lep0, Lepton lep1);
-
   }
 
   namespace Analyses
@@ -286,6 +282,12 @@ namespace Ditto
   }
 
 }
+
+// comparators
+template <class T>
+bool comparator_pdgId(T p0, T p1) { return p0.pdgId > p1.pdgId; }
+template <class T>
+bool comparator_pt(T p0, T p1) { return p0.p4.Pt() > p1.p4.Pt(); }
 
 
 #endif
