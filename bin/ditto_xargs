@@ -17,9 +17,9 @@ JOBTXTFILE=$1
 
 # filter some jobs
 if [ "x${2}" != "x" ]; then
-  cat $1 | grep $2 > /tmp/jobs.txt
+  cat $1 | grep -v \# | grep $2 > /tmp/jobs.txt
 else
-  cat $1 > /tmp/jobs.txt
+  cat $1 | grep -v \# > /tmp/jobs.txt
 fi
 
 # run the job in parallel

@@ -734,6 +734,15 @@ namespace Ditto
   {
 
     //______________________________________________________________________________________
+    template <class T>
+    void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj)
+    {
+      std::vector<T> goodobjs;
+      for (auto& obj: objs) if (isgoodobj(obj)) goodobjs.push_back(obj);
+      objs = std::vector<T>(goodobjs);
+    }
+
+    //______________________________________________________________________________________
     void SM_WWW_3l0SFOS(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 3) ) return;
@@ -768,19 +777,19 @@ namespace Ditto
       //if ( !(bjets.size() == 0) ) return;
       //// Angle between trilepton and MET
       //if ( !( fabs((leptons[0].p4 + leptons[1].p4 + leptons[2].p4).DeltaPhi(met.p4)) > 2.5 ) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
     void SM_WWW_3l1SFOS(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 3) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
     void SM_WWW_3l2SFOS(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 3) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
     //______________________________________________________________________________________
@@ -789,7 +798,7 @@ namespace Ditto
       if ( !(a.leptons.size() == 2) ) return;
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 121) ) return;
       if ( !(a.met.p4.Pt() > 60.) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
     void SM_WWW_SSem(AnalysisData& a)
@@ -797,7 +806,7 @@ namespace Ditto
       if ( !(a.leptons.size() == 2) ) return;
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 143) ) return;
       if ( !(a.met.p4.Pt() > 60.) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
     void SM_WWW_SSmm(AnalysisData& a)
@@ -808,21 +817,113 @@ namespace Ditto
       if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
       if ( !(VarUtil::Mjj(a) < 105.) ) return;
       if ( !(VarUtil::Mjj(a) > 65.) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
     //______________________________________________________________________________________
     void SM_Triboson_5l(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 5) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
     //______________________________________________________________________________________
     void SM_Triboson_4l(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 4) ) return;
-      HistUtil::fillHistograms(__FUNCTION__, a);
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
+    }
+
+    //______________________________________________________________________________________
+    void SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a)
+    {
+
+      selectObjects_SUSY_ISR_Soft2l_SUS_16_048(a);
+
+      // no cut
+      HistUtil::fillCutflow(__FUNCTION__, a, 0);
+
+      // select good leptons
+      if ( !(a.leptons.size() == 2 && a.leptons[0].p4.Pt() < 30.) ) return;
+      HistUtil::fillCutflow(__FUNCTION__, a, 1);
+
+      // is mm channel
+      if      ( VarUtil::isOSMMChannel(a) )
+      {
+        HistUtil::fillCutflow(__FUNCTION__, a, 2);
+        int cf_bin = 0;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(a.bjets.size() == 0                                            ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(a.met.p4.Pt() > 125.                                           ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::Mll(a) > 4.                                           ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(fabs(VarUtil::Mll(a)-9.75) > 0.75                              ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::Mll(a) < 50.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::Ptll(a) > 3.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::METHTRatio(a) > 0.6 && VarUtil::METHTRatio(a) < 1.4   ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::HT(a) > 100.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::MTNthLep(a, 0) < 70. && VarUtil::MTNthLep(a, 1) < 70. ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(VarUtil::Mtt(a) < 0. || VarUtil::Mtt(a) > 160.                 ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+      }
+      // is ee channel
+      else if ( VarUtil::isOSEEChannel(a) )
+      {
+        HistUtil::fillCutflow(__FUNCTION__, a, 3);
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"mm"), a, 0);
+        if ( !(a.bjets.size() == 0) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"mm"), a, 1);
+      }
+      // is em channel
+      else if ( VarUtil::isOSEMChannel(a) )
+      {
+        HistUtil::fillCutflow(__FUNCTION__, a, 4);
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"em"), a, 0);
+        if ( !(a.bjets.size() == 0) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"em"), a, 1);
+      }
+
+//                          {
+//                            fillISRCutflow(12);
+//                            if      (Vbf::mt2tree.met_pt < 200.) { fillISRHistogram(Vbf::mee_low_name , VBFSUSYUtilities::getMll(), Vbf::evt_scale1fb); }
+//                            else if (Vbf::mt2tree.met_pt < 250.) { fillISRHistogram(Vbf::mee_med_name , VBFSUSYUtilities::getMll(), Vbf::evt_scale1fb); fillISRHistogram(Vbf::mll_med_name , VBFSUSYUtilities::getMll(), Vbf::evt_scale1fb); }
+//                            else                                 { fillISRHistogram(Vbf::mee_high_name, VBFSUSYUtilities::getMll(), Vbf::evt_scale1fb); fillISRHistogram(Vbf::mll_high_name, VBFSUSYUtilities::getMll(), Vbf::evt_scale1fb); }
+//                          }
+
+    }
+
+    void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a)
+    {
+      selectObjs<ObjUtil::Lepton>(a.leptons , isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048);
+      selectObjs<ObjUtil::Jet>   (a.jets    , isGoodJet_SUSY_ISR_Soft2l_SUS_16_048);
+      selectObjs<ObjUtil::Jet>   (a.bjets   , isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048);
+    }
+
+    bool isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Lepton& lepton)
+    {
+      if ( !(lepton.p4.Pt() >= 5.                                        ) ) return false;
+      if ( (abs(lepton.pdgId) == 11) && !( (fabs(lepton.p4.Eta()) < 2.5) ) ) return false;
+      if ( (abs(lepton.pdgId) == 13) && !( (fabs(lepton.p4.Eta()) < 2.4) ) ) return false;
+      if ( !( fabs(lepton.sip3d) < 2.                                    ) ) return false;
+      if ( !( fabs(lepton.dxy)   < 0.01                                  ) ) return false;
+      if ( !( fabs(lepton.dz)    < 0.01                                  ) ) return false;
+      if ( !( fabs(lepton.relIso03) < 0.5                                ) ) return false;
+      if ( !( fabs(lepton.relIso03*lepton.p4.Pt()) < 5.                  ) ) return false;
+      //if ( (abs(lepton.lep_pdgId) == 11) && !( (lepton.lep_tightId > ELECTRON_ID) ) ) return false;
+      //if ( (abs(lepton.lep_pdgId) == 13) && !( (lepton.lep_tightId > MUON_ID)     ) ) return false;
+      return true;
+    }
+
+    bool isGoodJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 25. ) ) return false;
+      return true;
+    }
+
+    bool isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 25.        ) ) return false;
+      if ( !(fabs(jet.p4.Eta()) < 2.4 ) ) return false;
+      if ( !(jet.btagCSV > 0.46       ) ) return false;
+      return true;
     }
 
     //______________________________________________________________________________________
@@ -834,7 +935,7 @@ namespace Ditto
     void SUSY_VBF_MG5_Validation(AnalysisData& a)
     {
       //if (a.met.p4.Pt() > 100. && VarUtil::Mjj(a) > 150.0)
-        HistUtil::fillHistograms(__FUNCTION__, a);
+        HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
   }
@@ -892,6 +993,22 @@ namespace Ditto
       return MjjCloseToX(a.jets, 80.385);
     }
 
+    float HT(Analyses::AnalysisData& a)
+    {
+      float ht = 0;
+      for (auto& jet : a.jets)
+        ht += jet.p4.Pt();
+      return ht;
+    }
+
+    float METHTRatio(Analyses::AnalysisData& a)
+    {
+      float ht = 0;
+      for (auto& jet : a.jets)
+        ht += jet.p4.Pt();
+      return ht;
+    }
+
     float Mjj(Analyses::AnalysisData& a)
     {
       // If less than 2 jets just skip
@@ -940,6 +1057,14 @@ namespace Ditto
       return fabs(a.bjets[0].p4.Eta()-a.bjets[1].p4.Eta());
     }
 
+    float Ptll(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.leptons.size() < 2)
+        return -999;
+      return (a.leptons[0].p4+a.leptons[1].p4).Pt();
+    }
+
     float Mll(Analyses::AnalysisData& a)
     {
       // If less than 2 jets just skip
@@ -971,13 +1096,71 @@ namespace Ditto
       return MTNthLep(a, 0);
     }
 
+    float Mtt(Analyses::AnalysisData& a)
+    {
+
+      if (a.leptons.size() < 2)
+        return -999;
+
+      TLorentzVector lep0_tlv;
+      TLorentzVector lep1_tlv;
+      TLorentzVector tmp_met;
+      float x_1;
+      float x_2;
+      float mtt;
+      float Mll;
+
+      lep0_tlv = a.leptons[0].p4;
+      lep1_tlv = a.leptons[1].p4;
+      tmp_met = a.met.p4;
+      Mll = (lep0_tlv + lep1_tlv).M();
+
+      // below from HWWlvlvCode.cxx https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/HiggsPhys/HSG3/WWDileptonAnalysisCode/HWWlvlvCode/trunk/Root/HWWlvlvCode.cxx
+      x_1= (lep0_tlv.Px()*lep1_tlv.Py()-lep0_tlv.Py()*lep1_tlv.Px())/(lep1_tlv.Py()*tmp_met.Px()-lep1_tlv.Px()*tmp_met.Py()+lep0_tlv.Px()*lep1_tlv.Py()-lep0_tlv.Py()*lep1_tlv.Px());
+      x_2= (lep0_tlv.Px()*lep1_tlv.Py()-lep0_tlv.Py()*lep1_tlv.Px())/(lep0_tlv.Px()*tmp_met.Py()-lep0_tlv.Py()*tmp_met.Px()+lep0_tlv.Px()*lep1_tlv.Py()-lep0_tlv.Py()*lep1_tlv.Px());
+      if (x_1 > 0 && x_2 > 0)
+        mtt = Mll/sqrt(x_1*x_2);
+      else
+        mtt = -9999.;
+
+      return mtt;
+    }
+
+    bool checkDilepPdgIdProduct(Analyses::AnalysisData& a, int check)
+    {
+      if (a.leptons.size() != 2) return false;
+      if (a.leptons[0].pdgId * a.leptons[1].pdgId == check) return true;
+      return false;
+    }
+
+    bool isOSEEChannel(Analyses::AnalysisData& a)
+    {
+      return checkDilepPdgIdProduct(a, -121);
+    }
+
+    bool isOSEMChannel(Analyses::AnalysisData& a)
+    {
+      return checkDilepPdgIdProduct(a, -143);
+    }
+
+    bool isOSMMChannel(Analyses::AnalysisData& a)
+    {
+      return checkDilepPdgIdProduct(a, -169);
+    }
+
   }
 
   namespace HistUtil
   {
 
     //______________________________________________________________________________________
-    void fillHistograms(const char* prefix, Analyses::AnalysisData& a)
+    string catPrefix(string prefix1, string prefix2)
+    {
+      return TString::Format("%s_%s_", prefix1.c_str(), prefix2.c_str()).Data();
+    }
+
+    //______________________________________________________________________________________
+    void fillStdHistograms(string prefix, Analyses::AnalysisData& a)
     {
       /// fill all histogram types
       fillNLep       (prefix, a);
@@ -1012,38 +1195,44 @@ namespace Ditto
 
     //______________________________________________________________________________________
     /// Multiplicity variables
-    void fillNLep      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
-    void fillNJet      (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
-    void fillNBjet     (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    void fillNLep      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    void fillNJet      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
+    void fillNBjet     (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "" , 5 , 0. , 5. , prefix); }
     /// Single object kinematics
-    void fillMET       (const char* prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "" , 180 , 0. , 500.   , prefix); }
-    void fillLepPt     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dpt"  , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ilep * 20 , prefix); }
-    void fillJetPt     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dpt"  , ijet).Data() , a.jets   [ijet].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ijet * 20 , prefix); }
-    void fillLepEta    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%deta" , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -3.     ,   3.             , prefix); }
-    void fillJetEta    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%deta" , ijet).Data() , a.jets   [ijet].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -5.     ,   5.             , prefix); }
-    void fillLepPhi    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dphi" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
-    void fillJetPhi    (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dphi" , ijet).Data() , a.jets   [ijet].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
+    void fillMET       (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "" , 180 , 0. , 500.   , prefix); }
+    void fillLepPt     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dpt"  , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ilep * 20 , prefix); }
+    void fillJetPt     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dpt"  , ijet).Data() , a.jets   [ijet].p4.Pt()  , a.wgt , a.hist_db , "" , 180 ,  0.     , 200. - ijet * 20 , prefix); }
+    void fillLepEta    (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%deta" , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -3.     ,   3.             , prefix); }
+    void fillJetEta    (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%deta" , ijet).Data() , a.jets   [ijet].p4.Eta() , a.wgt , a.hist_db , "" , 180 , -5.     ,   5.             , prefix); }
+    void fillLepPhi    (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dphi" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
+    void fillJetPhi    (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dphi" , ijet).Data() , a.jets   [ijet].p4.Phi() , a.wgt , a.hist_db , "" , 180 , -3.1416 ,   3.1416         , prefix); }
     /// Di object kinematics (GeV scales)
-    void fillMll       (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillVBFMjj    (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("vbfmjj"    , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 2500.  , prefix); }
-    void fillVBFMbb    (const char* prefix , Analyses::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("vbfmbb"    , VarUtil::Mbb(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 2500.  , prefix); }
-    void fillPtjj      (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("ptjj"      , VarUtil::Ptjj(a)       , a.wgt , a.hist_db , "" , 180 , 0. , 1000.  , prefix); }
-    void fillPtbb      (const char* prefix , Analyses::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("ptbb"      , VarUtil::Ptbb(a)       , a.wgt , a.hist_db , "" , 180 , 0. , 1000.  , prefix); }
-    void fillMjj       (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillMjjW      (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
-    void fillMT        (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMll       (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillVBFMjj    (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("vbfmjj"    , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 2500.  , prefix); }
+    void fillVBFMbb    (string prefix , Analyses::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("vbfmbb"    , VarUtil::Mbb(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 2500.  , prefix); }
+    void fillPtjj      (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("ptjj"      , VarUtil::Ptjj(a)       , a.wgt , a.hist_db , "" , 180 , 0. , 1000.  , prefix); }
+    void fillPtbb      (string prefix , Analyses::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("ptbb"      , VarUtil::Ptbb(a)       , a.wgt , a.hist_db , "" , 180 , 0. , 1000.  , prefix); }
+    void fillMjj       (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMjjW      (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
+    void fillMT        (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "" , 180 , 0. , 180.   , prefix); }
     /// Di object kinematics (angular)
-    void fillDPhill    (const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
-    void fillDEtajj    (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
-    void fillDEtabb    (const char* prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detabb"    , VarUtil::DEtabb(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
-    void fillDPhiLepMET(const char* prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }
+    void fillDPhill    (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix); }
+    void fillDEtajj    (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
+    void fillDEtabb    (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detabb"    , VarUtil::DEtabb(a)     , a.wgt , a.hist_db , "" , 180 , 0. , 9.     , prefix); }
+    void fillDPhiLepMET(string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "" , 5   , 0. , 3.1416 , prefix); }
     /// Single object ID-related
-    void fillLepDz      (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
-    void fillLepDxy     (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
-    void fillLepSip3d   (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                              , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
-    void fillLepRelIso03(const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                           , a.wgt , a.hist_db , "" , 180 , 0. , 0.2, prefix); }
-    void fillLepAbsIso03(const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 5. , prefix); }
-    void fillLepID      (const char* prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].tightId                            , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
+    void fillLepDz      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
+    void fillLepDxy     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
+    void fillLepSip3d   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                              , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
+    void fillLepRelIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                           , a.wgt , a.hist_db , "" , 180 , 0. , 0.2, prefix); }
+    void fillLepAbsIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 5. , prefix); }
+    void fillLepID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].tightId                            , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
+
+    void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin)
+    {
+      PlotUtil::plot1D("cutflow"   , ibin, a.wgt, a.hist_db, "", 10, 0., 10., prefix);
+      PlotUtil::plot1D("rawcutflow", ibin,    1., a.hist_db, "", 10, 0., 10., prefix);
+    }
 
   }
 

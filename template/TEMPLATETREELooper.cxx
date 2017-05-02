@@ -88,13 +88,13 @@ void loadTEMPLATETREENAMEEvent()
 void processTEMPLATETREENAMEEvent()
 {
   /// Set objects
-  setObjects();
+  getObjects();
 }
 
 //______________________________________________________________________________________
-void setObjects()
+void getObjects()
 {
-  /// Get and set objects
+  /// Get objects
   //ana_data.leptons = getLeptons(mytree);
   //ana_data.jets    = getJets(mytree);
   //ana_data.met     = getMET(mytree);

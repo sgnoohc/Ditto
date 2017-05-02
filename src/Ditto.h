@@ -9,6 +9,7 @@
 // C++
 #include <algorithm>
 #include <cstdio>
+#include <functional>
 #include <map>
 #include <string>
 #include <utility>
@@ -189,6 +190,7 @@ namespace Ditto
       TLorentzVector p4;
     };
     typedef std::vector<Truth> Truths;
+
   }
 
   namespace Analyses
@@ -204,19 +206,29 @@ namespace Ditto
       double wgt;
     };
 
+    template <class T>
+    void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj);
+
     /// SM physics
-    void SM_WWW_3l0SFOS(AnalysisData& ana_db);
-    void SM_WWW_3l1SFOS(AnalysisData& ana_db);
-    void SM_WWW_3l2SFOS(AnalysisData& ana_db);
-    void SM_WWW_SSee(AnalysisData& ana_db);
-    void SM_WWW_SSem(AnalysisData& ana_db);
-    void SM_WWW_SSmm(AnalysisData& ana_db);
-    void SM_Triboson_4l(AnalysisData& ana_db);
-    void SM_Triboson_5l(AnalysisData& ana_db);
+    void SM_WWW_3l0SFOS(AnalysisData& a);
+    void SM_WWW_3l1SFOS(AnalysisData& a);
+    void SM_WWW_3l2SFOS(AnalysisData& a);
+    void SM_WWW_SSee(AnalysisData& a);
+    void SM_WWW_SSem(AnalysisData& a);
+    void SM_WWW_SSmm(AnalysisData& a);
+    void SM_Triboson_4l(AnalysisData& a);
+    void SM_Triboson_5l(AnalysisData& a);
 
     /// SUSY physics
-    void SUSY_VBF_Soft1l(AnalysisData& ana_db);
-    void SUSY_VBF_MG5_Validation(AnalysisData& ana_db);
+    void SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
+    void SUSY_VBF_Soft1l(AnalysisData& a);
+    void SUSY_VBF_MG5_Validation(AnalysisData& a);
+
+    /// Object selections
+    void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
+    bool isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Lepton& lepton);
+    bool isGoodJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
+    bool isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
 
   }
 
@@ -227,6 +239,8 @@ namespace Ditto
     float MjjCloseToX(Analyses::AnalysisData& a, float X);
     float MTNthLep(Analyses::AnalysisData& a, int lep_idx);
     /// calculator with just analysis data
+    float HT(Analyses::AnalysisData& a);
+    float METHTRatio(Analyses::AnalysisData& a);
     float MjjWmass(Analyses::AnalysisData& a);
     float Mjj(Analyses::AnalysisData& a);
     float Ptjj(Analyses::AnalysisData& a);
@@ -234,50 +248,59 @@ namespace Ditto
     float Ptbb(Analyses::AnalysisData& a);
     float DEtajj(Analyses::AnalysisData& a);
     float DEtabb(Analyses::AnalysisData& a);
+    float Ptll(Analyses::AnalysisData& a);
     float Mll(Analyses::AnalysisData& a);
     float DPhill(Analyses::AnalysisData& a);
     float DPhiLepMET(Analyses::AnalysisData& a);
     float MT(Analyses::AnalysisData& a);
+    float Mtt(Analyses::AnalysisData& a);
+    bool isOSEEChannel(Analyses::AnalysisData& a);
+    bool isOSMMChannel(Analyses::AnalysisData& a);
+    bool isOSEMChannel(Analyses::AnalysisData& a);
 
   }
 
   namespace HistUtil
   {
 
-    void fillHistograms(const char* prefix, Analyses::AnalysisData& ana_db);
+    string catPrefix(string prefix1, string prefix2);
+
+    void fillStdHistograms(string prefix, Analyses::AnalysisData& a);
     /// Multiplicity variables
-    void fillNLep      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillNJet      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillNBjet     (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillNLep      (string prefix, Analyses::AnalysisData& a);
+    void fillNJet      (string prefix, Analyses::AnalysisData& a);
+    void fillNBjet     (string prefix, Analyses::AnalysisData& a);
     /// Single object kinematics
-    void fillMET       (const char* prefix , Analyses::AnalysisData& a);
-    void fillLepPt     (const char* prefix , Analyses::AnalysisData& a);
-    void fillJetPt     (const char* prefix , Analyses::AnalysisData& a);
-    void fillLepEta    (const char* prefix , Analyses::AnalysisData& a);
-    void fillJetEta    (const char* prefix , Analyses::AnalysisData& a);
-    void fillLepPhi    (const char* prefix , Analyses::AnalysisData& a);
-    void fillJetPhi    (const char* prefix , Analyses::AnalysisData& a);
+    void fillMET       (string prefix , Analyses::AnalysisData& a);
+    void fillLepPt     (string prefix , Analyses::AnalysisData& a);
+    void fillJetPt     (string prefix , Analyses::AnalysisData& a);
+    void fillLepEta    (string prefix , Analyses::AnalysisData& a);
+    void fillJetEta    (string prefix , Analyses::AnalysisData& a);
+    void fillLepPhi    (string prefix , Analyses::AnalysisData& a);
+    void fillJetPhi    (string prefix , Analyses::AnalysisData& a);
     /// Di object kinematics (GeV scales)
-    void fillMll       (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillVBFMjj    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillVBFMbb    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillPtjj      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillPtbb      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillMjj       (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillMjjW      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillMT        (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillMll       (string prefix, Analyses::AnalysisData& a);
+    void fillVBFMjj    (string prefix, Analyses::AnalysisData& a);
+    void fillVBFMbb    (string prefix, Analyses::AnalysisData& a);
+    void fillPtjj      (string prefix, Analyses::AnalysisData& a);
+    void fillPtbb      (string prefix, Analyses::AnalysisData& a);
+    void fillMjj       (string prefix, Analyses::AnalysisData& a);
+    void fillMjjW      (string prefix, Analyses::AnalysisData& a);
+    void fillMT        (string prefix, Analyses::AnalysisData& a);
     /// Di object kinematics (angular)
-    void fillDPhill    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillDEtajj    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillDEtabb    (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillDPhiLepMET(const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillDPhill    (string prefix, Analyses::AnalysisData& a);
+    void fillDEtajj    (string prefix, Analyses::AnalysisData& a);
+    void fillDEtabb    (string prefix, Analyses::AnalysisData& a);
+    void fillDPhiLepMET(string prefix, Analyses::AnalysisData& a);
     /// Single object ID-related
-    void fillLepDz      (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepDxy     (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepSip3d   (const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepRelIso03(const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepAbsIso03(const char* prefix, Analyses::AnalysisData& ana_db);
-    void fillLepID      (const char* prefix, Analyses::AnalysisData& ana_db);
+    void fillLepDz      (string prefix, Analyses::AnalysisData& a);
+    void fillLepDxy     (string prefix, Analyses::AnalysisData& a);
+    void fillLepSip3d   (string prefix, Analyses::AnalysisData& a);
+    void fillLepRelIso03(string prefix, Analyses::AnalysisData& a);
+    void fillLepAbsIso03(string prefix, Analyses::AnalysisData& a);
+    void fillLepID      (string prefix, Analyses::AnalysisData& a);
+
+    void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin);
 
   }
 

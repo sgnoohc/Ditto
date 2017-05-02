@@ -35,7 +35,7 @@ void afterLoop();
 void initTEMPLATETREENAME();
 void loadTEMPLATETREENAMEEvent();
 void processTEMPLATETREENAMEEvent();
-void setObjects();
+void getObjects();
 
 #endif
 //eof
