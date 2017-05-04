@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p archives/
+
+stamp=$(date +%Y%m%d_%H%M%S)
+ARCHIVEPATH=archives/archives_${stamp}
+mkdir -p ${ARCHIVEPATH}
+
+cp -r haddoutput $ARCHIVEPATH/
+cp -r output $ARCHIVEPATH/
+cp -r plots $ARCHIVEPATH/
+
+vim $ARCHIVEPATH/README.md
