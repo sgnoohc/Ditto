@@ -6,7 +6,7 @@ usage()
 {
   echo "Usage:"
   echo ""
-  echo "   $0 PACKAGENAME BINARYNAME"
+  echo "   $0 PACKAGEPATH"
   echo ""
   echo ""
   return
@@ -14,10 +14,7 @@ usage()
 
 # Parse arguments
 if [ -z $1 ]; then usage; return; fi
-if [ -z $2 ]; then usage; return; fi
-PACKAGENAME=$1
-BINARYNAME=$2
-PACKAGEPATH=$DIR/../../${PACKAGENAME}
+PACKAGEPATH=$('cd' $(dirname $1); pwd)/$(basename $1)
 
 # Check that the analysis code exists
 if [ ! -d "${PACKAGEPATH}" ]; then
@@ -31,14 +28,12 @@ date
 echo "================================================"
 echo "$(basename $0) $*"
 echo "------------------------------------------------"
-echo "PACKAGENAME    : ${PACKAGENAME}"
-echo "BINARYNAME     : ${BINARYNAME}"
-echo "PACKAGEPATH    : ${DIR}/../../${PACKAGENAME}"
+echo "PACKAGEPATH    : ${PACKAGEPATH}"
 echo "================================================"
 
 # Set the variables
-export PACKAGENAME=${PACKAGENAME}
-export BINARYNAME=${BINARYNAME}
+export PACKAGENAME=$(basename $PACKAGEPATH)
+export BINARYNAME=ditto
 export PACKAGEPATH=${PACKAGEPATH}
 export PATH=$DIR:$PATH;
 export DITTOPATH=$DIR/../;
