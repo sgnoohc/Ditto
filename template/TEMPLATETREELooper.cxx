@@ -104,6 +104,9 @@ void getObjects()
 //______________________________________________________________________________________
 void afterLoop()
 {
+  // Save histograms
+  PlotUtil::savePlots(ana_data.hist_db, output_name.Data());
+
   // Fun exit
   PrintUtil::exit();
 }
