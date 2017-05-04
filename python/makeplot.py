@@ -34,7 +34,7 @@ parser.add_argument('--delimiter_histdef_styleindex', dest='delimter_histdef_sty
 # gStyle
 parser.add_argument('--gStyleSetOptStat', dest='gStyleSetOptStat', default=0, help=argparse.SUPPRESS)
 parser.add_argument('--gStyleSetErrorX', dest='gStyleSetErrorX', default=0, help=argparse.SUPPRESS)
-parser.add_argument('--draw_cms_logo', dest='draw_cms_logo', default=True, action='store_true', help=argparse.SUPPRESS)
+parser.add_argument('--draw_cms_logo', dest='draw_cms_logo', default=1, type=int, help=argparse.SUPPRESS)
 
 # Options for input histograms
 parser.add_argument('--sighist', dest='signal_histogram_fullpaths', action='append', help='fullpaths to the TH1 (e.g. hist.root:tfolder1/tfolder2/myhist)')
@@ -433,8 +433,10 @@ class HistogramManager:
     def set_histaxis_labels(self, hist):
         if hist.GetXaxis() == None:
             return
-        hist.GetXaxis().SetTitle(self.args.XTitle)
-        hist.GetYaxis().SetTitle(self.args.YTitle)
+        if len(self.args.XTitle) != 0:
+            hist.GetXaxis().SetTitle(self.args.XTitle)
+        if len(self.args.YTitle) != 0:
+            hist.GetYaxis().SetTitle(self.args.YTitle)
     def stylize_histogram(self, hist, histogram_fullpath):
         styles = self.parse_style(histogram_fullpath)
         #print 'size of histogram',histogram_fullpath,hist.Integral()
@@ -522,6 +524,8 @@ class HistogramManager:
         stackedhist.Draw('hist') # must draw before accessing TAxis
         for hist in hists:
             stackedhist.Add(hist)
+            stackedhist.GetXaxis().SetTitle(hist.GetXaxis().GetTitle())
+            stackedhist.GetYaxis().SetTitle(hist.GetYaxis().GetTitle())
         self.set_histaxis_settings(stackedhist)
         self.set_histaxis_labels(stackedhist)
         return stackedhist, hists
@@ -925,7 +929,7 @@ class HistogramPainter:
             latex.SetTextFont(42)
             latex.SetTextSize(0.062*self.args.labeltextsize)
             latex.SetTextAlign(11)
-            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'70 fb^{-1} (13 TeV)')
+            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'36 fb^{-1} (13 TeV)')
 
 
 

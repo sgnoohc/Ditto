@@ -113,7 +113,10 @@ for item in $@; do
   if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
 done
 
-for vars in $(root -l -b -q ../Ditto/macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
+# create plots directory if needed
+mkdir -p plots/
+
+for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
 
   THISVAR=${vars//;1}
 

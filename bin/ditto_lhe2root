@@ -1,7 +1,6 @@
 #!/bin/bash
 
 if [ -d "$HOME/login" ]; then
-  echo "LOGINEXISTS"
   LOGINEXISTS=true;
   source ~/login/bash/utils.sh
 else
@@ -19,5 +18,11 @@ if [ -z $1 ]; then
   exit
 fi
 
+LHEINPUTFILEPATH=$1
+ROOTOUTPUTFILEPATH=$2
 
-python ~/login/python/scripts/lhe2root.py $1 $2
+if [ -z $2 ]; then
+  ROOTOUTPUTFILEPATH=${LHEINPUTFILEPATH/lhe/root}
+fi
+
+python ~/login/python/scripts/lhe2root.py ${LHEINPUTFILEPATH} ${ROOTOUTPUTFILEPATH}

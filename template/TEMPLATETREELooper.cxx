@@ -89,6 +89,9 @@ void processTEMPLATETREENAMEEvent()
 {
   /// Set objects
   getObjects();
+
+  /// Fill histograms
+  // HistUtil::fillStdHistograms("", ana_data);
 }
 
 //______________________________________________________________________________________

@@ -1,5 +1,18 @@
 #!/bin/bash
 
+ERROR=echo
+UL=echo
+SUCCESS=echo
+MSG=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  UL=e_underline
+  SUCCESS=e_success
+  MSG=e_msg
+fi
+
 usage()
 {
   echo "Usage:"
@@ -18,16 +31,16 @@ TREECLASSNAME=$1
 TREECLASSNAMESHORT=$2
 
 if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
-  echo "A looper already exists! exiting..."
+  $ERROR "A looper already exists! exiting..."
   exit
 fi
 
 if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
-  echo "A looper already exists! exiting..."
+  $ERROR "A looper already exists! exiting..."
   exit
 fi
 
-echo "copying template tree loopers to the package directory..."
+$MSG "copying template tree loopers to the package directory..."
 
 # Copy TREELooper
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h
