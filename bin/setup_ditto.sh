@@ -1,6 +1,19 @@
 #!/bin/bash
 
+ERROR=echo
+UL=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  UL=e_underline
+fi
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  $ERROR "ERROR: This setup command must be sourced!"
+  exit
+fi
 
 usage()
 {
@@ -25,15 +38,12 @@ fi
 
 # Verbose
 date
-echo "================================================"
-echo "$(basename $0) $*"
-echo "------------------------------------------------"
-echo "PACKAGEPATH    : ${PACKAGEPATH}"
-echo "================================================"
 
 # Set the variables
 export PACKAGENAME=$(basename $PACKAGEPATH)
 export BINARYNAME=ditto_ana_${PACKAGENAME}
 export PACKAGEPATH=${PACKAGEPATH}
-export PATH=$DIR:$PATH;
-export DITTOPATH=$DIR/../;
+export PATH=$DIR:$PATH
+export DITTOPATH=$DIR/../
+
+$DIR/ditto_setup_check

@@ -2,13 +2,43 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+ERROR=echo
+UL=echo
+SUCCESS=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  UL=e_underline
+  SUCCESS=e_success
+fi
+
 error()
 {
-  echo "Error: DITTOPATH variable is not set!"
-  echo "Please run, source $DIR/setup.sh PACKAGEPATH first!"
+  $ERROR "ERROR: ditto environment is not set!"
+  $UL "Please run, source $DIR/setup_ditto.sh PACKAGEPATH first!"
+  echo ""
+  echo "==================================================="
+  echo PACKAGENAME=$PACKAGENAME
+  echo BINARYNAME=$BINARYNAME
+  echo PACKAGEPATH=$PACKAGEPATH
+  echo DITTOPATH=$DITTOPATH
+  echo "==================================================="
+  echo ""
+  echo ""
   exit 1
 }
 
 if [ "x${DITTOPATH}" == "x" ]; then error; fi
 if [ "x${PACKAGENAME}" == "x" ]; then error; fi
 if [ "x${PACKAGEPATH}" == "x" ]; then error; fi
+
+if [ -z $1 ]; then
+  $SUCCESS "Ditto environment is set with the following setting"
+  echo "==================================================="
+  echo PACKAGENAME=$PACKAGENAME
+  echo BINARYNAME=$BINARYNAME
+  echo PACKAGEPATH=$PACKAGEPATH
+  echo DITTOPATH=$DITTOPATH
+  echo "==================================================="
+fi

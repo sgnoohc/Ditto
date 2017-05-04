@@ -1,7 +1,6 @@
 #!/bin/bash
 
-ditto_setup_check
-if [ $? -eq 1 ]; then exit; fi
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check; if [ $? -eq 1 ]; then exit; fi
 
 echo ${PACKAGEPATH}
 
