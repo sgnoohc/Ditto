@@ -10,5 +10,6 @@ cp -r haddoutput $ARCHIVEPATH/
 cp -r output $ARCHIVEPATH/
 cp -r plots $ARCHIVEPATH/
 cp -r $PACKAGEPATH $ARCHIVEPATH/
+cp -r $DITTOPATH $ARCHIVEPATH/ditto
 
 vim $ARCHIVEPATH/README.md
