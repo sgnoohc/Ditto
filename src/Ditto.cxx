@@ -848,21 +848,59 @@ namespace Ditto
       HistUtil::fillCutflow(__FUNCTION__, a, 1);
 
       // is mm channel
-      if      ( VarUtil::isOSMMChannel(a) )
+      if ( VarUtil::isOSMMChannel(a) )
       {
         HistUtil::fillCutflow(__FUNCTION__, a, 2);
         int cf_bin = 0;
         HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(a.bjets.size() == 0                                            ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(a.met.p4.Pt() > 125.                                           ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::Mll(a) > 4.                                           ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(fabs(VarUtil::Mll(a)-9.75) > 0.75                              ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::Mll(a) < 50.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::Ptll(a) > 3.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::METHTRatio(a) > 0.6 && VarUtil::METHTRatio(a) < 1.4   ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::HT(a) > 100.                                          ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::MTNthLep(a, 0) < 70. && VarUtil::MTNthLep(a, 1) < 70. ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
-        if ( !(VarUtil::Mtt(a) < 0. || VarUtil::Mtt(a) > 160.                 ) ) return; HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        if ( !(a.bjets.size() == 0                                            ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_BVeto"), a);
+        if ( !(a.met.p4.Pt() > 125.                                           ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_METge125"), a);
+        if ( !(VarUtil::Mll(a) > 4.                                           ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_Mllge4"), a);
+        if ( !(fabs(VarUtil::Mll(a)-9.75) > 0.75                              ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_Mllaw9p75"), a);
+        if ( !(VarUtil::Mll(a) < 50.                                          ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_Mllle50"), a);
+        if ( !(VarUtil::Ptll(a) > 3.                                          ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_Ptllge3"), a);
+        if ( !(VarUtil::METHTRatio(a) > 0.6 && VarUtil::METHTRatio(a) < 1.4   ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_METHTRatioge0p6le1p4"), a);
+        if ( !(VarUtil::HT(a) > 100.                                          ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_HTge100"), a);
+        if ( !(VarUtil::MTNthLep(a, 0) < 70. && VarUtil::MTNthLep(a, 1) < 70. ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_MT12le70"), a);
+        if ( !(VarUtil::Mtt(a) < 0. || VarUtil::Mtt(a) > 160.                 ) ) return;
+        HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+        HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_MttVeto"), a);
+        if      (a.met.p4.Pt() < 200.)
+        {
+          cf_bin += 0;
+          HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+          HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_lowmet"), a);
+        }
+        else if (a.met.p4.Pt() < 250.)
+        {
+          cf_bin += 1;
+          HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+          HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_medmet"), a);
+        }
+        else
+        {
+          cf_bin += 2;
+          HistUtil::fillCutflow(HistUtil::catPrefix(__FUNCTION__,"ee"), a, cf_bin); cf_bin++;
+          HistUtil::fillStdHistograms(HistUtil::catPrefix(__FUNCTION__,"ee_highmet"), a);
+        }
       }
       // is ee channel
       else if ( VarUtil::isOSEEChannel(a) )
