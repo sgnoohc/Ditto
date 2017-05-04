@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -d "$HOME/login" ]; then
+  echo "LOGINEXISTS"
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+else
+  echo "This command is built with the assumption that you have login."
+  echo "If you want to use this, ask philip@physics.ucsd.edu"
+  exit
+fi
+
+if [ -z $1 ]; then
+  echo "Usage:"
+  echo ""
+  echo "   $0 PATHTOLHE [OUTPUTROOTPATH]"
+  echo ""
+  echo ""
+  exit
+fi
+
+
+python ~/login/python/scripts/lhe2root.py $1 $2

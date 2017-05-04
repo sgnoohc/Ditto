@@ -1,0 +1,32 @@
+#!/bin/bash
+
+echo ${PACKAGEPATH}
+
+usage(){
+  echo "Usage:"
+  echo ""
+  echo "  $0 ROOTFILE TTREENAME MAKECLASSNAME"
+  echo ""
+  echo ""
+  exit
+}
+
+if [ -z $1 ]; then usage; fi
+if [ -z $2 ]; then usage; fi
+if [ -z $3 ]; then usage; fi
+
+ROOTFILE=$1
+TTREENAME=$2
+MAKECLASSNAME=$3
+
+ROOTFILE=$('cd' $(dirname ${ROOTFILE}); pwd)/$(basename $1)
+
+echo "void makeclass() {" > /tmp/makeclass.C
+echo "  TFile* file = new TFile(\"${ROOTFILE}\");" >> /tmp/makeclass.C
+echo "  TTree* tree = (TTree*) file->Get(\"${TTREENAME}\");" >> /tmp/makeclass.C
+echo "  tree->MakeClass(\"${MAKECLASSNAME}\");" >> /tmp/makeclass.C
+echo "}" >> /tmp/makeclass.C
+
+cd ${PACKAGEPATH}/src/
+
+root -l -b -q /tmp/makeclass.C
