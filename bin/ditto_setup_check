@@ -11,3 +11,5 @@ error()
 }
 
 if [ "x${DITTOPATH}" == "x" ]; then error; fi
+if [ "x${PACKAGENAME}" == "x" ]; then error; fi
+if [ "x${PACKAGEPATH}" == "x" ]; then error; fi

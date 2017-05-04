@@ -33,7 +33,7 @@ echo "================================================"
 
 # Set the variables
 export PACKAGENAME=$(basename $PACKAGEPATH)
-export BINARYNAME=ditto
+export BINARYNAME=ditto_ana_${PACKAGENAME}
 export PACKAGEPATH=${PACKAGEPATH}
 export PATH=$DIR:$PATH;
 export DITTOPATH=$DIR/../;

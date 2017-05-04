@@ -1,4 +1,4 @@
 bin/www
 bin/susyvbf
-bin/ditto
+bin/ditto_ana_*
 src/Ditto.o

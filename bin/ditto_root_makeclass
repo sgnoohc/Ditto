@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ditto_setup_check
+
 echo ${PACKAGEPATH}
 
 usage(){
@@ -30,3 +32,4 @@ echo "}" >> /tmp/makeclass.C
 cd ${PACKAGEPATH}/src/
 
 root -l -b -q /tmp/makeclass.C
+mv ${MAKECLASSNAME}.C ${MAKECLASSNAME}.cxx
