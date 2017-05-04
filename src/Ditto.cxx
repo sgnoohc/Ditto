@@ -763,20 +763,20 @@ namespace Ditto
             (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13)
            )
          ) return;
-      //// Mll > 20 GeV
-      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId == -11 && leptons[2].pdgId == -11) if ( !( (leptons[1].p4 + leptons[2].p4).M() > 20.) ) return;
-      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId ==  13 && leptons[2].pdgId == -11) if ( !( (leptons[0].p4 + leptons[1].p4).M() > 20.) ) return;
-      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId == -13 && leptons[2].pdgId == -13) if ( !( (leptons[1].p4 + leptons[2].p4).M() > 20.) ) return;
-      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId ==  11 && leptons[2].pdgId == -13) if ( !( (leptons[0].p4 + leptons[1].p4).M() > 20.) ) return;
-      //// Z veto
-      //if (leptons[0].pdgId ==  13 && leptons[1].pdgId == -11 && leptons[2].pdgId == -11) if ( !( fabs( (leptons[1].p4 + leptons[2].p4).M() - 91.1876 ) < 15. ) ) return;
-      //if (leptons[0].pdgId ==  11 && leptons[1].pdgId ==  11 && leptons[2].pdgId == -13) if ( !( fabs( (leptons[0].p4 + leptons[1].p4).M() - 91.1876 ) < 15. ) ) return;
-      //// Jet veto
-      //if ( !(jets.size() < 2) ) return;
-      //// B-Jet veto
-      //if ( !(bjets.size() == 0) ) return;
-      //// Angle between trilepton and MET
-      //if ( !( fabs((leptons[0].p4 + leptons[1].p4 + leptons[2].p4).DeltaPhi(met.p4)) > 2.5 ) ) return;
+      // Mll > 20 GeV
+      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
+      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
+      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -13 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
+      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
+      // Z veto
+      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( fabs( (a.leptons[1].p4 + a.leptons[2].p4).M() - 91.1876 ) < 15. ) ) return;
+      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( fabs( (a.leptons[0].p4 + a.leptons[1].p4).M() - 91.1876 ) < 15. ) ) return;
+      // Jet veto
+      if ( !(a.jets.size() < 2) ) return;
+      // B-Jet veto
+      if ( !(a.bjets.size() == 0) ) return;
+      // Angle between trilepton and MET
+      if ( !( fabs((a.leptons[0].p4 + a.leptons[1].p4 + a.leptons[2].p4).DeltaPhi(a.met.p4)) > 2.5 ) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
