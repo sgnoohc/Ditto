@@ -835,12 +835,13 @@ namespace Ditto
     //______________________________________________________________________________________
     void SM_VBS_WH(AnalysisData& a)
     {
-      selectObjects_SUSY_ISR_Soft2l_SUS_16_048(a);
+      //selectObjects_SUSY_ISR_Soft2l_SUS_16_048(a);
 
-      if ( !( a.jets.size() < 6 ) ) return;
-      if ( !( a.leptons.size() == 0 ) ) return;
-      if ( !( a.bjets.size() < 2 ) ) return;
-      HistUtil::fillStdHistograms(__FUNCTION__, a);
+      //if ( !( a.jets.size() == 6 ) ) return;
+      //if ( !( a.leptons.size() == 0 ) ) return;
+      //if ( !( a.bjets.size() >= 1 ) ) return;
+
+      //HistUtil::fillStdHistograms(__FUNCTION__, a);
 
     }
 
@@ -1205,7 +1206,7 @@ namespace Ditto
       std::string bitmask(K, 1); // K leading 1's
       bitmask.resize(N, 0); // N-K trailing 0's
 
-      std::vector<int> combs;
+      std::vector<std::vector<int> > combs;
       // print integers and permute bitmask
       do {
         std::vector<int> comb;
@@ -1213,9 +1214,8 @@ namespace Ditto
         {
           if (bitmask[i])
             comb.push_back(i);
-          std::cout << " " << i;
         }
-        combs.push_back(combs);
+        combs.push_back(comb);
       } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
       return combs;
     }
@@ -1271,9 +1271,9 @@ namespace Ditto
 
     //______________________________________________________________________________________
     /// Multiplicity variables
-    void fillNLep      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "N_{lep}" , 5 , 0. , 5. , prefix); }
-    void fillNJet      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "N_{jet}" , 5 , 0. , 5. , prefix); }
-    void fillNBjet     (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "N_{b-jet}" , 5 , 0. , 5. , prefix); }
+    void fillNLep      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "N_{lep}" , 10 , 0. , 10. , prefix); }
+    void fillNJet      (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "N_{jet}" , 10 , 0. , 10. , prefix); }
+    void fillNBjet     (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "N_{b-jet}" , 10 , 0. , 10. , prefix); }
     /// Single object kinematics
     void fillMET       (string prefix , Analyses::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "MET [GeV]" , 180 , 0. , 500.   , prefix); }
     void fillLepPt     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)  PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
@@ -1306,7 +1306,7 @@ namespace Ditto
     void fillLepRelIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                           , a.wgt , a.hist_db , "" , 180 , 0. , 0.2, prefix); }
     void fillLepAbsIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 5. , prefix); }
     void fillLepID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].tightId                            , a.wgt , a.hist_db , "" , 180 , 0. , 5  , prefix); }
-    void fillJetID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                 , a.wgt , a.hist_db , "" ,  25 , 0. , 25 , prefix); }
+    void fillJetID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                 , a.wgt , a.hist_db , "" ,   2 , 0. , 30 , prefix); }
 
     void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin)
     {

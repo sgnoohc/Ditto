@@ -114,6 +114,14 @@ for item in $@; do
   if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
 done
 
+if [ -z ${REFFILE} ]; then
+for item in $@; do
+  CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+  if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
+  if [ "x${CATEGORY}" == "xbkg" ]; then REFFILE=$item; break; fi
+done
+fi
+
 # create plots directory if needed
 mkdir -p plots/
 
