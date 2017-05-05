@@ -23,6 +23,7 @@ usage()
   echo "  -v    Var histogram name     (e.g. -v nlep)"
   echo "  -p    Plot options           (e.g. -p plot1d)"
   echo "  -o    Plot output prefix     (e.g. -o Prefix)"
+  echo "  -L    Luminosity             (e.g. -L Prefix)"
   echo "  -e    Extra plot option      (e.g. -e '--autostack')"
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
   echo "Options without arguments:"
@@ -142,7 +143,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
-    if [ -z ${SCALE} ]; then SCALE=1; fi
+    if [ -z ${SCALE} ]; then SCALE=70; fi
     if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
@@ -165,7 +166,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
       if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
-      if [ -z ${SCALE} ]; then SCALE=1; fi
+      if [ -z ${SCALE} ]; then SCALE=70; fi
       if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
       TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
       CATEGORY=bkg

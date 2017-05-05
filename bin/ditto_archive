@@ -1,9 +1,9 @@
 #!/bin/bash
 
-mkdir -p archives/
+mkdir -p ~/cabinet/ditto_archives/
 
 stamp=$(date +%Y%m%d_%H%M%S)
-ARCHIVEPATH=archives/archives_${stamp}
+ARCHIVEPATH=~/cabinet/ditto_archives/archives_${stamp}
 mkdir -p ${ARCHIVEPATH}
 
 cp -r haddoutput $ARCHIVEPATH/
@@ -11,5 +11,7 @@ cp -r output $ARCHIVEPATH/
 cp -r plots $ARCHIVEPATH/
 cp -r $PACKAGEPATH $ARCHIVEPATH/
 cp -r $DITTOPATH $ARCHIVEPATH/ditto
+
+ditto_setup_check >> $ARCHIVEPATH/ditto_env.txt
 
 vim $ARCHIVEPATH/README.md
