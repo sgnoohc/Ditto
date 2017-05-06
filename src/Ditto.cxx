@@ -1316,6 +1316,43 @@ namespace Ditto
 
   }
 
+  namespace TreeUtil
+  {
+
+    TreeData treedata;
+
+    void initTreeData()
+    {
+      for (auto& v: treedata.mapint) v.second = 0;
+      for (auto& v: treedata.mapvfloat) v.second->clear();
+      for (auto& v: treedata.mapvint) v.second->clear();
+    }
+
+    void createIntBranch(TTree* tree, TString name) { treedata.mapint[name] = 0; tree->Branch(name, &(treedata.mapint[name]), name+"/I"); }
+    void createVIntBranch(TTree* tree, TString name) { treedata.mapvint[name] = new std::vector<int>(); tree->Branch(name, &(treedata.mapvint[name])); }
+    void createVFloatBranch(TTree* tree, TString name) { treedata.mapvfloat[name] = new std::vector<float>(); tree->Branch(name, &(treedata.mapvfloat[name])); }
+
+    void create4VecBranch(TTree* tree, TString name)
+    {
+      createIntBranch(tree, name+"_n");
+      createVFloatBranch(tree, name+"_pt");
+      createVFloatBranch(tree, name+"_eta");
+      createVFloatBranch(tree, name+"_phi");
+      createVFloatBranch(tree, name+"_mass");
+      createVFloatBranch(tree, name+"_energy");
+    }
+
+    void createTruthBranch(TTree* tree, TString name)
+    {
+      create4VecBranch(tree, name);
+      createVIntBranch(tree, name+"_pdgId");
+      createVIntBranch(tree, name+"_status");
+      createVIntBranch(tree, name+"_motherId");
+      createVIntBranch(tree, name+"_grandmotherId");
+    }
+
+  }
+
 }
 
 //eof

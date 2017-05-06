@@ -366,6 +366,33 @@ namespace Ditto
 
   }
 
+  namespace TreeUtil
+  {
+
+    typedef std::map<TString, int> mapInt;
+    typedef std::map<TString, std::vector<float>*> mapVFloat;
+    typedef std::map<TString, std::vector<int>*> mapVInt;
+
+    struct TreeData
+    {
+      mapInt mapint;
+      mapVFloat mapvfloat;
+      mapVInt mapvint;
+    };
+
+    extern TreeData treedata;
+
+    void initTreeData();
+
+    void createIntBranch(TTree* tree, TString name);
+    void createVIntBranch(TTree* tree, TString name);
+    void createVFloatBranch(TTree* tree, TString name);
+
+    void create4VecBranch(TTree* tree, TString name);
+    void createTruthBranch(TTree* tree, TString name);
+
+  }
+
 }
 
 // comparators
