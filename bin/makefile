@@ -21,6 +21,14 @@ SRCPATH         = src
 SRCS            = $(wildcard $(SRCPATH)/*.cxx)
 OBJS            = $(SRCS:.cxx=.o)
 
+# Core package SRCS and OBJS
+COREPATH        := $(shell echo $(COREPATH))
+ifdef COREPATH
+COREPATHINC     = -I$(COREPATH)/ -L$(COREPATH)
+#CORELIB         = $(COREPATH)/CMS3_CORE.so
+CORELIB         = -lCMS3_CORE
+endif
+
 # Ditto package path
 DITTOPATH       := $(shell echo $(DITTOPATH))
 DITTOPATHINC    = -I$(DITTOPATH)/src/
@@ -31,15 +39,15 @@ EXEC            := $(shell echo $(DITTOPATH)/bin/$(BINARYNAME))
 
 # Main target
 $(EXEC): $(OBJS) $(DITTOOBJ)
-	$(LD) $(LDFLAGS) $(GLIBS) $(OBJS) $(DITTOOBJ) -o $(EXEC)
+	$(LD) $(LDFLAGS) $(GLIBS) $(OBJS) $(DITTOOBJ) $(COREPATHINC) $(CORELIB) -o $(EXEC)
 
 # Ditto object
 $(DITTOOBJ): check-ditto
-	$(CXX) -c $(CXXFLAGS) $(DITTOPATHINC) $(DITTOPATH)/$(SRCPATH)/Ditto.cxx -o $@
+	$(CXX) -c $(CXXFLAGS) $(COREPATHINC) $(DITTOPATHINC) $(DITTOPATH)/$(SRCPATH)/Ditto.cxx -o $@
 
 # To create object files
 %.o: %.cxx
-	$(CXX) -c $(CXXFLAGS) $(DITTOPATHINC) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $(COREPATHINC) $(DITTOPATHINC) $< -o $@
 
 # Clean
 clean:

@@ -97,6 +97,8 @@ namespace Ditto
     extern TStopwatch my_timer;
     extern int bar_id;
     extern int print_rate;
+    extern bool isdata;
+    extern bool isfastsim;
 
     void loadFileIter();
     void loadTotalNEvents();
@@ -138,25 +140,47 @@ namespace Ditto
 
     struct Lepton
     {
-      int   charge;
-      int   pdgId;
+      // General
       float dxy;
       float dz;
-      int   tightId;
-      int   heepId;
-      float relIso03;
-      float relIso04;
-      float miniRelIso;
-      float relIsoAn04;
-      int   mcMatchId;
-      int   lostHits;
-      int   convVeto;
-      int   tightCharge;
-      float mva;
+      float ip3d;
+      float sip3d;
+      int   tightcharge;
+      int   charge;
+      int   pdgId;
+      int   id;
+      // Isolation related
       float ptRatio;
       float ptRel;
-      int   tightIdNoIso;
-      float sip3d;
+      float relIso03;
+      float relIso03DB;
+      float relIso03EA;
+      float miniRelIsoCMS3_EA;
+      float miniRelIsoCMS3_DB;
+      // Muon specifics
+      float muPOverP;
+      int   muPidPFMuon;
+      int   muType;
+      float muChi2OverNDof;
+      float muChi2LocalPosition;
+      float muTrkKink;
+      float muValidHitFraction;
+      float muSegmCompatibility;
+      // Electron specifics
+      float elEtaSC;
+      float elSigmaIEtaIEta_full5x5;
+      float elHOverE;
+      float elMva;
+      float elDEtaIn;
+      float elDPhiIn;
+      float elEpRatio;
+      int   elConvVeto;
+      int   elNmiss;
+      //float relIsoAn04;
+      //int   mcMatchId;
+      //int   lostHits;
+      //int   tightCharge;
+      //int   tightIdNoIso;
       TLorentzVector p4;
     };
     typedef std::vector<Lepton> Leptons;
@@ -189,6 +213,8 @@ namespace Ditto
     {
       int pdgId;
       int status;
+      int motherId;
+      int grandmotherId;
       TLorentzVector p4;
     };
     typedef std::vector<Truth> Truths;
@@ -233,6 +259,8 @@ namespace Ditto
     bool isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Lepton& lepton);
     bool isGoodJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
     bool isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
+    bool isGoodMediumBJet(ObjUtil::Jet& jet);
+    bool isGoodLooseBJet(ObjUtil::Jet& jet);
 
   }
 
@@ -247,6 +275,7 @@ namespace Ditto
     float METHTRatio(Analyses::AnalysisData& a);
     float MjjWmass(Analyses::AnalysisData& a);
     float Mjj(Analyses::AnalysisData& a);
+    float MljClosest(Analyses::AnalysisData& a);
     float Ptjj(Analyses::AnalysisData& a);
     float Mbb(Analyses::AnalysisData& a);
     float Ptbb(Analyses::AnalysisData& a);
@@ -257,6 +286,7 @@ namespace Ditto
     float DPhill(Analyses::AnalysisData& a);
     float DPhiLepMET(Analyses::AnalysisData& a);
     float MT(Analyses::AnalysisData& a);
+    float MTll(Analyses::AnalysisData& a);
     float Mtt(Analyses::AnalysisData& a);
     bool isOSEEChannel(Analyses::AnalysisData& a);
     bool isOSMMChannel(Analyses::AnalysisData& a);
@@ -348,6 +378,8 @@ namespace Ditto
     void fillMjj       (string prefix, Analyses::AnalysisData& a);
     void fillMjjW      (string prefix, Analyses::AnalysisData& a);
     void fillMT        (string prefix, Analyses::AnalysisData& a);
+    void fillMTll      (string prefix, Analyses::AnalysisData& a);
+    void fillMljClose  (string prefix, Analyses::AnalysisData& a);
     /// Di object kinematics (angular)
     void fillDPhill    (string prefix, Analyses::AnalysisData& a);
     void fillDEtajj    (string prefix, Analyses::AnalysisData& a);
@@ -388,8 +420,17 @@ namespace Ditto
     void createVIntBranch(TTree* tree, TString name);
     void createVFloatBranch(TTree* tree, TString name);
 
+    void setIntBranch(TString name, int val);
+    void pushbackVIntBranch(TString name, int val);
+    void pushbackVFloatBranch(TString name, float val);
+
     void create4VecBranch(TTree* tree, TString name);
     void createTruthBranch(TTree* tree, TString name);
+    void createLeptonBranch(TTree* tree, TString name);
+
+    void setTruths(Analyses::AnalysisData& ana_data, TString name);
+    void setLeptons(Analyses::AnalysisData& ana_data, TString name);
+    void pushback4Vec(TLorentzVector p4, TString name);
 
   }
 

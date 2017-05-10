@@ -354,6 +354,8 @@ namespace Ditto
     TObjArrayIter* file_iter               =   0;
     int bar_id                             =   0;
     int print_rate                         = 432;
+    bool isdata                            = false;
+    bool isfastsim                         = false;
     TStopwatch my_timer;
 
     TTree* getCurrentTTree()
@@ -536,7 +538,7 @@ namespace Ditto
       if (is_all_events_processed)
         PrintUtil::print(
             TString::Format("LoopUtil::isAllEventsProcessed() Processed all events! %d",
-              total_nevents_processed).Data()
+              total_nevents_processed-1).Data()
             );
       return is_all_events_processed;
     }
@@ -632,7 +634,7 @@ namespace Ditto
       {
 
         // sanity check
-        if (entry >= totalN+1) // +2 instead of +1 since, the loop might be a while loop where to check I got a bad event the index may go over 1.
+        if (entry >= totalN+10) // +2 instead of +1 since, the loop might be a while loop where to check I got a bad event the index may go over 1.
         {
           TString msg = TString::Format("%d %d", entry, totalN);
           PrintUtil::print(msg);
@@ -750,29 +752,50 @@ namespace Ditto
       std::sort(a.leptons.begin(), a.leptons.end(), comparator_pdgId<ObjUtil::Lepton>);
       // Leptons must be in one of following configurations:
       // +13, -11, -11
+      // +13, +11, +11
       // +13, +13, -11
-      // +11, -13, -13
+      // +13, +13, +11
+      // +11, +11, +11
       // +11, +11, -13
+      // +11, -13, -13
+      // -11, -11, -13
       if (
           !(
             (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) ||
+            (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId ==  11) ||
             (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId == -11) ||
+            (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId ==  11) ||
+            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId ==  11) ||
+            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) ||
             (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -13 && a.leptons[2].pdgId == -13) ||
-            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13)
+            (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11)
            )
          ) return;
-      // Mll > 20 GeV
-      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
-      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
-      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -13 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
-      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
-      // Z veto
-      if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( fabs( (a.leptons[1].p4 + a.leptons[2].p4).M() - 91.1876 ) < 15. ) ) return;
-      if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( fabs( (a.leptons[0].p4 + a.leptons[1].p4).M() - 91.1876 ) < 15. ) ) return;
+      ObjUtil::Leptons electrons;
+      ObjUtil::Leptons muons;
+      for (auto& lep : a.leptons)
+        if      (abs(lep.pdgId) == 11) electrons.push_back(lep);
+        else if (abs(lep.pdgId) == 13) muons.push_back(lep);
+      if (electrons.size() > 1)
+        for (unsigned iel = 0; iel < electrons.size() - 1; ++iel)
+          for (unsigned jel = iel + 1; jel < electrons.size(); ++ jel)
+            if ( !((electrons.at(iel).p4 + electrons.at(jel).p4).M() > 20. && fabs((electrons.at(iel).p4 + electrons.at(jel).p4).M()-91.1876) > 15. ) ) return;
+      if (muons.size() > 1)
+        for (unsigned imu = 0; imu < muons.size() - 1; ++imu)
+          for (unsigned jmu = imu + 1; jmu < muons.size(); ++ jmu)
+            if ( !((muons.at(imu).p4 + muons.at(jmu).p4).M() > 20. && fabs((muons.at(imu).p4 + muons.at(jmu).p4).M()-91.1876) > 15. ) ) return;
+      //// Mll > 20.
+      //if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
+      //if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId ==  13 && a.leptons[2].pdgId == -11) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
+      //if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId == -13 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[1].p4 + a.leptons[2].p4).M() > 20.) ) return;
+      //if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( (a.leptons[0].p4 + a.leptons[1].p4).M() > 20.) ) return;
+      //// Z veto
+      //if (a.leptons[0].pdgId ==  13 && a.leptons[1].pdgId == -11 && a.leptons[2].pdgId == -11) if ( !( fabs( (a.leptons[1].p4 + a.leptons[2].p4).M() - 91.1876 ) < 15. ) ) return;
+      //if (a.leptons[0].pdgId ==  11 && a.leptons[1].pdgId ==  11 && a.leptons[2].pdgId == -13) if ( !( fabs( (a.leptons[0].p4 + a.leptons[1].p4).M() - 91.1876 ) < 15. ) ) return;
       // Jet veto
       if ( !(a.jets.size() < 2) ) return;
       // B-Jet veto
-      if ( !(a.bjets.size() == 0) ) return;
+      //if ( !(a.bjets.size() == 0) ) return;
       // Angle between trilepton and MET
       if ( !( fabs((a.leptons[0].p4 + a.leptons[1].p4 + a.leptons[2].p4).DeltaPhi(a.met.p4)) > 2.5 ) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
@@ -810,9 +833,15 @@ namespace Ditto
     void SM_WWW_SSmm(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 2) ) return;
+      if ( !(a.jets.size() >= 2) ) return;
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 169) ) return;
       if ( !(a.leptons[0].p4.Pt() > 30.) ) return;
       if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
+      if ( !(a.jets[0].p4.Pt() > 30.) ) return;
+      if ( !(a.jets[1].p4.Pt() > 20.) ) return;
+      if ( !(fabs(a.jets[0].p4.Eta()) < 2.5) ) return;
+      if ( !(fabs(a.jets[1].p4.Eta()) < 2.5) ) return;
+      if ( !(VarUtil::DEtajj(a) < 1.5) ) return;
       if ( !(VarUtil::Mjj(a) < 105.) ) return;
       if ( !(VarUtil::Mjj(a) > 65.) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
@@ -975,6 +1004,22 @@ namespace Ditto
       return true;
     }
 
+    bool isGoodMediumBJet(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 25.        ) ) return false;
+      if ( !(fabs(jet.p4.Eta()) < 2.4 ) ) return false;
+      if ( !(jet.btagCSV > 0.8484     ) ) return false;
+      return true;
+    }
+
+    bool isGoodLooseBJet(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 25.        ) ) return false;
+      if ( !(fabs(jet.p4.Eta()) < 2.4 ) ) return false;
+      if ( !(jet.btagCSV > 0.5426     ) ) return false;
+      return true;
+    }
+
     //______________________________________________________________________________________
     void SUSY_VBF_Soft1l(AnalysisData& a)
     {
@@ -1027,6 +1072,13 @@ namespace Ditto
 
     }
 
+    float MT(TLorentzVector p4, TLorentzVector metp4)
+    {
+      /// Compute MT
+      float mt = sqrt(2 * p4.Pt() * ( 1 - cos(metp4.DeltaPhi(p4) ) ));
+      return mt;
+    }
+
     float MTNthLep(Analyses::AnalysisData& a, int lep_idx)
     {
       /// Compute MT with the Nth lepton provided by the lepton index argument
@@ -1064,6 +1116,26 @@ namespace Ditto
       if (a.jets.size() < 2)
         return -999;
       return (a.jets[0].p4+a.jets[1].p4).M();
+    }
+
+    float MljClosest(Analyses::AnalysisData& a)
+    {
+      // If less than 2 jets just skip
+      if (a.jets.size() < 1)
+        return -999;
+      if (a.leptons.size() < 1)
+        return -999;
+      TLorentzVector jetp4;
+      TLorentzVector lepp4;
+      float dr = 999;
+      for (auto& jet: a.jets)
+        for (auto& lep: a.leptons)
+          if (dr > jet.p4.DeltaR(lep.p4))
+          {
+            jetp4 = jet.p4;
+            lepp4 = lep.p4;
+          }
+      return (jetp4+lepp4).M();
     }
 
     float Ptjj(Analyses::AnalysisData& a)
@@ -1143,6 +1215,14 @@ namespace Ditto
       if (a.leptons.size() == 0)
         return -999;
       return MTNthLep(a, 0);
+    }
+
+    float MTll(Analyses::AnalysisData& a)
+    {
+      if (a.leptons.size() < 2)
+        return -999;
+      TLorentzVector dilep = a.leptons[0].p4 + a.leptons[1].p4;
+      return MT(dilep, a.met.p4);
     }
 
     float Mtt(Analyses::AnalysisData& a)
@@ -1250,12 +1330,14 @@ namespace Ditto
       fillBJetPhi    (prefix, a);
       fillMjjW       (prefix, a);
       fillMll        (prefix, a);
+      fillMljClose   (prefix, a);
       fillVBFMjj     (prefix, a);
       fillVBFMbb     (prefix, a);
       fillMjj        (prefix, a);
       fillPtjj       (prefix, a);
       fillPtbb       (prefix, a);
       fillMT         (prefix, a);
+      fillMTll       (prefix, a);
       fillDPhill     (prefix, a);
       fillDEtajj     (prefix, a);
       fillDEtabb     (prefix, a);
@@ -1294,6 +1376,8 @@ namespace Ditto
     void fillMjj       (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "M_{jj,close-to-W} [GeV]" , 180 , 0. , 180.   , prefix); }
     void fillMjjW      (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "M_{jj} [GeV]" , 180 , 0. , 180.   , prefix); }
     void fillMT        (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "M_{T} [GeV]" , 180 , 0. , 180.   , prefix); }
+    void fillMTll      (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mtll"      , VarUtil::MTll(a)       , a.wgt , a.hist_db , "M_{T,ll} [GeV]" , 180 , 0. , 400.   , prefix); }
+    void fillMljClose  (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 1) if (a.leptons.size() >= 1)PlotUtil::plot1D("mljclose"  , VarUtil::MljClosest(a)   , a.wgt , a.hist_db , "M_{lj,close} [GeV]" , 180 , 0. , 400.   , prefix); }
     /// Di object kinematics (angular)
     void fillDPhill    (string prefix , Analyses::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "#Delta#phi_{#ell#ell}" , 180 , 0. , 3.1416 , prefix); }
     void fillDEtajj    (string prefix , Analyses::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "#Delta#eta_{jj}" , 180 , 0. , 9.     , prefix); }
@@ -1302,10 +1386,10 @@ namespace Ditto
     /// Single object ID-related
     void fillLepDz      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
     void fillLepDxy     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                , a.wgt , a.hist_db , "" , 180 , 0. , 0.5, prefix); }
-    void fillLepSip3d   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                              , a.wgt , a.hist_db , "" , 180 , 0. , 1  , prefix); }
+    void fillLepSip3d   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                              , a.wgt , a.hist_db , "" , 180 , 0. , 10 , prefix); }
     void fillLepRelIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                           , a.wgt , a.hist_db , "" , 180 , 0. , 0.2, prefix); }
     void fillLepAbsIso03(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 5. , prefix); }
-    void fillLepID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].tightId                            , a.wgt , a.hist_db , "" , 180 , 0. , 5  , prefix); }
+    void fillLepID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].id                                 , a.wgt , a.hist_db , "" , 180 , 0. , 5  , prefix); }
     void fillJetID      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                 , a.wgt , a.hist_db , "" ,   2 , 0. , 30 , prefix); }
 
     void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin)
@@ -1332,6 +1416,10 @@ namespace Ditto
     void createVIntBranch(TTree* tree, TString name) { treedata.mapvint[name] = new std::vector<int>(); tree->Branch(name, &(treedata.mapvint[name])); }
     void createVFloatBranch(TTree* tree, TString name) { treedata.mapvfloat[name] = new std::vector<float>(); tree->Branch(name, &(treedata.mapvfloat[name])); }
 
+    void setIntBranch(TString name, int val) { treedata.mapint[name] = val; }
+    void pushbackVIntBranch(TString name, int val) { (*(treedata.mapvint[name])).push_back(val); }
+    void pushbackVFloatBranch(TString name, float val) { (*(treedata.mapvfloat[name])).push_back(val); }
+
     void create4VecBranch(TTree* tree, TString name)
     {
       createIntBranch(tree, name+"_n");
@@ -1349,6 +1437,108 @@ namespace Ditto
       createVIntBranch(tree, name+"_status");
       createVIntBranch(tree, name+"_motherId");
       createVIntBranch(tree, name+"_grandmotherId");
+    }
+
+    void createLeptonBranch(TTree* tree, TString name)
+    {
+      create4VecBranch  (tree, name);
+      createVFloatBranch(tree, name+"_dxy");
+      createVFloatBranch(tree, name+"_dz");
+      createVFloatBranch(tree, name+"_ip3d");
+      createVFloatBranch(tree, name+"_sip3d");
+      createVIntBranch  (tree, name+"_tightcharge");
+      createVIntBranch  (tree, name+"_charge");
+      createVIntBranch  (tree, name+"_pdgId");
+      createVIntBranch  (tree, name+"_id");
+      createVFloatBranch(tree, name+"_ptRatio");
+      createVFloatBranch(tree, name+"_ptRel");
+      createVFloatBranch(tree, name+"_relIso03");
+      createVFloatBranch(tree, name+"_relIso03DB");
+      createVFloatBranch(tree, name+"_relIso03EA");
+      createVFloatBranch(tree, name+"_miniRelIsoCMS3_EA");
+      createVFloatBranch(tree, name+"_miniRelIsoCMS3_DB");
+      // Muon specifics
+      createVFloatBranch(tree, name+"_muPOverP");
+      createVIntBranch  (tree, name+"_muPidPFMuon");
+      createVIntBranch  (tree, name+"_muType");
+      createVFloatBranch(tree, name+"_muChi2OverNDof");
+      createVFloatBranch(tree, name+"_muChi2LocalPosition");
+      createVFloatBranch(tree, name+"_muTrkKink");
+      createVFloatBranch(tree, name+"_muValidHitFraction");
+      createVFloatBranch(tree, name+"_muSegmCompatibility");
+      // Electron specifics
+      createVFloatBranch(tree, name+"_elEtaSC");
+      createVFloatBranch(tree, name+"_elSigmaIEtaIEta_full5x5");
+      createVFloatBranch(tree, name+"_elHOverE");
+      createVFloatBranch(tree, name+"_elMva");
+      createVFloatBranch(tree, name+"_elDEtaIn");
+      createVFloatBranch(tree, name+"_elDPhiIn");
+      createVFloatBranch(tree, name+"_elEpRatio");
+      createVIntBranch  (tree, name+"_elConvVeto");
+      createVIntBranch  (tree, name+"_elNmiss");
+    }
+
+    void setTruths(Analyses::AnalysisData& ana_data, TString name)
+    {
+      for (auto& truth : ana_data.truths)
+      {
+        pushback4Vec(truth.p4, name);
+        pushbackVIntBranch(name+"_pdgId", truth.pdgId);
+        pushbackVIntBranch(name+"_status", truth.status);
+        pushbackVIntBranch(name+"_motherId", truth.motherId);
+        pushbackVIntBranch(name+"_grandmotherId", truth.grandmotherId);
+      }
+    }
+
+    void setLeptons(Analyses::AnalysisData& ana_data, TString name)
+    {
+      for (auto& lepton : ana_data.leptons)
+      {
+        pushback4Vec(lepton.p4, name);
+        pushbackVFloatBranch(name+"_dxy", lepton.dxy);
+        pushbackVFloatBranch(name+"_dz", lepton.dz);
+        pushbackVFloatBranch(name+"_ip3d", lepton.ip3d);
+        pushbackVFloatBranch(name+"_sip3d", lepton.sip3d);
+        pushbackVIntBranch  (name+"_tightcharge", lepton.tightcharge);
+        pushbackVIntBranch  (name+"_charge", lepton.charge);
+        pushbackVIntBranch  (name+"_pdgId", lepton.pdgId);
+        pushbackVIntBranch  (name+"_id", lepton.id);
+        pushbackVFloatBranch(name+"_ptRatio", lepton.ptRatio);
+        pushbackVFloatBranch(name+"_ptRel", lepton.ptRel);
+        pushbackVFloatBranch(name+"_relIso03", lepton.relIso03);
+        pushbackVFloatBranch(name+"_relIso03DB", lepton.relIso03DB);
+        pushbackVFloatBranch(name+"_relIso03EA", lepton.relIso03EA);
+        pushbackVFloatBranch(name+"_miniRelIsoCMS3_EA", lepton.miniRelIsoCMS3_EA);
+        pushbackVFloatBranch(name+"_miniRelIsoCMS3_DB", lepton.miniRelIsoCMS3_DB);
+        // Muon specifics
+        pushbackVFloatBranch(name+"_muPOverP", lepton.muPOverP);
+        pushbackVIntBranch  (name+"_muPidPFMuon", lepton.muPidPFMuon);
+        pushbackVIntBranch  (name+"_muType", lepton.muType);
+        pushbackVFloatBranch(name+"_muChi2OverNDof", lepton.muChi2OverNDof);
+        pushbackVFloatBranch(name+"_muChi2LocalPosition", lepton.muChi2LocalPosition);
+        pushbackVFloatBranch(name+"_muTrkKink", lepton.muTrkKink);
+        pushbackVFloatBranch(name+"_muValidHitFraction", lepton.muValidHitFraction);
+        pushbackVFloatBranch(name+"_muSegmCompatibility", lepton.muSegmCompatibility);
+        // Electron specifics
+        pushbackVFloatBranch(name+"_elEtaSC", lepton.elEtaSC);
+        pushbackVFloatBranch(name+"_elSigmaIEtaIEta_full5x5", lepton.elSigmaIEtaIEta_full5x5);
+        pushbackVFloatBranch(name+"_elHOverE", lepton.elHOverE);
+        pushbackVFloatBranch(name+"_elMva", lepton.elMva);
+        pushbackVFloatBranch(name+"_elDEtaIn", lepton.elDEtaIn);
+        pushbackVFloatBranch(name+"_elDPhiIn", lepton.elDPhiIn);
+        pushbackVFloatBranch(name+"_elEpRatio", lepton.elEpRatio);
+        pushbackVIntBranch  (name+"_elConvVeto", lepton.elConvVeto);
+        pushbackVIntBranch  (name+"_elNmiss", lepton.elNmiss);
+      }
+    }
+
+    void pushback4Vec(TLorentzVector p4, TString name)
+    {
+      pushbackVFloatBranch(name+"_pt", p4.Pt());
+      pushbackVFloatBranch(name+"_eta", p4.Eta());
+      pushbackVFloatBranch(name+"_phi", p4.Phi());
+      pushbackVFloatBranch(name+"_mass", p4.M());
+      pushbackVFloatBranch(name+"_energy", p4.E());
     }
 
   }
