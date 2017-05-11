@@ -5,7 +5,7 @@
 
 #include "TEMPLATETREENAMELooper.h"
 
-TEMPLATETREENAME mytree;
+//TEMPLATETREENAME mytree;
 Analyses::AnalysisData ana_data;
 TString output_name;
 
@@ -98,9 +98,9 @@ void processTEMPLATETREENAMEEvent()
 void getObjects()
 {
   /// Get objects
-  //ana_data.leptons = getLeptons(mytree);
-  //ana_data.jets    = getJets(mytree);
-  //ana_data.met     = getMET(mytree);
+  //ana_data.leptons = getLeptons(/*mytree*/);
+  //ana_data.jets    = getJets(/*mytree*/);
+  //ana_data.met     = getMET(/*mytree*/);
   //ana_data.wgt     = mytree.evt_scale1fb;
 }
 

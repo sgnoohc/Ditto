@@ -17,7 +17,7 @@ usage()
 {
   echo "Usage:"
   echo ""
-  echo "   $0 TREECLASSNAME TREEINSTANCENAMEINROOTFILE"
+  echo "   $0 ROOTFILE TREECLASSNAME TREEINSTANCENAMEINROOTFILE"
   echo ""
   echo "   e.g. MT2Tree mt2"
   exit
@@ -26,9 +26,11 @@ usage()
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
 if [ -z $1 ]; then usage; fi
 if [ -z $2 ]; then usage; fi
+if [ -z $3 ]; then usage; fi
 
-TREECLASSNAME=$1
-TREECLASSNAMESHORT=$2
+ROOTFILE=$1
+TREECLASSNAME=$2
+TREECLASSNAMESHORT=$3
 
 if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
   $ERROR "A looper already exists! exiting..."
@@ -39,6 +41,11 @@ if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
   $ERROR "A looper already exists! exiting..."
   exit
 fi
+
+$MSG "generating tree class using make_classfiles.py in ${PACKAGEPATH}/src"
+mkdir -p ${PACKAGEPATH}/src/
+cd ${PACKAGEPATH}/src/
+$DITTOPATH/python/make_classfiles.py -t $TREECLASSNAMESHORT -o mytree -c $TREECLASSNAME $ROOTFILE
 
 $MSG "copying template tree loopers to the package directory..."
 

@@ -24,7 +24,7 @@
 
 using namespace Ditto;
 
-extern TEMPLATETREENAME mytree;
+//extern TEMPLATETREENAME mytree;
 extern Analyses::AnalysisData ana_data;
 extern TString output_name;
 

@@ -47,15 +47,18 @@ if __name__ == "__main__":
         tree = f.Get(treename)
         fs.append(f)
         trees.append(tree)
-        temp_aliases = trees[-1].GetListOfAliases()
+        #temp_aliases = trees[-1].GetListOfAliases()
+        temp_aliases = trees[-1].GetListOfBranches()
         temp_branches = trees[-1].GetListOfBranches()
+        print temp_branches
 
         for ala in temp_aliases:
             alias = ala.GetName()
             if alias not in names:
                 names.add(alias)
                 aliases.Add(ala)
-                branches.Add(trees[-1].GetBranch(trees[-1].GetAlias(alias)))
+                #branches.Add(trees[-1].GetBranch(trees[-1].GetAlias(alias)))
+                branches.Add(trees[-1].GetBranch(alias))
             if "hlt_trigNames" in alias: haveHLTInfo = True
             if "hlt8e29_trigNames" in alias: haveHLT8E29Info = True
             if "l1_trigNames" in alias: haveL1Info = True

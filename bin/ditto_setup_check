@@ -19,10 +19,14 @@ error()
   $UL "Please run, source $DIR/setup_ditto.sh PACKAGEPATH first!"
   echo ""
   echo "==================================================="
+  echo SCRAM_ARCH=$SCRAM_ARCH
+  echo CMSSWVERSION=$CMSSWVERSION
   echo PACKAGENAME=$PACKAGENAME
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH
   echo DITTOPATH=$DITTOPATH
+  echo COREPATH=$COREPATH
+  echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
   echo "==================================================="
   echo ""
   echo ""
@@ -32,10 +36,14 @@ error()
 if [ "x${DITTOPATH}" == "x" ]; then error; fi
 if [ "x${PACKAGENAME}" == "x" ]; then error; fi
 if [ "x${PACKAGEPATH}" == "x" ]; then error; fi
+if [ "x${SCRAM_ARCH}" == "x" ]; then error; fi
+if [ "x${CMSSWVERSION}" == "x" ]; then error; fi
 
 if [ -z $1 ]; then
   $SUCCESS "Ditto environment is set with the following setting"
   echo "==================================================="
+  echo SCRAM_ARCH=$SCRAM_ARCH
+  echo CMSSWVERSION=$CMSSWVERSION
   echo PACKAGENAME=$PACKAGENAME
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH

@@ -434,6 +434,7 @@ namespace Ditto
     void createVFloatBranch(TTree* tree, TString name);
 
     void setIntBranch(TString name, int val);
+    void setFloatBranch(TString name, float val);
     void pushbackVIntBranch(TString name, int val);
     void pushbackVFloatBranch(TString name, float val);
 
