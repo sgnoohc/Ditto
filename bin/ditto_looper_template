@@ -17,9 +17,9 @@ usage()
 {
   echo "Usage:"
   echo ""
-  echo "   $0 ROOTFILE TREECLASSNAME TREEINSTANCENAMEINROOTFILE"
+  echo "   $0 ROOTFILE TREECLASSNAME TREEINSTANCENAMEINROOTFILE [FORCE]"
   echo ""
-  echo "   e.g. MT2Tree mt2"
+  echo "   e.g. rootfile.root MT2Tree mt2"
   exit
 }
 
@@ -31,21 +31,25 @@ if [ -z $3 ]; then usage; fi
 ROOTFILE=$1
 TREECLASSNAME=$2
 TREECLASSNAMESHORT=$3
+FORCE=$4
 
-if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
-  $ERROR "A looper already exists! exiting..."
-  exit
-fi
+if [ -z ${FORCE} ]; then
+  if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
+    $ERROR "A looper already exists! exiting..."
+    exit
+  fi
 
-if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
-  $ERROR "A looper already exists! exiting..."
-  exit
+  if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
+    $ERROR "A looper already exists! exiting..."
+    exit
+  fi
 fi
 
 $MSG "generating tree class using make_classfiles.py in ${PACKAGEPATH}/src"
 mkdir -p ${PACKAGEPATH}/src/
 cd ${PACKAGEPATH}/src/
 $DITTOPATH/python/make_classfiles.py -t $TREECLASSNAMESHORT -o mytree -c $TREECLASSNAME $ROOTFILE
+mv ${TREECLASSNAME}.cc ${TREECLASSNAME}.cxx
 
 $MSG "copying template tree loopers to the package directory..."
 
