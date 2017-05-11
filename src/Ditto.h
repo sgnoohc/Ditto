@@ -193,10 +193,16 @@ namespace Ditto
       float mcPt;
       int   mcFlavour;
       int   hadronFlavour;
-      float qgl;
       float area;
+      float undoJEC;
+      float jecCorr;
+      float jecCorrUp;
+      float jecCorrDn;
+      float chf;
       int   id;
       int   puId;
+      int   puIdpuppi;
+      int   FSveto;
       TLorentzVector p4;
     };
     typedef std::vector<Jet> Jets;
@@ -204,6 +210,8 @@ namespace Ditto
     struct MET
     {
       TLorentzVector p4;
+      TLorentzVector p4CorrUp;
+      TLorentzVector p4CorrDn;
     };
     /// I don't expect to use the above very often.
     /// I only plan to use this when there are multiple flavors of MET
@@ -229,6 +237,7 @@ namespace Ditto
       ObjUtil::Jets jets;
       ObjUtil::Jets bjets;
       ObjUtil::MET met;
+      //ObjUtil::METs mets;
       ObjUtil::Truths truths;
       PlotUtil::Hist_DB hist_db;
       double wgt;
@@ -238,7 +247,7 @@ namespace Ditto
     void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj);
 
     /// SM physics
-    void SM_WWW_3l0SFOS(AnalysisData& a);
+    bool SM_WWW_3l0SFOS(AnalysisData& a);
     void SM_WWW_3l1SFOS(AnalysisData& a);
     void SM_WWW_3l2SFOS(AnalysisData& a);
     void SM_WWW_SSee(AnalysisData& a);
@@ -378,6 +387,7 @@ namespace Ditto
     void fillMjj       (string prefix, Analyses::AnalysisData& a);
     void fillMjjW      (string prefix, Analyses::AnalysisData& a);
     void fillMT        (string prefix, Analyses::AnalysisData& a);
+    void fillHT        (string prefix, Analyses::AnalysisData& a);
     void fillMTll      (string prefix, Analyses::AnalysisData& a);
     void fillMljClose  (string prefix, Analyses::AnalysisData& a);
     /// Di object kinematics (angular)
@@ -402,12 +412,14 @@ namespace Ditto
   {
 
     typedef std::map<TString, int> mapInt;
+    typedef std::map<TString, float> mapFloat;
     typedef std::map<TString, std::vector<float>*> mapVFloat;
     typedef std::map<TString, std::vector<int>*> mapVInt;
 
     struct TreeData
     {
       mapInt mapint;
+      mapFloat mapfloat;
       mapVFloat mapvfloat;
       mapVInt mapvint;
     };
@@ -417,6 +429,7 @@ namespace Ditto
     void initTreeData();
 
     void createIntBranch(TTree* tree, TString name);
+    void createFloatBranch(TTree* tree, TString name);
     void createVIntBranch(TTree* tree, TString name);
     void createVFloatBranch(TTree* tree, TString name);
 
@@ -427,9 +440,13 @@ namespace Ditto
     void create4VecBranch(TTree* tree, TString name);
     void createTruthBranch(TTree* tree, TString name);
     void createLeptonBranch(TTree* tree, TString name);
+    void createJetBranch(TTree* tree, TString name);
+    void createMETBranch(TTree* tree, TString name);
 
     void setTruths(Analyses::AnalysisData& ana_data, TString name);
     void setLeptons(Analyses::AnalysisData& ana_data, TString name);
+    void setJets(Analyses::AnalysisData& ana_data, TString name);
+    void setMET(Analyses::AnalysisData& ana_data, TString name);
     void pushback4Vec(TLorentzVector p4, TString name);
 
   }
