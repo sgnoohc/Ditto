@@ -80,7 +80,7 @@ void initTEMPLATETREENAME()
 //______________________________________________________________________________________
 void loadTEMPLATETREENAMEEvent()
 {
-  mytree.LoadTree(LoopUtil::getCurrentTTreeEventIndex());
+  //mytree.LoadTree(LoopUtil::getCurrentTTreeEventIndex());
   mytree.GetEntry(LoopUtil::getCurrentTTreeEventIndex());
 }
 
@@ -108,7 +108,7 @@ void getObjects()
 void afterLoop()
 {
   // Save histograms
-  PlotUtil::savePlots(ana_data.hist_db, output_name.Data());
+  //PlotUtil::savePlots(ana_data.hist_db, output_name.Data());
 
   // Fun exit
   PrintUtil::exit();
