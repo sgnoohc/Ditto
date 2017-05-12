@@ -48,6 +48,7 @@ ObjUtil::Leptons getLeptons(/*TREECLASSNAME& mytree*/)
     lepton.elEpRatio = mytree.lep_elEpRatio().at(ilep);
     lepton.elConvVeto = mytree.lep_elConvVeto().at(ilep);
     lepton.elNmiss = mytree.lep_elNmiss().at(ilep);
+    leptons.push_back(lepton);
   }
   return leptons;
 }
@@ -55,25 +56,26 @@ ObjUtil::Leptons getLeptons(/*TREECLASSNAME& mytree*/)
 ObjUtil::Jets getJets(/*TREECLASSNAME& mytree*/)
 {
   ObjUtil::Jets jets;
-  for (int ilep = 0; ilep < mytree.lep_n(); ++ilep)
+  for (int ijet = 0; ijet < mytree.jet_n(); ++ijet)
   {
     ObjUtil::Jet jet;
-    jet.p4.SetPtEtaPhiM(mytree.jet_pt().at(ilep),mytree.jet_eta().at(ilep),mytree.jet_phi().at(ilep),mytree.jet_mass().at(ilep));
-    jet.btagCSV = mytree.jet_btagCSV().at(ilep);
-    jet.rawPt = mytree.jet_rawPt().at(ilep);
-    jet.mcPt = mytree.jet_mcPt().at(ilep);
-    jet.mcFlavour = mytree.jet_mcFlavour().at(ilep);
-    jet.hadronFlavour = mytree.jet_hadronFlavour().at(ilep);
-    jet.area = mytree.jet_area().at(ilep);
-    jet.undoJEC = mytree.jet_undoJEC().at(ilep);
-    jet.jecCorr = mytree.jet_jecCorr().at(ilep);
-    jet.jecCorrUp = mytree.jet_jecCorrUp().at(ilep);
-    jet.jecCorrDn = mytree.jet_jecCorrDn().at(ilep);
-    jet.chf = mytree.jet_chf().at(ilep);
-    jet.id = mytree.jet_id().at(ilep);
-    jet.puId = mytree.jet_puId().at(ilep);
-    jet.puIdpuppi = mytree.jet_puIdpuppi().at(ilep);
-    jet.FSveto = mytree.jet_FSveto().at(ilep);
+    jet.p4.SetPtEtaPhiM(mytree.jet_pt().at(ijet),mytree.jet_eta().at(ijet),mytree.jet_phi().at(ijet),mytree.jet_mass().at(ijet));
+    jet.btagCSV = mytree.jet_btagCSV().at(ijet);
+    jet.rawPt = mytree.jet_rawPt().at(ijet);
+    jet.mcPt = mytree.jet_mcPt().at(ijet);
+    jet.mcFlavour = mytree.jet_mcFlavour().at(ijet);
+    jet.hadronFlavour = mytree.jet_hadronFlavour().at(ijet);
+    jet.area = mytree.jet_area().at(ijet);
+    jet.undoJEC = mytree.jet_undoJEC().at(ijet);
+    jet.jecCorr = mytree.jet_jecCorr().at(ijet);
+    jet.jecCorrUp = mytree.jet_jecCorrUp().at(ijet);
+    jet.jecCorrDn = mytree.jet_jecCorrDn().at(ijet);
+    jet.chf = mytree.jet_chf().at(ijet);
+    jet.id = mytree.jet_id().at(ijet);
+    jet.puId = mytree.jet_puId().at(ijet);
+    jet.puIdpuppi = mytree.jet_puIdpuppi().at(ijet);
+    jet.FSveto = mytree.jet_FSveto().at(ijet);
+    jets.push_back(jet);
   }
   return jets;
 }

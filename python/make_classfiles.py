@@ -50,7 +50,6 @@ if __name__ == "__main__":
         #temp_aliases = trees[-1].GetListOfAliases()
         temp_aliases = trees[-1].GetListOfBranches()
         temp_branches = trees[-1].GetListOfBranches()
-        print temp_branches
 
         for ala in temp_aliases:
             alias = ala.GetName()
@@ -172,7 +171,8 @@ if __name__ == "__main__":
                 }
 
     if aliases:
-        have_aliases = True
+        #have_aliases = True
+        have_aliases = False
         for iala, ala in enumerate(aliases):
             alias = ala.GetName()
             for tree in trees:

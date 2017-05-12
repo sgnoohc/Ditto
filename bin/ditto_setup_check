@@ -25,7 +25,7 @@ error()
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH
   echo DITTOPATH=$DITTOPATH
-  echo COREPATH=$COREPATH
+  echo "(optional)" COREPATH=$COREPATH
   echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
   echo "==================================================="
   echo ""
@@ -48,7 +48,7 @@ if [ -z $1 ]; then
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH
   echo DITTOPATH=$DITTOPATH
-  echo COREPATH=$COREPATH
+  echo "(optional)" COREPATH=$COREPATH
   echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
   echo "==================================================="
 fi
