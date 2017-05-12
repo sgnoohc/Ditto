@@ -1,0 +1,32 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+ERROR=echo
+UL=echo
+SUCCESS=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  UL=e_underline
+  SUCCESS=e_success
+fi
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  $ERROR "ERROR: This setup command must be sourced!"
+  exit
+fi
+
+if [ -z $1 ]; then
+  $ERROR "Please provide the path to the CORE packages"
+  $UL "If you haven't you can check the code out from https://github.com/cmstas/CORE"
+  return
+fi
+
+COREPATH=$('cd' $(dirname $1); pwd)/$(basename $1)
+
+export COREPATH=$COREPATH
+export LD_LIBRARY_PATH=$COREPATH/:$LD_LIBRARY_PATH
+
+$DIR/ditto_setup_check
