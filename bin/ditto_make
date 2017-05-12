@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
 cd $PACKAGEPATH
-cp $DITTOPATH/bin/makefile .
+cp $DITTOPATH/template/makefile .
 sleep 1
 make -j4
 rm makefile
