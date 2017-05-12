@@ -166,6 +166,10 @@ namespace Ditto
       float muTrkKink;
       float muValidHitFraction;
       float muSegmCompatibility;
+      int   muGFitValidSTAHits;
+      int   muNMatchedStations;
+      int   muValidPixelHits;
+      int   muNLayers;
       // Electron specifics
       float elEtaSC;
       float elSigmaIEtaIEta_full5x5;
@@ -265,11 +269,23 @@ namespace Ditto
 
     /// Object selections
     void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
+    void selectObjects_SM_WWW_SS(AnalysisData& a);
+
+    /// Single object selections
     bool isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Lepton& lepton);
     bool isGoodJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
     bool isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
     bool isGoodMediumBJet(ObjUtil::Jet& jet);
     bool isGoodLooseBJet(ObjUtil::Jet& jet);
+    bool isElectronPOGMVAIDCut(ObjUtil::Lepton& lepton,
+                            float barrel_highpt_mvacut    , float barrel_lowpt_mvacut    , float barrel_lowerpt_mvacut    ,
+                            float transition_highpt_mvacut, float transition_lowpt_mvacut, float transition_lowerpt_mvacut,
+                            float endcap_highpt_mvacut    , float endcap_lowpt_mvacut    , float endcap_lowerpt_mvacut);
+    bool isMediumMuonPOG(ObjUtil::Lepton& lepton);
+    bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton);
+    bool isGoodLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
 
   }
 
@@ -398,6 +414,7 @@ namespace Ditto
     /// Single object ID-related
     void fillLepDz      (string prefix, Analyses::AnalysisData& a);
     void fillLepDxy     (string prefix, Analyses::AnalysisData& a);
+    void fillLepIp3d    (string prefix, Analyses::AnalysisData& a);
     void fillLepSip3d   (string prefix, Analyses::AnalysisData& a);
     void fillLepRelIso03(string prefix, Analyses::AnalysisData& a);
     void fillLepAbsIso03(string prefix, Analyses::AnalysisData& a);
