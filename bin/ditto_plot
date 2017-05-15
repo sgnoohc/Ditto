@@ -141,17 +141,21 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
   for item in $@; do
     if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
     CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
-    NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
+    NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
+    COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<$item)
     if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
     if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
     if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
     if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
-    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
-    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
+    #if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
+    #if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
+    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
     if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
     if [ -z ${SCALE} ]; then SCALE=70; fi
+    if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
     if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
@@ -164,17 +168,21 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     for item in $@; do
       if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
       CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
-      NAME=$(grep -Po $CATEGORY'_\K[^.]+' <<<$item)
+      NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
+      COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<$item)
       if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
       if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
       if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
       if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
-      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
-      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
+      #if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
+      #if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
+      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
+      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
       if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
       if [ -z ${SCALE} ]; then SCALE=70; fi
+      if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
       if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
       TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
       CATEGORY=bkg

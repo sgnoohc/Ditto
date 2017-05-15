@@ -138,7 +138,14 @@ namespace Ditto
   namespace ObjUtil
   {
 
-    struct Lepton
+    struct Particle
+    {
+      TLorentzVector p4;
+      TLorentzVector p4CorrUp;
+      TLorentzVector p4CorrDn;
+    };
+
+    struct Lepton : Particle
     {
       // General
       float dxy;
@@ -164,7 +171,8 @@ namespace Ditto
       float muChi2OverNDof;
       float muChi2LocalPosition;
       float muTrkKink;
-      float muValidHitFraction;
+      //float muValidHitFraction;
+      double muValidHitFraction;
       float muSegmCompatibility;
       int   muGFitValidSTAHits;
       int   muNMatchedStations;
@@ -185,13 +193,52 @@ namespace Ditto
       //int   lostHits;
       //int   tightCharge;
       //int   tightIdNoIso;
-      TLorentzVector p4;
+      void print() {
+        std::cout << "Lepton::print()  dxy = " << dxy << std::endl;;
+        std::cout << "Lepton::print()  dz = " << dz << std::endl;;
+        std::cout << "Lepton::print()  ip3d = " << ip3d << std::endl;;
+        std::cout << "Lepton::print()  sip3d = " << sip3d << std::endl;;
+        std::cout << "Lepton::print()  tightcharge = " << tightcharge << std::endl;;
+        std::cout << "Lepton::print()  charge = " << charge << std::endl;;
+        std::cout << "Lepton::print()  pdgId = " << pdgId << std::endl;;
+        std::cout << "Lepton::print()  id = " << id << std::endl;;
+        // Isolation related
+        std::cout << "Lepton::print()  ptRatio = " << ptRatio << std::endl;;
+        std::cout << "Lepton::print()  ptRel = " << ptRel << std::endl;;
+        std::cout << "Lepton::print()  relIso03 = " << relIso03 << std::endl;;
+        std::cout << "Lepton::print()  relIso03DB = " << relIso03DB << std::endl;;
+        std::cout << "Lepton::print()  relIso03EA = " << relIso03EA << std::endl;;
+        std::cout << "Lepton::print()  miniRelIsoCMS3_EA = " << miniRelIsoCMS3_EA << std::endl;;
+        std::cout << "Lepton::print()  miniRelIsoCMS3_DB = " << miniRelIsoCMS3_DB << std::endl;;
+        // Muon specifics
+        std::cout << "Lepton::print()  muPOverP = " << muPOverP << std::endl;;
+        std::cout << "Lepton::print()  muPidPFMuon = " << muPidPFMuon << std::endl;;
+        std::cout << "Lepton::print()  muType = " << muType << std::endl;;
+        std::cout << "Lepton::print()  muChi2OverNDof = " << muChi2OverNDof << std::endl;;
+        std::cout << "Lepton::print()  muChi2LocalPosition = " << muChi2LocalPosition << std::endl;;
+        std::cout << "Lepton::print()  muTrkKink = " << muTrkKink << std::endl;;
+        std::cout << "Lepton::print()  muValidHitFraction = " << muValidHitFraction << std::endl;;
+        std::cout << "Lepton::print()  muSegmCompatibility = " << muSegmCompatibility << std::endl;;
+        std::cout << "Lepton::print()  muGFitValidSTAHits = " << muGFitValidSTAHits << std::endl;;
+        std::cout << "Lepton::print()  muNMatchedStations = " << muNMatchedStations << std::endl;;
+        std::cout << "Lepton::print()  muValidPixelHits = " << muValidPixelHits << std::endl;;
+        std::cout << "Lepton::print()  muNLayers = " << muNLayers << std::endl;;
+        // Electron specifics
+        std::cout << "Lepton::print()  elEtaSC = " << elEtaSC << std::endl;;
+        std::cout << "Lepton::print()  elSigmaIEtaIEta_full5x5 = " << elSigmaIEtaIEta_full5x5 << std::endl;;
+        std::cout << "Lepton::print()  elHOverE = " << elHOverE << std::endl;;
+        std::cout << "Lepton::print()  elMva = " << elMva << std::endl;;
+        std::cout << "Lepton::print()  elDEtaIn = " << elDEtaIn << std::endl;;
+        std::cout << "Lepton::print()  elDPhiIn = " << elDPhiIn << std::endl;;
+        std::cout << "Lepton::print()  elEpRatio = " << elEpRatio << std::endl;;
+        std::cout << "Lepton::print()  elConvVeto = " << elConvVeto << std::endl;;
+        std::cout << "Lepton::print()  elNmiss = " << elNmiss << std::endl;;
+      }
     };
     typedef std::vector<Lepton> Leptons;
 
-    struct Jet
+    struct Jet : Particle
     {
-
       float btagCSV;
       float rawPt;
       float mcPt;
@@ -203,33 +250,45 @@ namespace Ditto
       float jecCorrUp;
       float jecCorrDn;
       float chf;
+      float nhf;
+      float cef;
+      float nef;
+      float muf;
+      float cm;
+      float nm;
+      float puValue;
+      float mcdr;
+      int   npfcand;
       int   id;
       int   puId;
       int   puIdpuppi;
       int   FSveto;
-      TLorentzVector p4;
     };
     typedef std::vector<Jet> Jets;
 
-    struct MET
+    struct MET : Particle
     {
-      TLorentzVector p4;
-      TLorentzVector p4CorrUp;
-      TLorentzVector p4CorrDn;
     };
     /// I don't expect to use the above very often.
     /// I only plan to use this when there are multiple flavors of MET
     typedef std::vector<MET> METs;
 
-    struct Truth
+    struct Truth : Particle
     {
       int pdgId;
       int status;
       int motherId;
       int grandmotherId;
-      TLorentzVector p4;
     };
     typedef std::vector<Truth> Truths;
+
+    struct EventInfo
+    {
+      int run;
+      int lumi;
+      int event;
+      float scale1fb;
+    };
 
   }
 
@@ -238,11 +297,13 @@ namespace Ditto
 
     struct AnalysisData {
       ObjUtil::Leptons leptons;
+      ObjUtil::Leptons vetoleptons;
       ObjUtil::Jets jets;
       ObjUtil::Jets bjets;
       ObjUtil::MET met;
       //ObjUtil::METs mets;
       ObjUtil::Truths truths;
+      ObjUtil::EventInfo eventinfo;
       PlotUtil::Hist_DB hist_db;
       double wgt;
     };
@@ -260,6 +321,7 @@ namespace Ditto
     void SM_Triboson_4l(AnalysisData& a);
     void SM_Triboson_5l(AnalysisData& a);
     void SM_VBS_WH(AnalysisData& a);
+    void SM_VBS_WW_lvjj(AnalysisData& a);
 
 
     /// SUSY physics
@@ -270,27 +332,97 @@ namespace Ditto
     /// Object selections
     void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
     void selectObjects_SM_WWW_SS(AnalysisData& a);
+    void selectObjects_SM_VBS_WW_lvjj(AnalysisData& a);
 
     /// Single object selections
+    /// Electrons
+    bool isElectronPOGMVAIDCut(ObjUtil::Lepton& lepton,
+                               float barrel_highpt_mvacut    , float barrel_lowpt_mvacut    , float barrel_lowerpt_mvacut    ,
+                               float transition_highpt_mvacut, float transition_lowpt_mvacut, float transition_lowerpt_mvacut,
+                               float endcap_highpt_mvacut    , float endcap_lowpt_mvacut    , float endcap_lowerpt_mvacut);
+    bool isElectronPOGCutBasedIDCut(ObjUtil::Lepton& lepton,
+                                    float barrel_elSigmaIEtaIEta_full5x5_cut , float barrel_abs_elDEtaIn_cut , float barrel_abs_elDPhiIn_cut ,
+                                    float barrel_elHOverE_cut                , float barrel_relIso03EA_cut   , float barrel_elEpRatio_cut    , int barrel_elNmiss_cut ,
+                                    float endcap_elSigmaIEtaIEta_full5x5_cut , float endcap_abs_elDEtaIn_cut , float endcap_abs_elDPhiIn_cut ,
+                                    float endcap_elHOverE_cut                , float endcap_relIso03EA_cut   , float endcap_elEpRatio_cut    , int endcap_elNmiss_cut);
+    bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton);
+    /// Muons
+    bool isMediumMuonPOG(ObjUtil::Lepton& lepton);
+    /// Jets
+    bool isLoosePFJet_Summer16_v1(ObjUtil::Jet& jet);
+    /// BJets
+    bool isGoodMediumBJet(ObjUtil::Jet& jet);
+    bool isGoodLooseBJet(ObjUtil::Jet& jet);
+
+    /// Analysis specifics
+    /// SUSY_ISR_Soft2l_SUS_16_048
     bool isGoodLepton_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Lepton& lepton);
     bool isGoodJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
     bool isGoodBJet_SUSY_ISR_Soft2l_SUS_16_048(ObjUtil::Jet& jet);
-    bool isGoodMediumBJet(ObjUtil::Jet& jet);
-    bool isGoodLooseBJet(ObjUtil::Jet& jet);
-    bool isElectronPOGMVAIDCut(ObjUtil::Lepton& lepton,
-                            float barrel_highpt_mvacut    , float barrel_lowpt_mvacut    , float barrel_lowerpt_mvacut    ,
-                            float transition_highpt_mvacut, float transition_lowpt_mvacut, float transition_lowerpt_mvacut,
-                            float endcap_highpt_mvacut    , float endcap_lowpt_mvacut    , float endcap_lowerpt_mvacut);
-    bool isMediumMuonPOG(ObjUtil::Lepton& lepton);
-    bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton);
+
+    /// SM_WWW_SS
     bool isGoodLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isGoodElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isGoodMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodJet_SM_WWW_SS(ObjUtil::Jet& jet);
+    bool isGoodBJet_SM_WWW_SS(ObjUtil::Jet& jet);
+    bool isIsoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isIsoMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
 
+    /// SM_VBS_WW_lvjj
+    bool isGoodLepton_SM_VBS_WW_lvjj(ObjUtil::Lepton& lepton);
+    bool isGoodElectron_SM_VBS_WW_lvjj(ObjUtil::Lepton& lepton);
+    bool isGoodMuon_SM_VBS_WW_lvjj(ObjUtil::Lepton& lepton);
+    bool isGoodJet_SM_VBS_WW_lvjj(ObjUtil::Jet& jet);
+    bool isGoodBJet_SM_VBS_WW_lvjj(ObjUtil::Jet& jet);
+
+    /// Overlap Removal
+    void overlapRemoval(AnalysisData& a);
+
+  }
+
+  namespace CombUtil
+  {
   }
 
   namespace VarUtil
   {
+
+    /// calculator with tlorentzvector
+    float DEta(TLorentzVector, TLorentzVector);
+    float DPhi(TLorentzVector, TLorentzVector);
+    float DR  (TLorentzVector, TLorentzVector);
+    float DPt (TLorentzVector, TLorentzVector);
+    float Mass(TLorentzVector, TLorentzVector);
+    float Pt  (TLorentzVector, TLorentzVector);
+    float MT  (TLorentzVector, TLorentzVector); // defined below
+
+    /// calculator with objects
+    float DEta(ObjUtil::Particle, ObjUtil::Particle);
+    float DPhi(ObjUtil::Particle, ObjUtil::Particle);
+    float DR  (ObjUtil::Particle, ObjUtil::Particle);
+    float DPt (ObjUtil::Particle, ObjUtil::Particle);
+    float Mass(ObjUtil::Particle, ObjUtil::Particle);
+    float Pt  (ObjUtil::Particle, ObjUtil::Particle);
+    float MT  (ObjUtil::Particle, ObjUtil::Particle);
+
+    /// calculator with tlorentzvector
+    float DEta(TLorentzVector, ObjUtil::Particle);
+    float DPhi(TLorentzVector, ObjUtil::Particle);
+    float DR  (TLorentzVector, ObjUtil::Particle);
+    float DPt (TLorentzVector, ObjUtil::Particle);
+    float Mass(TLorentzVector, ObjUtil::Particle);
+    float Pt  (TLorentzVector, ObjUtil::Particle);
+    float MT  (TLorentzVector, ObjUtil::Particle);
+
+    /// calculator with tlorentzvector
+    float DEta(ObjUtil::Particle, TLorentzVector);
+    float DPhi(ObjUtil::Particle, TLorentzVector);
+    float DR  (ObjUtil::Particle, TLorentzVector);
+    float DPt (ObjUtil::Particle, TLorentzVector);
+    float Mass(ObjUtil::Particle, TLorentzVector);
+    float Pt  (ObjUtil::Particle, TLorentzVector);
+    float MT  (ObjUtil::Particle, TLorentzVector);
 
     /// calculator with some additional arguments
     float MjjCloseToX(Analyses::AnalysisData& a, float X);
@@ -298,7 +430,9 @@ namespace Ditto
     /// calculator with just analysis data
     float HT(Analyses::AnalysisData& a);
     float METHTRatio(Analyses::AnalysisData& a);
+    float DRjjWmass(Analyses::AnalysisData& a);
     float MjjWmass(Analyses::AnalysisData& a);
+    float DRjj(Analyses::AnalysisData& a);
     float Mjj(Analyses::AnalysisData& a);
     float MljClosest(Analyses::AnalysisData& a);
     float Ptjj(Analyses::AnalysisData& a);
@@ -313,6 +447,8 @@ namespace Ditto
     float MT(Analyses::AnalysisData& a);
     float MTll(Analyses::AnalysisData& a);
     float Mtt(Analyses::AnalysisData& a);
+    float Mlvjj(Analyses::AnalysisData& a, int lepidx = 0, int jetidx0 = 0, int jetidx1 = 1);
+    float NeutrinoSolver(Analyses::AnalysisData& a, int lepidx = 0);
     bool isOSEEChannel(Analyses::AnalysisData& a);
     bool isOSMMChannel(Analyses::AnalysisData& a);
     bool isOSEMChannel(Analyses::AnalysisData& a);
@@ -409,17 +545,22 @@ namespace Ditto
     /// Di object kinematics (angular)
     void fillDPhill    (string prefix, Analyses::AnalysisData& a);
     void fillDEtajj    (string prefix, Analyses::AnalysisData& a);
+    void fillDRjj      (string prefix, Analyses::AnalysisData& a);
     void fillDEtabb    (string prefix, Analyses::AnalysisData& a);
     void fillDPhiLepMET(string prefix, Analyses::AnalysisData& a);
+    void fillDRjjW     (string prefix, Analyses::AnalysisData& a);
     /// Single object ID-related
-    void fillLepDz      (string prefix, Analyses::AnalysisData& a);
-    void fillLepDxy     (string prefix, Analyses::AnalysisData& a);
-    void fillLepIp3d    (string prefix, Analyses::AnalysisData& a);
-    void fillLepSip3d   (string prefix, Analyses::AnalysisData& a);
-    void fillLepRelIso03(string prefix, Analyses::AnalysisData& a);
-    void fillLepAbsIso03(string prefix, Analyses::AnalysisData& a);
-    void fillLepID      (string prefix, Analyses::AnalysisData& a);
-    void fillJetID      (string prefix, Analyses::AnalysisData& a);
+    void fillLepDz       (string prefix, Analyses::AnalysisData& a);
+    void fillLepDxy      (string prefix, Analyses::AnalysisData& a);
+    void fillLepIp3d     (string prefix, Analyses::AnalysisData& a);
+    void fillLepSip3d    (string prefix, Analyses::AnalysisData& a);
+    void fillLepRelIso03 (string prefix, Analyses::AnalysisData& a);
+    void fillLepAbsIso03 (string prefix, Analyses::AnalysisData& a);
+    void fillLepMiniIso03(string prefix, Analyses::AnalysisData& a);
+    void fillLepPtRel    (string prefix, Analyses::AnalysisData& a);
+    void fillLepPtRatio  (string prefix, Analyses::AnalysisData& a);
+    void fillLepID       (string prefix, Analyses::AnalysisData& a);
+    void fillJetID       (string prefix, Analyses::AnalysisData& a);
 
     void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin);
 
@@ -460,11 +601,13 @@ namespace Ditto
     void createLeptonBranch(TTree* tree, TString name);
     void createJetBranch(TTree* tree, TString name);
     void createMETBranch(TTree* tree, TString name);
+    void createEventInfoBranch(TTree* tree, TString name);
 
     void setTruths(Analyses::AnalysisData& ana_data, TString name);
     void setLeptons(Analyses::AnalysisData& ana_data, TString name);
     void setJets(Analyses::AnalysisData& ana_data, TString name);
     void setMET(Analyses::AnalysisData& ana_data, TString name);
+    void setEventInfo(Analyses::AnalysisData& ana_data, TString name);
     void pushback4Vec(TLorentzVector p4, TString name);
 
   }
