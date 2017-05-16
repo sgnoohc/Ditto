@@ -95,7 +95,7 @@ ObjUtil::METs getMETs(/*TREECLASSNAME& mytree*/)
 ObjUtil::MET getMET(/*TREECLASSNAME& mytree*/)
 {
   ObjUtil::MET met;
-  met.p4.SetPtEtaPhiE(mytree.met_pt, 0, mytree.met_phi, mytree.met_pt);
+  met.p4.SetPtEtaPhiE(mytree.met_pt(), 0, mytree.met_phi(), mytree.met_pt());
   return met;
 }
 

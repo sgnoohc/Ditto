@@ -21,18 +21,21 @@ if [ -d haddoutput ]; then
   :
 else
   $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+  exit
 fi
 
 if [ -d output ]; then
   :
 else
   $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+  exit
 fi
 
 if [ -d plots ]; then
   :
 else
   $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+  exit
 fi
 
 ARCHIVEPATH=~/cabinet/ditto_archives/archives_${stamp}

@@ -37,6 +37,9 @@ void beforeLoop(TChain* chain, TString output_name_, int nevents)
 
   output_name = output_name_;
 
+  // If output_name contains "_skimtree" remove it.
+  output_name.ReplaceAll("_skimtree", "");
+
 }
 
 
@@ -97,8 +100,11 @@ void processTEMPLATETREENAMEEvent()
   /// Fill histograms
   // HistUtil::fillStdHistograms("", ana_data);
 
+  //bool pass = Analyses::SM_VBS_WW_lvjj(ana_data);
+
   /// Fill skimmed ttree
-  TreeUtil::fillSkimTree();
+  //if (pass)
+  //  TreeUtil::fillSkimTree();
 }
 
 //______________________________________________________________________________________

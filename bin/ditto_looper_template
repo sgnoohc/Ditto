@@ -68,8 +68,8 @@ fi
 $MSG "generating tree class using make_classfiles.py in ${PACKAGEPATH}/src"
 mkdir -p ${PACKAGEPATH}/src/
 cd ${PACKAGEPATH}/src/
-$DITTOPATH/python/make_classfiles.py -t $TREECLASSNAMESHORT -o mytree -c $TREECLASSNAME $ROOTFILE
-mv ${TREECLASSNAME}.cc ${TREECLASSNAME}.cxx
+$DITTOPATH/bin/ditto_root_makeclass $ROOTFILE $TREECLASSNAME $TREECLASSNAMESHORT
+#mv ${TREECLASSNAME}.cc ${TREECLASSNAME}.cxx
 
 $MSG "copying template tree loopers to the package directory..."
 

@@ -740,6 +740,11 @@ namespace Ditto
   namespace Analyses
   {
 
+    AnalysisData* this_a = 0;
+
+    //______________________________________________________________________________________
+    void setAnalysisData(AnalysisData& a) { this_a = &a; }
+
     //______________________________________________________________________________________
     template <class T>
     void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj)
@@ -839,30 +844,35 @@ namespace Ditto
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
     //______________________________________________________________________________________
-    void SM_WWW_SSmm(AnalysisData& a)
+    bool SM_WWW_SSmm(AnalysisData& a)
     {
+
       /// selectObjs
       selectObjects_SM_WWW_SS(a);
 
       /// Overlap removal
       overlapRemoval(a);
 
-      if ( !(a.leptons.size() == 2) ) return;
-      if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 169) ) return;
-      HistUtil::fillStdHistograms(((string)"presel_")+__FUNCTION__, a);
-      if ( !(a.jets.size() >= 2) ) return;
-      HistUtil::fillStdHistograms(((string)"njet_")+__FUNCTION__, a);
-      if ( !(a.bjets.size() == 0) ) return;
-      if ( !(a.leptons[0].p4.Pt() > 30.) ) return;
-      if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
-      if ( !(a.jets[0].p4.Pt() > 30.) ) return;
-      if ( !(a.jets[1].p4.Pt() > 20.) ) return;
-      if ( !(fabs(a.jets[0].p4.Eta()) < 2.5) ) return;
-      if ( !(fabs(a.jets[1].p4.Eta()) < 2.5) ) return;
-      if ( !(VarUtil::DEtajj(a) < 1.5) ) return;
-      if ( !(VarUtil::Mjj(a) < 105.) ) return;
-      if ( !(VarUtil::Mjj(a) > 65.) ) return;
+      // Boolean flag to pass whether it passed a "presel" so we can skim or not
+      bool pass = false;
+
+      HistUtil::fillCutflow(__FUNCTION__, a, 0);
+      if (!( a.leptons.size() == 2                          )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 1);
+      if (!( a.leptons[0].pdgId * a.leptons[1].pdgId == 169 )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 2); pass = true;
+      if (!( a.jets.size() >= 2                             )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 3);
+      if (!( a.bjets.size() == 0                            )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 4);
+      if (!( a.leptons[0].p4.Pt() > 30.                     )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 5);
+      if (!( a.leptons[1].p4.Pt() > 30.                     )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 6);
+      if (!( a.jets[0].p4.Pt() > 30.                        )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 6);
+      if (!( a.jets[1].p4.Pt() > 20.                        )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 7);
+      if (!( fabs(a.jets[0].p4.Eta()) < 2.5                 )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 8);
+      if (!( fabs(a.jets[1].p4.Eta()) < 2.5                 )) return pass; HistUtil::fillCutflow(__FUNCTION__, a, 9);
+      if (!( VarUtil::DEtajj(a) < 1.5                       )) return pass; HistUtil::fillCutflow(__FUNCTION__, a,10);
+      if (!( VarUtil::Mjj(a) < 105.                         )) return pass; HistUtil::fillCutflow(__FUNCTION__, a,11);
+      if (!( VarUtil::Mjj(a) > 65.                          )) return pass; HistUtil::fillCutflow(__FUNCTION__, a,12);
       HistUtil::fillStdHistograms(__FUNCTION__, a);
+
+      return pass;
     }
 
     //______________________________________________________________________________________
@@ -892,14 +902,14 @@ namespace Ditto
     }
 
     //______________________________________________________________________________________
-    void SM_VBS_WW_lvjj(AnalysisData& a)
+    bool SM_VBS_WW_lvjj(AnalysisData& a)
     {
       selectObjects_SM_VBS_WW_lvjj(a);
       overlapRemoval(a);
-      if (!( a.leptons.size() == 1 )) return;
-      if (!( a.jets.size()    >= 4 )) return;
-      TreeUtil::fillSkimTree();
+      if (!( a.leptons.size() == 1 )) return false;
+      if (!( a.jets.size()    >= 4 )) return false;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
+      return true;
     }
 
     //______________________________________________________________________________________
@@ -1285,7 +1295,8 @@ namespace Ditto
     {
       if ( !(jet.p4.Pt()              > 20.) ) return false;
       if ( !(fabs(jet.p4.Eta())       <  5.) ) return false;
-      if ( !(isLoosePFJet_Summer16_v1(jet) ) ) return false;
+      //if ( !(isLoosePFJet_Summer16_v1(jet) ) ) return false;
+      if ( !(jet.id & (1<<0)               ) ) return false;
       return true;
     }
 
@@ -1328,15 +1339,16 @@ namespace Ditto
     //______________________________________________________________________________________
     bool isGoodMuon_SM_WWW_SS(ObjUtil::Lepton& lepton)
     {
-      if ( !(lepton.p4.Pt()             >    20.   ) ) return false;
-      if ( !(fabs(lepton.p4.Eta())      <    2.4   ) ) return false;
-      if ( !(abs(lepton.pdgId)          ==   13    ) ) return false;
-      if ( !(fabs(lepton.sip3d)         <     4    ) ) return false;
-      if ( !(fabs(lepton.dz)            <=    0.1  ) ) return false;
-      if ( !(fabs(lepton.dxy)           <=    0.05 ) ) return false;
-      if ( !(lepton.muPOverP            <     0.2  ) ) return false;
-      if ( !(isMediumMuonPOG(lepton)               ) ) return false;
-      if ( !(isIsoMuon_SM_WWW_SS(lepton)           ) ) return false;
+      HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
+      if ( !(lepton.p4.Pt()             >    20.   ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 1);
+      if ( !(fabs(lepton.p4.Eta())      <    2.4   ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 2);
+      if ( !(abs(lepton.pdgId)          ==   13    ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 3);
+      if ( !(fabs(lepton.sip3d)         <     4    ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 4);
+      if ( !(fabs(lepton.dz)            <=    0.1  ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 5);
+      if ( !(fabs(lepton.dxy)           <=    0.05 ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 6);
+      if ( !(lepton.muPOverP            <     0.2  ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 8);
+      if ( !(isMediumMuonPOG(lepton)               ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a), 9);
+      if ( !(isIsoMuon_SM_WWW_SS(lepton)           ) ) return false; HistUtil::fillCutflow(__FUNCTION__, (*this_a),10);
       return true;
     }
 

@@ -312,17 +312,22 @@ namespace Ditto
     template <class T>
     void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj);
 
+    extern AnalysisData* this_a;
+
+    /// this_a
+    void setAnalysisData(AnalysisData& a);
+
     /// SM physics
     bool SM_WWW_3l0SFOS(AnalysisData& a);
     void SM_WWW_3l1SFOS(AnalysisData& a);
     void SM_WWW_3l2SFOS(AnalysisData& a);
     void SM_WWW_SSee(AnalysisData& a);
     void SM_WWW_SSem(AnalysisData& a);
-    void SM_WWW_SSmm(AnalysisData& a);
+    bool SM_WWW_SSmm(AnalysisData& a);
     void SM_Triboson_4l(AnalysisData& a);
     void SM_Triboson_5l(AnalysisData& a);
     void SM_VBS_WH(AnalysisData& a);
-    void SM_VBS_WW_lvjj(AnalysisData& a);
+    bool SM_VBS_WW_lvjj(AnalysisData& a);
 
 
     /// SUSY physics
