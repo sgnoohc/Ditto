@@ -51,6 +51,10 @@ void loop()
 
     initTEMPLATETREENAME();
 
+    // I am assuming I only run one file at a time
+    // NOTE: Later I should probably update this to be more general
+    TreeUtil::createSkimTree((output_name+"_skimtree.root").Data());
+
     // Loop over the TTree
     while (LoopUtil::nextEvent())
     {
@@ -92,6 +96,9 @@ void processTEMPLATETREENAMEEvent()
 
   /// Fill histograms
   // HistUtil::fillStdHistograms("", ana_data);
+
+  /// Fill skimmed ttree
+  TreeUtil::fillSkimTree();
 }
 
 //______________________________________________________________________________________
@@ -108,7 +115,10 @@ void getObjects()
 void afterLoop()
 {
   // Save histograms
-  //PlotUtil::savePlots(ana_data.hist_db, output_name.Data());
+  PlotUtil::savePlots(ana_data.hist_db, (output_name+"_hist.root").Data());
+
+  // Save skimmmed tree
+  TreeUtil::saveSkimTree();
 
   // Fun exit
   PrintUtil::exit();

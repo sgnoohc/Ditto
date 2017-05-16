@@ -17,31 +17,51 @@ usage()
 {
   echo "Usage:"
   echo ""
-  echo "   $0 ROOTFILE TREECLASSNAME TREEINSTANCENAMEINROOTFILE [FORCE]"
+  echo "   $0 ANALYSISNAME EXAMPLEROOTFILE TREECLASSNAME TREEINSTANCENAMEINROOTFILE [FORCE]"
   echo ""
-  echo "   e.g. rootfile.root MT2Tree mt2"
-  exit
+  echo "   e.g. MT2Analysis rootfile.root MT2Tree mt2"
+  return
 }
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
-if [ -z $1 ]; then usage; fi
-if [ -z $2 ]; then usage; fi
-if [ -z $3 ]; then usage; fi
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+#$DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
 
-ROOTFILE=$1
-TREECLASSNAME=$2
-TREECLASSNAMESHORT=$3
-FORCE=$4
+if [ -z $1 ]; then usage; return; fi
+if [ -z $2 ]; then usage; return; fi
+if [ -z $3 ]; then usage; return; fi
+if [ -z $4 ]; then usage; return; fi
+
+ANALYSISNAME=$1
+ROOTFILE=$2
+TREECLASSNAME=$3
+TREECLASSNAMESHORT=$4
+FORCE=$5
+
+if [ -d ${ANALYSISNAME} ]; then
+  $ERROR "A directory with name=${ANALYSISNAME} already exists."
+  $MSG "Please check the name of the analysis directory you wish to create."
+  return
+fi
+
+if [ -e ${ROOTFILE} ]; then
+  :
+else
+  $ERROR "${ROOTFILE} does not exists."
+  $MSG "Please check the provided root file path"
+fi
+
+mkdir -p ${ANALYSISNAME}/src/
+source $DIR/setup_ditto ${ANALYSISNAME}
 
 if [ -z ${FORCE} ]; then
   if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h ]; then
     $ERROR "A looper already exists! exiting..."
-    exit
+    return
   fi
 
   if [ -e ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx ]; then
     $ERROR "A looper already exists! exiting..."
-    exit
+    return
   fi
 fi
 
@@ -68,3 +88,5 @@ sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp2.cxx         > ${P
 # Copy TREEConnector
 sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.h
 sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx
+
+cd ../../

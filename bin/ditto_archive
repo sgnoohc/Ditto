@@ -1,8 +1,40 @@
 #!/bin/bash
 
+ERROR=echo
+UL=echo
+SUCCESS=echo
+MSG=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  UL=e_underline
+  SUCCESS=e_success
+  MSG=e_msg
+fi
+
 mkdir -p ~/cabinet/ditto_archives/
 
 stamp=$(date +%Y%m%d_%H%M%S)
+
+if [ -d haddoutput ]; then
+  :
+else
+  $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+fi
+
+if [ -d output ]; then
+  :
+else
+  $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+fi
+
+if [ -d plots ]; then
+  :
+else
+  $ERROR "haddoutput/ does not exists, are you sure you're even in an analysis workdir to even archive anything?"
+fi
+
 ARCHIVEPATH=~/cabinet/ditto_archives/archives_${stamp}
 mkdir -p ${ARCHIVEPATH}
 

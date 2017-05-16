@@ -106,6 +106,7 @@ namespace Ditto
     TFile* getCurrentTFile();
     TTree* getCurrentTTree();
     TChain* getCurrentTChain();
+    TString getCurrentTFileName();
     int getCurrentTTreeEventIndex();
     void setCurrentTTreeMaxNEvents();
     void setFractionOfBookedNEvents();
@@ -583,6 +584,8 @@ namespace Ditto
     };
 
     extern TreeData treedata;
+    extern TFile* skimfile;
+    extern TTree* skimtree;
 
     void initTreeData();
 
@@ -609,6 +612,10 @@ namespace Ditto
     void setMET(Analyses::AnalysisData& ana_data, TString name);
     void setEventInfo(Analyses::AnalysisData& ana_data, TString name);
     void pushback4Vec(TLorentzVector p4, TString name);
+
+    void createSkimTree(const char*);
+    void fillSkimTree();
+    void saveSkimTree();
 
   }
 

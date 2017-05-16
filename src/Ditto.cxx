@@ -318,7 +318,7 @@ namespace Ditto
       else                     print("               ||----w |");
       if (true)                print("               ||     ||");
       print();
-      sleep(1);
+      //sleep(0);
     }
 
     void exit(int q)
@@ -385,6 +385,11 @@ namespace Ditto
       else
         PrintUtil::error("current_tchain not set!");
       return 0;
+    }
+
+    TString getCurrentTFileName()
+    {
+      return TString(getCurrentTFile()->GetName());
     }
 
     void loadCurrentTTreeWithName(const char* treename)
@@ -526,7 +531,7 @@ namespace Ditto
       incrementCurrentTTreeEventIndex();
       int loadresult = loadCurrentTTreeEvent();
       incrementTotalNEventsProcessed();
-      //printProgressBar();
+      printProgressBar();
       if (loadresult == -2) // TTree::LoadTree returns -2 if no entry exist
         return false;
       else
@@ -821,6 +826,7 @@ namespace Ditto
     {
       if ( !(a.leptons.size() == 2) ) return;
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 121) ) return;
+      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(a.met.p4.Pt() > 60.) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
@@ -835,33 +841,27 @@ namespace Ditto
     //______________________________________________________________________________________
     void SM_WWW_SSmm(AnalysisData& a)
     {
+      /// selectObjs
+      selectObjects_SM_WWW_SS(a);
+
+      /// Overlap removal
+      overlapRemoval(a);
+
       if ( !(a.leptons.size() == 2) ) return;
       if ( !(a.leptons[0].pdgId * a.leptons[1].pdgId == 169) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       HistUtil::fillStdHistograms(((string)"presel_")+__FUNCTION__, a);
       if ( !(a.jets.size() >= 2) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       HistUtil::fillStdHistograms(((string)"njet_")+__FUNCTION__, a);
       if ( !(a.bjets.size() == 0) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(a.leptons[0].p4.Pt() > 30.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(a.leptons[1].p4.Pt() > 30.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(a.jets[0].p4.Pt() > 30.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(a.jets[1].p4.Pt() > 20.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(fabs(a.jets[0].p4.Eta()) < 2.5) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(fabs(a.jets[1].p4.Eta()) < 2.5) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(VarUtil::DEtajj(a) < 1.5) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(VarUtil::Mjj(a) < 105.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       if ( !(VarUtil::Mjj(a) > 65.) ) return;
-      HistUtil::fillCutflow(__FUNCTION__, a, __COUNTER__);
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
@@ -896,8 +896,9 @@ namespace Ditto
     {
       selectObjects_SM_VBS_WW_lvjj(a);
       overlapRemoval(a);
-      if (!( a.leptons.size() == 1)) return;
-      if (!( a.jets.size()    >= 4)) return;
+      if (!( a.leptons.size() == 1 )) return;
+      if (!( a.jets.size()    >= 4 )) return;
+      TreeUtil::fillSkimTree();
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
 
@@ -998,6 +999,51 @@ namespace Ditto
     //______________________________________________________________________________________
     void SUSY_VBF_Soft1l(AnalysisData& a)
     {
+
+      if (!( a.met.p4.Pt()       >   200.    )) return;
+      if (!( a.leptons.size()    >=    1     )) return;
+      if (!( a.jets.size()       >=    2     )) return;
+      if (!( a.jets[1].p4.Pt()   >    50.    )) return;
+      if (!( VarUtil::DEtajj(a)  >     3.8   )) return;
+      if (!( VarUtil::MT(a)      <    40.    )) return;
+      HistUtil::fillStdHistograms(__FUNCTION__, a);
+
+      int met_bin_idx = -1;
+      int mjj_bin_idx = -1;
+      int lpt_bin_idx = -1;
+
+      float met = a.met.p4.Pt();
+      float mjj = VarUtil::Mjj(a);
+      float lpt = a.leptons[0].p4.Pt();
+
+      // TODO: generalize the function
+      // MET [200 ,  300 ,  400 , inf]
+      // Mjj [500 , 1000 , 1500 , inf]
+      // lPt [  5 ,   10 ,   20 ,  30]
+
+      int finalbin = 0;
+
+      if      (met <  200) met_bin_idx = -1;
+      else if (met <  300) met_bin_idx =  0;
+      else if (met <  400) met_bin_idx =  1;
+      else                 met_bin_idx =  2;
+
+      if      (mjj <  500) mjj_bin_idx = -1;
+      else if (mjj < 1000) mjj_bin_idx =  0;
+      else                 mjj_bin_idx =  1;
+
+      if      (lpt <   10) lpt_bin_idx =  2;
+      else if (lpt <   20) lpt_bin_idx =  1;
+      else if (lpt <   30) lpt_bin_idx =  0;
+      else                 lpt_bin_idx = -1;
+
+      // if any of them don't fall into the bin return -1
+      if (met_bin_idx < 0 || mjj_bin_idx < 0 || lpt_bin_idx < 0)
+        finalbin = -1;
+
+      finalbin = 1 * met_bin_idx + 3 * lpt_bin_idx;
+      PlotUtil::plot1D("multibin", finalbin, a.wgt, a.hist_db, "Multibin", 9, 0., 9., __FUNCTION__);
+
     }
 
     //______________________________________________________________________________________
@@ -1066,9 +1112,9 @@ namespace Ditto
       };
 
       float aeta = fabs(lepton.elEtaSC);
-      if (aeta < 0.8)                     return lepton.elMva > mvacut(0.77, 0.52, 0.77, lepton.p4.Pt());
-      if ((aeta >= 0.8 && aeta <= 1.479)) return lepton.elMva > mvacut(0.56, 0.11, 0.56, lepton.p4.Pt());
-      if (aeta > 1.479)                   return lepton.elMva > mvacut(0.48,-0.01, 0.48, lepton.p4.Pt());
+      if (aeta < 0.8)                     return lepton.elMva > mvacut(barrel_highpt_mvacut, barrel_lowpt_mvacut, barrel_lowerpt_mvacut, lepton.p4.Pt());
+      if ((aeta >= 0.8 && aeta <= 1.479)) return lepton.elMva > mvacut(transition_highpt_mvacut, transition_lowpt_mvacut, transition_lowerpt_mvacut, lepton.p4.Pt());
+      if (aeta > 1.479)                   return lepton.elMva > mvacut(endcap_highpt_mvacut, endcap_lowpt_mvacut, endcap_lowerpt_mvacut, lepton.p4.Pt());
       return false;
     }
 
@@ -1260,14 +1306,16 @@ namespace Ditto
     //______________________________________________________________________________________
     bool isGoodElectron_SM_WWW_SS(ObjUtil::Lepton& lepton)
     {
-      if ( !(lepton.p4.Pt()                   >  20.  ) ) return false;
+      if ( !(lepton.p4.Pt()                   >  10.  ) ) return false;
+      if ( !(fabs(lepton.p4.Eta())            <  2.4  ) ) return false;
       if ( !(fabs(lepton.pdgId)               == 11   ) ) return false;
       if ( !(fabs(lepton.elEtaSC)             <= 2.5  ) ) return false;
-      if ( !(!lepton.elConvVeto                       ) ) return false;
-      if ( !(lepton.elNmiss                   == 0    ) ) return false;
+      if ( !(!(lepton.elConvVeto)                     ) ) return false;
+      if ( !(lepton.elNmiss                   <= 0    ) ) return false;
       if ( !(fabs(lepton.dz)                  <  0.1  ) ) return false;
       if ( !(fabs(lepton.dxy)                 <  0.05 ) ) return false;
       if ( !(fabs(lepton.sip3d)               <  4    ) ) return false;
+      if ( !(lepton.tightcharge               == 2    ) ) return false;
       if ( !(isElectronPOGMVAIDCut(lepton,
                  /* barrel */      0.77, 0.52, 0.77,
                  /* transition */  0.56, 0.11, 0.56,
@@ -1354,21 +1402,19 @@ namespace Ditto
     //______________________________________________________________________________________
     bool isGoodJet_SM_VBS_WW_lvjj(ObjUtil::Jet& jet)
     {
-      if (!( jet.p4.Pt()        > 20. )) return false;
-      if (!( fabs(jet.p4.Eta()) <  5. )) return false;
-      if (!( jet.id & (1<<0)          )) return false; // isLoosePFJet
-      if (!( jet.id & (1<<5)          )) return false; // isLoosePileupJetId
+      if (!( jet.p4.Pt()             > 20. )) return false;
+      if (!( fabs(jet.p4.Eta())      <  5. )) return false;
+      //if (!( isLoosePFJet_Summer16_v1(jet) )) return false; // isLoosePFJet
+      if (!( jet.id & (1<<0)               )) return false; // isLoosePFJet
+      //if (!( jet.id & (1<<5)               )) return false; // isLoosePileupJetId
       return true;
     }
 
     //______________________________________________________________________________________
     bool isGoodBJet_SM_VBS_WW_lvjj(ObjUtil::Jet& jet)
     {
-      if (!( jet.p4.Pt()        > 20. )) return false;
-      if (!( fabs(jet.p4.Eta()) <  5. )) return false;
-      if (!( jet.id & (1<<0)          )) return false; // isLoosePFJet
-      if (!( jet.id & (1<<5)          )) return false; // isLoosePileupJetId
-      if (!( isGoodMediumBJet(jet)    )) return false;
+      if (!( isGoodJet_SM_VBS_WW_lvjj(jet)   )) return false;
+      if (!( isGoodMediumBJet(jet)           )) return false;
       return true;
     }
 
@@ -1529,7 +1575,7 @@ namespace Ditto
     float MT(TLorentzVector p4, TLorentzVector metp4)
     {
       /// Compute MT
-      float mt = sqrt(2 * p4.Pt() * ( 1 - cos(metp4.DeltaPhi(p4) ) ));
+      float mt = sqrt(2 * p4.Pt() * metp4.Pt() * ( 1 - cos(metp4.DeltaPhi(p4) ) ));
       return mt;
     }
 
@@ -1537,7 +1583,7 @@ namespace Ditto
     {
       /// Compute MT with the Nth lepton provided by the lepton index argument
       if (a.leptons.size() <= (unsigned int) lep_idx) return -999;
-      float mt = sqrt(2 * a.leptons[lep_idx].p4.Pt() * ( 1 - cos(a.met.p4.DeltaPhi(a.leptons[lep_idx].p4) ) ));
+      float mt = sqrt(2 * a.leptons[lep_idx].p4.Pt() * a.met.p4.Pt() * ( 1 - cos(a.met.p4.DeltaPhi(a.leptons[lep_idx].p4) ) ));
       return mt;
     }
 
@@ -1911,6 +1957,8 @@ namespace Ditto
   {
 
     TreeData treedata;
+    TFile* skimfile = 0;
+    TTree* skimtree = 0;
 
     void initTreeData()
     {
@@ -2148,6 +2196,31 @@ namespace Ditto
       pushbackVFloatBranch(name+"_phi", p4.Phi());
       pushbackVFloatBranch(name+"_mass", p4.M());
       pushbackVFloatBranch(name+"_energy", p4.E());
+    }
+
+    void createSkimTree(const char* filename)
+    {
+      if (LoopUtil::getCurrentTFileName().Contains("skimtree")) return;
+      printf("[Ditto::HistUtil::saveSkimTree] Creating %s to hold skimmed TTree\n", filename);
+      skimfile = new TFile(filename, "recreate");
+      skimtree = LoopUtil::getCurrentTTree()->CloneTree(0);
+    }
+
+    void fillSkimTree()
+    {
+      if (LoopUtil::getCurrentTFileName().Contains("skimtree")) return;
+      skimtree->Fill();
+    }
+
+    void saveSkimTree()
+    {
+      if (!skimtree) return;
+      printf("[Ditto::HistUtil::saveSkimTree] Writing skimmed TTree to %s\n", skimfile->GetName());
+      skimfile->cd();
+      skimtree->Write();
+      delete skimtree;
+      skimfile->Write();
+      skimfile->Close();
     }
 
   }

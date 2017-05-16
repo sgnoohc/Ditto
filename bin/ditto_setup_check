@@ -16,7 +16,7 @@ fi
 error()
 {
   $ERROR "ERROR: ditto environment is not set!"
-  $UL "Please run, source $DIR/setup_ditto.sh PACKAGEPATH first!"
+  $UL "Please run, source $DIR/setup_ditto PACKAGEPATH first!"
   echo ""
   echo "==================================================="
   echo SCRAM_ARCH=$SCRAM_ARCH
