@@ -35,10 +35,16 @@ void beforeLoop(TChain* chain, TString output_name_, int nevents)
   // Initialize configurations for event looping
   LoopUtil::resetLoopCondition(chain, nevents);
 
-  output_name = output_name_;
+  // Replace all ".root" added accidentally
+  output_name_.ReplaceAll(".root", "");
+  LoopUtil::output_name = output_name_;
+
+  // If output_name does not contain "_skimtree" then skim the event
+  //if (!output_name.Contains("_skimtree"))
+  //  LoopUtil::setDoSkim();
 
   // If output_name contains "_skimtree" remove it.
-  output_name.ReplaceAll("_skimtree", "");
+  LoopUtil::output_name.ReplaceAll("_skimtree", "");
 
 }
 
@@ -56,7 +62,7 @@ void loop()
 
     // I am assuming I only run one file at a time
     // NOTE: Later I should probably update this to be more general
-    TreeUtil::createSkimTree((output_name+"_skimtree.root").Data());
+    if (LoopUtil::doskim) TreeUtil::createSkimTree((LoopUtil::output_name+"_skimtree.root").Data());
 
     // Loop over the TTree
     while (LoopUtil::nextEvent())
@@ -82,6 +88,7 @@ void initTEMPLATETREENAME()
 {
   // Init the Class
   mytree.Init(LoopUtil::getCurrentTTree());
+  //if (LoopUtil::doskim) mytree.LoadAllBranches();
 }
 
 //______________________________________________________________________________________
@@ -121,10 +128,10 @@ void getObjects()
 void afterLoop()
 {
   // Save histograms
-  PlotUtil::savePlots(ana_data.hist_db, (output_name+"_hist.root").Data());
+  PlotUtil::savePlots(ana_data.hist_db, (LoopUtil::output_name+"_hist.root").Data());
 
   // Save skimmmed tree
-  TreeUtil::saveSkimTree();
+  if (LoopUtil::doskim) TreeUtil::saveSkimTree();
 
   // Fun exit
   PrintUtil::exit();

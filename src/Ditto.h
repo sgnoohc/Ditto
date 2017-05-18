@@ -99,6 +99,8 @@ namespace Ditto
     extern int print_rate;
     extern bool isdata;
     extern bool isfastsim;
+    extern bool doskim;
+    extern TString output_name;
 
     void loadFileIter();
     void loadTotalNEvents();
@@ -133,6 +135,7 @@ namespace Ditto
     void initProgressBar();
     void loadFractionOfBookedNEvents();
     double getFractionOfBookedNEvents();
+    void setDoSkim(bool b=true);
 
   }
 
@@ -294,12 +297,15 @@ namespace Ditto
       float scale1fb;
     };
 
+    typedef std::map<TString, Leptons> LeptonsCollection;
+
   }
 
   namespace Analyses
   {
 
     struct AnalysisData {
+      ObjUtil::LeptonsCollection lepcol;
       ObjUtil::Leptons leptons;
       ObjUtil::Leptons vetoleptons;
       ObjUtil::Jets jets;
@@ -322,6 +328,7 @@ namespace Ditto
     void setAnalysisData(AnalysisData& a);
 
     void doObjectCutflow();
+    void doNotObjectCutflow();
 
     /// Lepton ID study
     bool PID_Isolation();
@@ -333,11 +340,11 @@ namespace Ditto
     void SM_WWW_SSee(AnalysisData& a);
     void SM_WWW_SSem(AnalysisData& a);
     bool SM_WWW_SSmm(AnalysisData& a);
+    void SM_WWW_SS_Isolation_Study(AnalysisData& a, AnalysisData& b);
     void SM_Triboson_4l(AnalysisData& a);
     void SM_Triboson_5l(AnalysisData& a);
     void SM_VBS_WH(AnalysisData& a);
     bool SM_VBS_WW_lvjj(AnalysisData& a);
-
 
     /// SUSY physics
     void SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
@@ -347,6 +354,7 @@ namespace Ditto
     /// Object selections
     void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
     void selectObjects_SM_WWW_SS(AnalysisData& a);
+    void selectObjects_SM_WWW_SS_Isolation_Study(AnalysisData& a);
     void selectObjects_SM_VBS_WW_lvjj(AnalysisData& a);
     void selectObjects_PID_Isolation(AnalysisData& a);
 
@@ -381,6 +389,9 @@ namespace Ditto
     bool isGoodLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isGoodElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isGoodMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodNonIsoLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodNonIsoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isGoodNonIsoMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isGoodJet_SM_WWW_SS(ObjUtil::Jet& jet);
     bool isGoodBJet_SM_WWW_SS(ObjUtil::Jet& jet);
     bool isIsoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
@@ -398,7 +409,7 @@ namespace Ditto
 
     /// PID_Isolation study
     bool isGoodMuon_PID_Isolation(ObjUtil::Lepton& lepton);
-//	    bool isFakeMuon_PID_Isolation(ObjUtil::Lepton& lepton);
+    bool isGoodElectron_PID_Isolation(ObjUtil::Lepton& lepton);
 
     /// Overlap Removal
     void overlapRemoval(AnalysisData& a);
@@ -540,6 +551,8 @@ namespace Ditto
 
     void fillStdHistograms(string prefix, Analyses::AnalysisData& a);
     void fillLeptonIDHistograms(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLeptonIDHistograms(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLeptonIDHistograms(string prefix, Analyses::AnalysisData& a);
     /// Multiplicity variables
     void fillNLep      (string prefix, Analyses::AnalysisData& a);
     void fillNJet      (string prefix, Analyses::AnalysisData& a);
@@ -588,27 +601,40 @@ namespace Ditto
     void fillLepMiniIso03(string prefix, Analyses::AnalysisData& a);
     void fillLepPtRel    (string prefix, Analyses::AnalysisData& a);
     void fillLepPtRatio  (string prefix, Analyses::AnalysisData& a);
-    void fillLepID       (string prefix, Analyses::AnalysisData& a);
     void fillLepIsFromW  (string prefix, Analyses::AnalysisData& a);
+    /// Leptons from W
+    void fillIsFromWLepDz        (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepDxy       (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepIp3d      (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepSip3d     (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03EA(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepMiniIso03 (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPtRel     (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPtRatio   (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepIsFromW   (string prefix, Analyses::AnalysisData& a);
+    /// Leptons not from W
+    void fillIsNotFromWLepDz        (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepDxy       (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepIp3d      (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepSip3d     (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03EA(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepMiniIso03 (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPtRel     (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPtRatio   (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepIsFromW   (string prefix, Analyses::AnalysisData& a);
     /// Single object jet related
     void fillJetID       (string prefix, Analyses::AnalysisData& a);
-    /// Single object veto lepton related
-    void fillVetoLepDz       (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepDxy      (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepIp3d     (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepSip3d    (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepRelIso03 (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepAbsIso03 (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepRelIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepMiniIso03(string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepPtRel    (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepPtRatio  (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepID       (string prefix, Analyses::AnalysisData& a);
-    void fillVetoLepIsFromW  (string prefix, Analyses::AnalysisData& a);
-
+    /// Fill cutflow
     void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin);
 
   }

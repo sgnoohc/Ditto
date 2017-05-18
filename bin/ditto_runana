@@ -76,8 +76,8 @@ echo "NEVENTSTOPROCESS   : ${NEVENTSTOPROCESS}"
 echo "USESKIMMED         : ${USESKIMMED}"
 echo "================================================"
 
-$MSG "Listing samples in SAMPLESDIRPATH=$SAMPLESDIRPATH"
-ls -lhB --color=auto $SAMPLESDIRPATH
+#$MSG "Listing samples in SAMPLESDIRPATH=$SAMPLESDIRPATH"
+#ls -lhB --color=auto $SAMPLESDIRPATH
 
 echo ""
 echo ""
@@ -163,7 +163,8 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     sed "s/SAMPLEFILENAME/${SAMPLEFILENAME}/" /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
     sed "s/NEVENTS/${NEVENTS}/" /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
     sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp4.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
-    #condor_submit /tmp/phchang/${CONDORJOBNAME}.cmd
+    $MSG "Submitting "${CONDORJOBNAME}
+    condor_submit /tmp/phchang/${CONDORJOBNAME}.cmd
     export CONDORJOBCOUNTER=$((CONDORJOBCOUNTER+1))
     #echo $CONDORJOBCOUNTER
   done < /tmp/ditto_runana_jobs.txt

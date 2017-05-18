@@ -365,7 +365,9 @@ namespace Ditto
     int print_rate                         = 432;
     bool isdata                            = false;
     bool isfastsim                         = false;
+    bool doskim                            = false;
     TStopwatch my_timer;
+    TString output_name                    = "output";
 
     TTree* getCurrentTTree()
     {
@@ -742,6 +744,11 @@ namespace Ditto
       return fraction_of_booked_nevents;
     }
 
+    void setDoSkim(bool b)
+    {
+      doskim = b;
+    }
+
   }
 
   namespace Analyses
@@ -755,6 +762,7 @@ namespace Ditto
 
     //______________________________________________________________________________________
     void doObjectCutflow() { do_object_cutflow = true; }
+    void doNotObjectCutflow() { do_object_cutflow = false; }
 
     //______________________________________________________________________________________
     template <class T>
@@ -842,12 +850,14 @@ namespace Ditto
       HistUtil::fillStdHistograms(__FUNCTION__, a);
       return true;
     }
+
     //______________________________________________________________________________________
     void SM_WWW_3l1SFOS(AnalysisData& a)
     {
       if ( !(a.leptons.size() == 3) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
+
     //______________________________________________________________________________________
     void SM_WWW_3l2SFOS(AnalysisData& a)
     {
@@ -864,6 +874,7 @@ namespace Ditto
       if ( !(a.met.p4.Pt() > 60.) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
+
     //______________________________________________________________________________________
     void SM_WWW_SSem(AnalysisData& a)
     {
@@ -872,9 +883,13 @@ namespace Ditto
       if ( !(a.met.p4.Pt() > 60.) ) return;
       HistUtil::fillStdHistograms(__FUNCTION__, a);
     }
+
     //______________________________________________________________________________________
     bool SM_WWW_SSmm(AnalysisData& a)
     {
+
+      // Set the AnalysisData pointer
+      setAnalysisData(a);
 
       // Boolean flag to pass whether it passed a "presel" so we can skim or not
       bool pass = false;
@@ -902,6 +917,28 @@ namespace Ditto
       HistUtil::fillLeptonIDHistograms(__FUNCTION__,a);
 
       return pass;
+    }
+
+    //______________________________________________________________________________________
+    void SM_WWW_SS_Isolation_Study(AnalysisData& a_good, AnalysisData& a_fake)
+    {
+      doObjectCutflow();
+
+      setAnalysisData(a_good);
+      selectObjects_PID_Isolation(a_good);
+      //a_good.leptons = ObjUtil::Leptons(a_good.lepcol["muon"]);
+      //HistUtil::fillIsFromWLeptonIDHistograms("LepISoStudyMuon__", a_good);
+      a_good.leptons = ObjUtil::Leptons(a_good.lepcol["elec"]);
+      HistUtil::fillIsFromWLeptonIDHistograms("LepISoStudyElec__", a_good);
+
+      setAnalysisData(a_fake);
+      selectObjects_PID_Isolation(a_fake);
+      //a_fake.leptons = ObjUtil::Leptons(a_fake.lepcol["muon"]);
+      //HistUtil::fillIsNotFromWLeptonIDHistograms("LepISoStudyMuon__", a_fake);
+      //a_fake.leptons = ObjUtil::Leptons(a_fake.lepcol["elec"]);
+      //HistUtil::fillIsNotFromWLeptonIDHistograms("LepISoStudyElec__", a_fake);
+
+      doNotObjectCutflow();
     }
 
     //______________________________________________________________________________________
@@ -1111,6 +1148,12 @@ namespace Ditto
     }
 
     //______________________________________________________________________________________
+    void selectObjects_SM_WWW_SS_Isolation_Study(AnalysisData& a)
+    {
+      selectObjs<ObjUtil::Lepton>(a.leptons     , isGoodNonIsoLepton_SM_WWW_SS);
+    }
+
+    //______________________________________________________________________________________
     void selectObjects_SM_VBS_WW_lvjj(AnalysisData& a)
     {
       selectObjs<ObjUtil::Lepton>(a.leptons, isGoodLepton_SM_VBS_WW_lvjj);
@@ -1121,8 +1164,8 @@ namespace Ditto
     //______________________________________________________________________________________
     void selectObjects_PID_Isolation(AnalysisData& a)
     {
-      selectObjs<ObjUtil::Lepton>(a.leptons     , isGoodMuon_PID_Isolation);
-//	      selectObjs<ObjUtil::Lepton>(a.vetoleptons , isFakeMuon_PID_Isolation);
+      selectObjs<ObjUtil::Lepton>(a.lepcol["muon"] , isGoodNonIsoMuon_SM_WWW_SS);
+      selectObjs<ObjUtil::Lepton>(a.lepcol["elec"] , isGoodNonIsoElectron_SM_WWW_SS);
     }
 
     //______________________________________________________________________________________
@@ -1361,27 +1404,53 @@ namespace Ditto
     //______________________________________________________________________________________
     bool isGoodElectron_SM_WWW_SS(ObjUtil::Lepton& lepton)
     {
-      if ( !(lepton.p4.Pt()                   >  20.  ) ) return false;
-      if ( !(fabs(lepton.p4.Eta())            <  2.4  ) ) return false;
-      if ( !(fabs(lepton.pdgId)               == 11   ) ) return false;
-      if ( !(fabs(lepton.elEtaSC)             <= 2.5  ) ) return false;
-      if ( !(!(lepton.elConvVeto)                     ) ) return false;
-      if ( !(lepton.elNmiss                   <= 0    ) ) return false;
-      if ( !(fabs(lepton.dz)                  <  0.1  ) ) return false;
-      if ( !(fabs(lepton.dxy)                 <  0.05 ) ) return false;
-      if ( !(fabs(lepton.sip3d)               <  4    ) ) return false;
-      if ( !(lepton.tightcharge               == 2    ) ) return false;
-      if ( !(isElectronPOGMVAIDCut(lepton,
-                 /* barrel */      0.77, 0.52, 0.77,
-                 /* transition */  0.56, 0.11, 0.56,
-                 /* endcap */      0.48,-0.01, 0.48)  ) ) return false;
-      if ( !(isTriggerSafenoIso_v1(lepton)            ) ) return false;
-      //if ( !(isIsoElectron_SM_WWW_SS(lepton)          ) ) return false;
+                                                                 if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
+      if (!( isGoodNonIsoMuon_SM_WWW_SS(lepton) )) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 1);
+      if (!( isIsoElectron_SM_WWW_SS(lepton)    )) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 2);
       return true;
     }
 
     //______________________________________________________________________________________
     bool isGoodMuon_SM_WWW_SS(ObjUtil::Lepton& lepton)
+    {
+                                                                 if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
+      if (!( isGoodNonIsoMuon_SM_WWW_SS(lepton) )) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 1);
+      if (!( isIsoMuon_SM_WWW_SS(lepton)        )) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 2);
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isGoodNonIsoLepton_SM_WWW_SS(ObjUtil::Lepton& lepton)
+    {
+      return isGoodNonIsoElectron_SM_WWW_SS(lepton) || isGoodNonIsoMuon_SM_WWW_SS(lepton);
+    }
+
+    //______________________________________________________________________________________
+    bool isGoodNonIsoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton)
+    {
+                                                                        if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  0);
+      if ( !(lepton.p4.Pt()                   >  20.  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  1);
+      if ( !(fabs(lepton.p4.Eta())            <  2.4  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  2);
+      if ( !(fabs(lepton.pdgId)               == 11   ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  3);
+      if ( !(fabs(lepton.elEtaSC)             <= 2.5  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  4);
+      if ( !(!(lepton.elConvVeto)                     ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  5);
+      if ( !(lepton.elNmiss                   <= 0    ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  6);
+      if ( !(fabs(lepton.dz)                  <  0.1  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  7);
+      if ( !(fabs(lepton.dxy)                 <  0.05 ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  8);
+      if ( !(fabs(lepton.sip3d)               <  4    ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),  9);
+      if ( !(lepton.tightcharge               == 2    ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 10);
+      if ( !(isElectronPOGMVAIDCut(lepton,
+                 /* barrel */      0.77, 0.52, 0.77,
+                 /* transition */  0.56, 0.11, 0.56,
+                 /* endcap */      0.48,-0.01, 0.48)  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 11);
+      if ( !(isTriggerSafenoIso_v1(lepton)            ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 12);
+      if ( !(lepton.isFromX & (1<<0)                  ) )               if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 13);
+      if (  (lepton.isFromX & (1<<0)                  ) )               if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 14);
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isGoodNonIsoMuon_SM_WWW_SS(ObjUtil::Lepton& lepton)
     {
                                                                      if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
       if ( !(lepton.p4.Pt()             >    20.   ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 1);
@@ -1392,7 +1461,8 @@ namespace Ditto
       if ( !(fabs(lepton.dxy)           <=    0.05 ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 6);
       if ( !(lepton.muPOverP            <     0.2  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 7);
       if ( !(isMediumMuonPOG(lepton)               ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 8);
-      //if ( !(isIsoMuon_SM_WWW_SS(lepton)           ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 9);
+      if ( !(lepton.isFromX & (1<<0)                  ) )            if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 9);
+      if (  (lepton.isFromX & (1<<0)                  ) )            if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),10);
       return true;
     }
 
@@ -1539,22 +1609,28 @@ namespace Ditto
       return true;
     }
 
-//	    //______________________________________________________________________________________
-//	    bool isFakeMuon_PID_Isolation(ObjUtil::Lepton& lepton)
-//	    {
-//	                                                                       if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),-1);
-//	      if (  (lepton.isFromX & (1<<0) /*not asking W*/) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
-//	      if ( !(lepton.p4.Pt()               >    20.   ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 1);
-//	      if ( !(fabs(lepton.p4.Eta())        <    2.4   ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 2);
-//	      if ( !(abs(lepton.pdgId)            ==   13    ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 3);
-//	      if ( !(fabs(lepton.sip3d)           <     4    ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 4);
-//	      if ( !(fabs(lepton.dz)              <=    0.1  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 5);
-//	      if ( !(fabs(lepton.dxy)             <=    0.05 ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 6);
-//	      if ( !(lepton.muPOverP              <     0.2  ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 8);
-//	      if ( !(isMediumMuonPOG(lepton)                 ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 9);
-//	      //if ( !(isIsoMuon_SM_WWW_SS(lepton)           ) ) return false; if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a),10);
-//	      return true;
-//	    }
+    //______________________________________________________________________________________
+    bool isGoodElectron_PID_Isolation(ObjUtil::Lepton& lepton)
+    {
+                                                                     if (do_object_cutflow) HistUtil::fillCutflow(__FUNCTION__, (*this_a), 0);
+      if ( !(lepton.p4.Pt()                   >  20.  ) ) return false;
+      if ( !(fabs(lepton.p4.Eta())            <  2.4  ) ) return false;
+      if ( !(fabs(lepton.pdgId)               == 11   ) ) return false;
+      if ( !(fabs(lepton.elEtaSC)             <= 2.5  ) ) return false;
+      if ( !(!(lepton.elConvVeto)                     ) ) return false;
+      if ( !(lepton.elNmiss                   <= 0    ) ) return false;
+      if ( !(fabs(lepton.dz)                  <  0.1  ) ) return false;
+      if ( !(fabs(lepton.dxy)                 <  0.05 ) ) return false;
+      if ( !(fabs(lepton.sip3d)               <  4    ) ) return false;
+      if ( !(lepton.tightcharge               == 2    ) ) return false;
+      if ( !(isElectronPOGMVAIDCut(lepton,
+                 /* barrel */      0.77, 0.52, 0.77,
+                 /* transition */  0.56, 0.11, 0.56,
+                 /* endcap */      0.48,-0.01, 0.48)  ) ) return false;
+      if ( !(isTriggerSafenoIso_v1(lepton)            ) ) return false;
+      //if ( !(isIsoElectron_SM_WWW_SS(lepton)          ) ) return false;
+      return true;
+    }
 
     //______________________________________________________________________________________
     void overlapRemoval(AnalysisData& ana_data)
@@ -2044,37 +2120,60 @@ namespace Ditto
     void fillLeptonIDHistograms(string prefix, Analyses::AnalysisData& a)
     {
       /// fill all histogram types
-      fillLepDz      (prefix, a);
-      fillLepDxy     (prefix, a);
-      fillLepIp3d    (prefix, a);
-      fillLepSip3d   (prefix, a);
-      fillLepRelIso03(prefix, a);
-      fillLepAbsIso03(prefix, a);
+      fillLepDz        (prefix, a);
+      fillLepDxy       (prefix, a);
+      fillLepIp3d      (prefix, a);
+      fillLepSip3d     (prefix, a);
+      fillLepRelIso03  (prefix, a);
+      fillLepAbsIso03  (prefix, a);
       fillLepRelIso03EA(prefix, a);
       fillLepAbsIso03EA(prefix, a);
       fillLepRelIso03DB(prefix, a);
       fillLepAbsIso03DB(prefix, a);
-      fillLepMiniIso03(prefix, a);
-      fillLepPtRatio (prefix, a);
-      fillLepPtRel   (prefix, a);
-      //fillLepID      (prefix, a);
-      fillLepIsFromW (prefix, a);
+      fillLepMiniIso03 (prefix, a);
+      fillLepPtRatio   (prefix, a);
+      fillLepPtRel     (prefix, a);
+      fillLepIsFromW   (prefix, a);
+    }
 
-      fillVetoLepDz      (prefix, a);
-      fillVetoLepDxy     (prefix, a);
-      fillVetoLepIp3d    (prefix, a);
-      fillVetoLepSip3d   (prefix, a);
-      fillVetoLepRelIso03(prefix, a);
-      fillVetoLepAbsIso03(prefix, a);
-      fillVetoLepRelIso03EA(prefix, a);
-      fillVetoLepAbsIso03EA(prefix, a);
-      fillVetoLepRelIso03DB(prefix, a);
-      fillVetoLepAbsIso03DB(prefix, a);
-      fillVetoLepMiniIso03(prefix, a);
-      fillVetoLepPtRatio (prefix, a);
-      fillVetoLepPtRel   (prefix, a);
-      fillVetoLepID      (prefix, a);
-      fillVetoLepIsFromW (prefix, a);
+    //______________________________________________________________________________________
+    void fillIsFromWLeptonIDHistograms(string prefix, Analyses::AnalysisData& a)
+    {
+      /// fill all histogram types
+      fillIsFromWLepDz        (prefix, a);
+      fillIsFromWLepDxy       (prefix, a);
+      fillIsFromWLepIp3d      (prefix, a);
+      fillIsFromWLepSip3d     (prefix, a);
+      fillIsFromWLepRelIso03  (prefix, a);
+      fillIsFromWLepAbsIso03  (prefix, a);
+      fillIsFromWLepRelIso03EA(prefix, a);
+      fillIsFromWLepAbsIso03EA(prefix, a);
+      fillIsFromWLepRelIso03DB(prefix, a);
+      fillIsFromWLepAbsIso03DB(prefix, a);
+      fillIsFromWLepMiniIso03 (prefix, a);
+      fillIsFromWLepPtRatio   (prefix, a);
+      fillIsFromWLepPtRel     (prefix, a);
+      fillIsFromWLepIsFromW   (prefix, a);
+    }
+
+    //______________________________________________________________________________________
+    void fillIsNotFromWLeptonIDHistograms(string prefix, Analyses::AnalysisData& a)
+    {
+      /// fill all histogram types
+      fillIsNotFromWLepDz        (prefix, a);
+      fillIsNotFromWLepDxy       (prefix, a);
+      fillIsNotFromWLepIp3d      (prefix, a);
+      fillIsNotFromWLepSip3d     (prefix, a);
+      fillIsNotFromWLepRelIso03  (prefix, a);
+      fillIsNotFromWLepAbsIso03  (prefix, a);
+      fillIsNotFromWLepRelIso03EA(prefix, a);
+      fillIsNotFromWLepAbsIso03EA(prefix, a);
+      fillIsNotFromWLepRelIso03DB(prefix, a);
+      fillIsNotFromWLepAbsIso03DB(prefix, a);
+      fillIsNotFromWLepMiniIso03 (prefix, a);
+      fillIsNotFromWLepPtRatio   (prefix, a);
+      fillIsNotFromWLepPtRel     (prefix, a);
+      fillIsNotFromWLepIsFromW   (prefix, a);
     }
 
     //______________________________________________________________________________________
@@ -2126,26 +2225,39 @@ namespace Ditto
     void fillLepMiniIso03 (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dminiIso03" , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                    , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
     void fillLepPtRel     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptrel"     , ilep).Data() , a.leptons[ilep].ptRel                                , a.wgt , a.hist_db , "" , 180 , 0. , 30., prefix); }
     void fillLepPtRatio   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptratio"   , ilep).Data() , a.leptons[ilep].ptRatio                              , a.wgt , a.hist_db , "" , 180 , 0.5, 1.0, prefix); }
-    void fillLepID        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dID"        , ilep).Data() , a.leptons[ilep].id                                   , a.wgt , a.hist_db , "" , 180 , 0. , 5  , prefix); }
     void fillLepIsFromW   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dIsFromW"   , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                   , a.wgt , a.hist_db , "" ,   2 , 0. , 2  , prefix); }
+    /// Leptons from W
+    void fillIsFromWLepDz        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                   , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+    void fillIsFromWLepDxy       (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                  , a.wgt , a.hist_db , "" , 180 , 0. , 0.01, prefix); }
+    void fillIsFromWLepIp3d      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dip3d"      , ilep).Data() , a.leptons[ilep].ip3d                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+    void fillIsFromWLepSip3d     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                                , a.wgt , a.hist_db , "" , 180 , 0. , 10 , prefix); }
+    void fillIsFromWLepRelIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                             , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsFromWLepAbsIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsFromWLepRelIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsFromWLepAbsIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsFromWLepRelIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsFromWLepAbsIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsFromWLepMiniIso03 (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dminiIso03" , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                    , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsFromWLepPtRel     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptrel"     , ilep).Data() , a.leptons[ilep].ptRel                                , a.wgt , a.hist_db , "" , 180 , 0. , 30., prefix); }
+    void fillIsFromWLepPtRatio   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptratio"   , ilep).Data() , a.leptons[ilep].ptRatio                              , a.wgt , a.hist_db , "" , 180 , 0.5, 1.0, prefix); }
+    void fillIsFromWLepIsFromW   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dIsFromW"   , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                   , a.wgt , a.hist_db , "" ,   2 , 0. , 2  , prefix); }
+    /// Leptons Is not from W
+    void fillIsNotFromWLepDz        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                   , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+    void fillIsNotFromWLepDxy       (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                  , a.wgt , a.hist_db , "" , 180 , 0. , 0.01, prefix); }
+    void fillIsNotFromWLepIp3d      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dip3d"      , ilep).Data() , a.leptons[ilep].ip3d                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+    void fillIsNotFromWLepSip3d     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                                , a.wgt , a.hist_db , "" , 180 , 0. , 10 , prefix); }
+    void fillIsNotFromWLepRelIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                             , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsNotFromWLepAbsIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsNotFromWLepRelIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsNotFromWLepAbsIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsNotFromWLepRelIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsNotFromWLepAbsIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+    void fillIsNotFromWLepMiniIso03 (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dminiIso03" , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                    , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+    void fillIsNotFromWLepPtRel     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptrel"     , ilep).Data() , a.leptons[ilep].ptRel                                , a.wgt , a.hist_db , "" , 180 , 0. , 30., prefix); }
+    void fillIsNotFromWLepPtRatio   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptratio"   , ilep).Data() , a.leptons[ilep].ptRatio                              , a.wgt , a.hist_db , "" , 180 , 0.5, 1.0, prefix); }
+    void fillIsNotFromWLepIsFromW   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dIsFromW"   , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                   , a.wgt , a.hist_db , "" ,   2 , 0. , 2  , prefix); }
     // Jet single object
     void fillJetID        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                   , a.wgt , a.hist_db , "" ,   2 , 0. , 30 , prefix); }
-    /// Veto leptons
-    void fillVetoLepDz        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%ddz"         , ilep).Data() , a.vetoleptons[ilep].dz                                       , a.wgt , a.hist_db , "" , 180 , 0.  , 0.05 , prefix); }
-    void fillVetoLepDxy       (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%ddxy"        , ilep).Data() , a.vetoleptons[ilep].dxy                                      , a.wgt , a.hist_db , "" , 180 , 0.  , 0.01 , prefix); }
-    void fillVetoLepIp3d      (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dip3d"       , ilep).Data() , a.vetoleptons[ilep].ip3d                                     , a.wgt , a.hist_db , "" , 180 , 0.  , 0.05 , prefix); }
-    void fillVetoLepSip3d     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dsip3d"      , ilep).Data() , a.vetoleptons[ilep].sip3d                                    , a.wgt , a.hist_db , "" , 180 , 0.  , 10  , prefix); }
-    void fillVetoLepRelIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%drelIso03"   , ilep).Data() , a.vetoleptons[ilep].relIso03                                 , a.wgt , a.hist_db , "" , 180 , 0.  , 1.5 , prefix); }
-    void fillVetoLepAbsIso03  (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dabsIso03"   , ilep).Data() , a.vetoleptons[ilep].relIso03 * a.vetoleptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0.  , 10. , prefix); }
-    void fillVetoLepRelIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%drelIso03EA" , ilep).Data() , a.vetoleptons[ilep].relIso03EA                               , a.wgt , a.hist_db , "" , 180 , 0.  , 1.5 , prefix); }
-    void fillVetoLepAbsIso03EA(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dabsIso03EA" , ilep).Data() , a.vetoleptons[ilep].relIso03EA * a.vetoleptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0.  , 10. , prefix); }
-    void fillVetoLepRelIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%drelIso03DB" , ilep).Data() , a.vetoleptons[ilep].relIso03DB                               , a.wgt , a.hist_db , "" , 180 , 0.  , 1.5 , prefix); }
-    void fillVetoLepAbsIso03DB(string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dabsIso03DB" , ilep).Data() , a.vetoleptons[ilep].relIso03DB * a.vetoleptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0.  , 10. , prefix); }
-    void fillVetoLepMiniIso03 (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dminiIso03"  , ilep).Data() , a.vetoleptons[ilep].miniRelIsoCMS3_EA                        , a.wgt , a.hist_db , "" , 180 , 0.  , 1.5 , prefix); }
-    void fillVetoLepPtRel     (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dptrel"      , ilep).Data() , a.vetoleptons[ilep].ptRel                                    , a.wgt , a.hist_db , "" , 180 , 0.  , 30. , prefix); }
-    void fillVetoLepPtRatio   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dptratio"    , ilep).Data() , a.vetoleptons[ilep].ptRatio                                  , a.wgt , a.hist_db , "" , 180 , 0.5 , 1.0 , prefix); }
-    void fillVetoLepID        (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dID"         , ilep).Data() , a.vetoleptons[ilep].id                                       , a.wgt , a.hist_db , "" , 180 , 0.  , 5   , prefix); }
-    void fillVetoLepIsFromW   (string prefix , Analyses::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.vetoleptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("vetolep%dIsFromW"    , ilep).Data() , (a.vetoleptons[ilep].isFromX) & (1<<0)                       , a.wgt , a.hist_db , "" , 2   , 0.  , 2   , prefix); }
 
     void fillCutflow    (string prefix, Analyses::AnalysisData& a, int ibin)
     {
@@ -2408,7 +2520,6 @@ namespace Ditto
 
     void createSkimTree(const char* filename)
     {
-      if (LoopUtil::getCurrentTFileName().Contains("skimtree")) return;
       printf("[Ditto::HistUtil::saveSkimTree] Creating %s to hold skimmed TTree\n", filename);
       skimfile = new TFile(filename, "recreate");
       skimtree = LoopUtil::getCurrentTTree()->CloneTree(0);
@@ -2416,7 +2527,6 @@ namespace Ditto
 
     void fillSkimTree()
     {
-      if (LoopUtil::getCurrentTFileName().Contains("skimtree")) return;
       skimtree->Fill();
     }
 
