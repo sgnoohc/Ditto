@@ -1,7 +1,7 @@
 universe=Vanilla
 +DESIRED_Sites="T2_US_UCSD"
 executable=/home/users/phchang/ditto/condor/executable.sh
-arguments=ANALYSIS HADOOPDIR SAMPLEFILENAME NEVENTS
+arguments=ANALYSIS HADOOPDIR SAMPLEFILENAME TAG NEVENTS
 transfer_executable=True
 transfer_input_files=INPUTFILES
 transfer_output_files = ""
