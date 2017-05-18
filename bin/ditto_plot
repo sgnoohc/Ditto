@@ -26,6 +26,7 @@ usage()
   echo "  -L    Luminosity             (e.g. -L Prefix)"
   echo "  -e    Extra plot option      (e.g. -e '--autostack')"
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
+  echo "  -S    Signal scale           (e.g. -S '*100' # must provide '*')"
   echo "Options without arguments:"
   echo "  -s    Shape comparison"
   echo
@@ -46,13 +47,15 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":e:v:p:o:f:hs" OPTION; do
+while getopts ":e:L:v:p:o:f:S:hs" OPTION; do
   case $OPTION in
     e) EXTRAOPTION=${OPTARG};;
     v) VAR=${OPTARG};;
     p) PLOTOPTION=${OPTARG};;
     o) OUTPUTPREFIX=${OPTARG};;
+    L) SCALE=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
+    S) SIGSCALE=${OPTARG};;
     s) SHAPECOMPARISON="TRUE";;
     h) usage;;
     :) usage;;
@@ -160,7 +163,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
     if [ "x${CATEGORY}" == "xbkg" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetFillColor=>${COLOR},SetLineWidth=>0,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
-    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}${SIGSCALE}\'"; fi
   done
 
   # if no bkg, then add a sig to bkg

@@ -20,7 +20,7 @@ error()
   echo ""
   echo "==================================================="
   echo SCRAM_ARCH=$SCRAM_ARCH
-  echo CMSSWVERSION=$CMSSWVERSION
+  echo CMSSW_VERSION=$CMSSW_VERSION
   echo PACKAGENAME=$PACKAGENAME
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH
@@ -37,13 +37,13 @@ if [ "x${DITTOPATH}" == "x" ]; then error; fi
 if [ "x${PACKAGENAME}" == "x" ]; then error; fi
 if [ "x${PACKAGEPATH}" == "x" ]; then error; fi
 if [ "x${SCRAM_ARCH}" == "x" ]; then error; fi
-if [ "x${CMSSWVERSION}" == "x" ]; then error; fi
+if [ "x${CMSSW_VERSION}" == "x" ]; then error; fi
 
 if [ -z $1 ]; then
   $SUCCESS "Ditto environment is set with the following setting"
   echo "==================================================="
   echo SCRAM_ARCH=$SCRAM_ARCH
-  echo CMSSWVERSION=$CMSSWVERSION
+  echo CMSSW_VERSION=$CMSSW_VERSION
   echo PACKAGENAME=$PACKAGENAME
   echo BINARYNAME=$BINARYNAME
   echo PACKAGEPATH=$PACKAGEPATH

@@ -48,6 +48,8 @@ ObjUtil::Leptons getLeptons(/*TREECLASSNAME& mytree*/)
     lepton.elEpRatio = mytree.lep_elEpRatio().at(ilep);
     lepton.elConvVeto = mytree.lep_elConvVeto().at(ilep);
     lepton.elNmiss = mytree.lep_elNmiss().at(ilep);
+    // truth matching
+    lepton.isFromX = mytree.lep_isFromX().at(ilep);
     leptons.push_back(lepton);
   }
   return leptons;

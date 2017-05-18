@@ -78,7 +78,7 @@ parser.add_argument('--output_tcanvas_name', dest='output_tcanvas_name', help='o
 parser.add_argument('--output_file_open_option', dest='output_file_open_option', help='open to update? or open to recreate? etc.', default='update')
 
 # Options for saving plot
-parser.add_argument('--plotfiletype', dest='plotfiletypes', action='append', help='plot types (e.g. pdf, eps, png, etc.)', default=['pdf'])
+parser.add_argument('--plotfiletype', dest='plotfiletypes', action='append', help='plot types (e.g. pdf, eps, png, etc.)', default=['pdf', 'png'])
 parser.add_argument('--plotname', dest='plotname', help='plot name', default='myplot')
 parser.add_argument('--plotlabel', dest='plotlabel', help='plot label on top')
 parser.add_argument('--plotlabelXcoord', dest='plotlabelXcoord', default=.92, type=float, help='plot label X-coord on top')
@@ -624,7 +624,7 @@ class HistogramPainter:
         splity = int(self.args.canvas_def.split(self.args.delimiter_canvas_def)[0].split(',')[1]) # hard code
         if splity != 2:
             #print 'override canvas def'
-            self.args.canvas_def = '1,2:0-0.3-1-1-0.1-0.30-0.02-0.20:0-0-1-0.3-0.05-0.30-0.2-0.20'
+            self.args.canvas_def = '1,2:0-0.3-1-1-0.1-0.30-0.02-0.20:0-0-1-0.3-0.05-0.30-0.4-0.20'
         if float(self.args.canvas_size_x) / float(self.args.canvas_size_y) > 1:
             print 'override canvas ratio since canvas x-size is longer than y-size'
             self.args.canvas_size_x = 800
@@ -642,7 +642,7 @@ class HistogramPainter:
         splity = int(self.args.canvas_def.split(self.args.delimiter_canvas_def)[0].split(',')[1]) # hard code
         if splity != 2:
             #print 'override canvas def'
-            self.args.canvas_def = '1,2:0-0.3-1-1-0.1-0.30-0.02-0.20:0-0-1-0.3-0.05-0.30-0.2-0.20'
+            self.args.canvas_def = '1,2:0-0.3-1-1-0.1-0.30-0.02-0.20:0-0-1-0.3-0.05-0.30-0.4-0.20'
         if float(self.args.canvas_size_x) / float(self.args.canvas_size_y) > 1:
             print 'override canvas ratio since canvas x-size is longer than y-size'
             self.args.canvas_size_x = 800
@@ -1361,8 +1361,8 @@ class HistogramPainter:
                 globalmax = localmax
             if index == 0:
                 sig_scan_lower_hist.Draw('hist')
-                sig_scan_lower_hist.SetMaximum(2.0)
-                sig_scan_lower_hist.SetMinimum(0.0)
+                sig_scan_lower_hist.SetMaximum(2.00)
+                sig_scan_lower_hist.SetMinimum(0.)
                 self.histmanager.set_histaxis_settings(sig_scan_lower_hist, 2.0)
                 self.histmanager.set_histaxis_labels(sig_scan_lower_hist)
                 if option == "s/sqrt(b)":
@@ -1396,7 +1396,26 @@ class HistogramPainter:
             if localmax > globalmax:
                 globalmax = localmax
             if index == 0:
+
                 hist.Draw('histsame')
+
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                hist.Draw('hist')
+#	                hist.SetLineStyle(1)
+#	                self.histmanager.set_histaxis_settings(hist, 2.2)
+#	                self.histmanager.set_histaxis_labels(hist)
+#	                self.objs.append(hist)
+#	                hist.SetMaximum(1.04)
+#	                hist.SetMinimum(0.81)
+#	                return
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+
             else:
                 hist.Draw('histsame')
             self.objs.append(hist)
@@ -1407,6 +1426,24 @@ class HistogramPainter:
                 globalmax = localmax
             if index == 0:
                 hist.Draw('histsame')
+
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                hist.Draw('hist')
+#	                hist.SetLineStyle(1)
+#	                self.histmanager.set_histaxis_settings(hist, 2.2)
+#	                self.histmanager.set_histaxis_labels(hist)
+#	                self.objs.append(hist)
+#	                hist.SetMaximum(1.04)
+#	                hist.SetMinimum(0.81)
+#	                return
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+#	                # To overwrite and only show acceptance
+
             else:
                 hist.Draw('histsame')
             self.objs.append(hist)
