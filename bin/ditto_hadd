@@ -1,0 +1,195 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+$DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+ERROR=echo
+MSG=echo
+SUCCESS=echo
+WARNING=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  MSG=e_msg
+  SUCCESS=e_success
+  WARNING=e_warning
+fi
+
+usage() {
+  $MSG "Usage:"
+  echo ""
+  echo "      sh $(basename $0) OPTSTRING ... OUTPUT_DIR_PATH"
+  echo
+  echo "Options with arguments:"
+  echo "  -h    Help                           (Display this message)"
+  echo "  -r    Red color category             (e.g. -r \'wz,ttv\')"
+  echo "  -b    Blue color category            (e.g. -b \'wz,ttv\')"
+  echo "  -y    Yellow color category          (e.g. -y \'wz,ttv\')"
+  echo "  -g    Green color category           (e.g. -g \'wz,ttv\')"
+  echo "  -k    Sky blue color category        (e.g. -k \'wz,ttv\')"
+  echo "  -o    Orange color category          (e.g. -o \'wz,ttv\')"
+  echo "  -p    Purple color category          (e.g. -p \'wz,ttv\')"
+  echo "  -1    Signal #1                      (e.g. -1 \'wz,ttv\')"
+  echo "  -2    Signal #2                      (e.g. -2 \'wz,ttv\')"
+  echo "  -3    Signal #3                      (e.g. -3 \'wz,ttv\')"
+  echo "  -4    Signal #4                      (e.g. -3 \'wz,ttv\')"
+  echo " (-5    Signal #5? What?! Why would you want to create a terrible plot???)"
+  echo "  -d    /path/to/output/hadds/to       (e.g. -d ./)"
+  echo "Options without arguments:"
+  echo "  -s    Shape comparison"
+  echo
+  exit
+}
+
+# Command-line opts
+while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:h" OPTION; do
+  case $OPTION in
+    r) BKG1STR=${OPTARG};;
+    b) BKG2STR=${OPTARG};;
+    y) BKG3STR=${OPTARG};;
+    g) BKG4STR=${OPTARG};;
+    k) BKG5STR=${OPTARG};;
+    o) BKG6STR=${OPTARG};;
+    p) BKG7STR=${OPTARG};;
+    1) SIG1STR=${OPTARG};;
+    2) SIG2STR=${OPTARG};;
+    3) SIG3STR=${OPTARG};;
+    4) SIG4STR=${OPTARG};;
+    R) BKG1NICENAME=${OPTARG};;
+    B) BKG2NICENAME=${OPTARG};;
+    Y) BKG3NICENAME=${OPTARG};;
+    G) BKG4NICENAME=${OPTARG};;
+    K) BKG5NICENAME=${OPTARG};;
+    O) BKG6NICENAME=${OPTARG};;
+    P) BKG7NICENAME=${OPTARG};;
+    "!") SIG1NICENAME=${OPTARG};;
+    "@") SIG2NICENAME=${OPTARG};;
+    "#") SIG3NICENAME=${OPTARG};;
+    "$") SIG4NICENAME=${OPTARG};;
+    d) HADDOUTPUTDIR=${OPTARG};;
+    h) usage;;
+    :) usage;;
+  esac
+done
+
+# Shift away option strings
+shift $(($OPTIND - 1))
+
+# unflatten exclude pattern separated by commas
+BKG1s=(${BKG1STR//,/ })
+BKG2s=(${BKG2STR//,/ })
+BKG3s=(${BKG3STR//,/ })
+BKG4s=(${BKG4STR//,/ })
+BKG5s=(${BKG5STR//,/ })
+BKG6s=(${BKG6STR//,/ })
+BKG7s=(${BKG7STR//,/ })
+SIG1s=(${SIG1STR//,/ })
+SIG2s=(${SIG2STR//,/ })
+SIG3s=(${SIG3STR//,/ })
+SIG4s=(${SIG4STR//,/ })
+
+if [ -z ${BKG1STR} ]; then
+if [ -z ${BKG2STR} ]; then
+if [ -z ${BKG3STR} ]; then
+if [ -z ${BKG4STR} ]; then
+if [ -z ${BKG5STR} ]; then
+if [ -z ${BKG6STR} ]; then
+if [ -z ${BKG7STR} ]; then
+if [ -z ${SIG1STR} ]; then
+if [ -z ${SIG2STR} ]; then
+if [ -z ${SIG3STR} ]; then
+if [ -z ${SIG4STR} ]; then
+  usage;
+fi
+fi
+fi
+fi
+fi
+fi
+fi
+fi
+fi
+fi
+fi
+
+if [ -z $1 ]; then
+  usage;
+fi
+
+if [ -z ${HADDOUTPUTDIR} ]; then
+  $ERROR "Please specify where to output"
+  usage;
+fi
+
+# Verbose
+date
+echo "================================================"
+echo "$(basename $0) $*"
+echo "------------------------------------------------"
+echo "BKG Red      : ${BKG1STR}"
+echo "BKG Blue     : ${BKG2STR}"
+echo "BKG Yellow   : ${BKG3STR}"
+echo "BKG Green    : ${BKG4STR}"
+echo "BKG Sky Blue : ${BKG5STR}"
+echo "BKG Orange   : ${BKG6STR}"
+echo "SIG 1        : ${SIG1STR}"
+echo "SIG 2        : ${SIG2STR}"
+echo "SIG 3        : ${SIG3STR}"
+echo "SIG 4        : ${SIG4STR}"
+echo "================================================"
+
+$WARNING "Please be aware that you are hadding by \"(wildcard)pattern(wildcard)root\"!!"
+$WARNING "Unwanted root files may merge!!"
+$WARNING "The users need to make sure there are no errors!!"
+
+rm -f /tmp/ditto_hadd.txt
+
+hadd_category(){
+  name=$1[@]
+  BKGNICENAME=$2
+  BKGCOLOR=$3
+  OUTPUTDIR=$4
+  COLORINDEX=$5
+  TYPE=$6
+  BKGS=("${!name}")
+
+  BKGHADDSTR=""
+  for BKG in "${BKGS[@]}"; do
+    BKGHADDSTR_NEW=$(echo $(ls $OUTPUTDIR/*${BKG}*hist.root))
+    BKGHADDSTR=${BKGHADDSTR}" "$BKGHADDSTR_NEW
+  done
+  if [ -z "${BKGHADDSTR}" ]; then
+    :
+  else
+    if [ -z "${BKGNICENAME}" ]; then
+      $WARNING "You asked to hadd over '${BKGCOLOR}' category but did not provide nice name for this summed set"
+      $WARNING "Setting the nice name to '${BKGCOLOR}'"
+      BKGNICENAME=${BKGCOLOR}
+    fi
+    echo "hadd -f ${HADDOUTPUTDIR}/hist_${TYPE}_${BKGNICENAME}_${COLORINDEX}.root $BKGHADDSTR &> ${HADDOUTPUTDIR}/log/hadd_hist_${TYPE}_${BKGNICENAME}.log">> /tmp/ditto_hadd.txt
+  fi
+}
+
+# Now write each category hadd command to tmp area
+hadd_category BKG1s "${BKG1NICENAME}" "red"     "${1}" 6 bkg
+hadd_category BKG2s "${BKG2NICENAME}" "blue"    "${1}" 5 bkg
+hadd_category BKG3s "${BKG3NICENAME}" "yellow"  "${1}" 4 bkg
+hadd_category BKG4s "${BKG4NICENAME}" "green"   "${1}" 3 bkg
+hadd_category BKG5s "${BKG5NICENAME}" "skyblue" "${1}" 2 bkg
+hadd_category BKG6s "${BKG6NICENAME}" "orange"  "${1}" 1 bkg
+hadd_category BKG7s "${BKG7NICENAME}" "purple"  "${1}" 0 bkg
+
+hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${1}" 1 sig
+hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${1}" 2 sig
+hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${1}" 3 sig
+hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${1}" 4 sig
+
+# Create output directory if not already
+mkdir -p ${HADDOUTPUTDIR}/
+mkdir -p ${HADDOUTPUTDIR}/log
+rm -f ${HADDOUTPUTDIR}/*
+
+# run the job
+$MSG "Running hadd in xargs"
+$DITTOPATH/bin/ditto_xargs /tmp/ditto_hadd.txt

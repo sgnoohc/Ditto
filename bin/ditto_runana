@@ -1,0 +1,192 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+$DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+ERROR=echo
+MSG=echo
+SUCCESS=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  MSG=e_msg
+  SUCCESS=e_success
+fi
+
+usage() {
+  $MSG "Usage:"
+  echo ""
+  echo "      sh $(basename $0) OPTIONSTRINGS ..."
+  echo
+  echo "Options with arguments:"
+  echo "  -h    Help                           (Display this message)"
+  echo "  -t    job tag                        (e.g. -j default=test)"
+  echo "  -d    path to samples dir            (e.g. -d /hadoop/cms/store/user/phchang/AutoTwopler_babies/merged/general/v0.0.2/)"
+  echo "  -e    comma separated exclude filter (e.g. -e \"ht\")"
+  echo "  -q    comma separated require filter (e.g. -q \"www\")"
+  echo "  -N    N number of events to restrict (e.g. -N 1000000)"
+  echo "Options without arguments:"
+  echo "  -c    Condor submit"
+  echo "  -s    Suppress log output"
+  echo "  -k    run skimmed version"
+  echo
+  exit
+}
+
+# Command-line opts
+while getopts ":t:q:e:N:d:hsck" OPTION; do
+  case $OPTION in
+    t) JOBTAG=${OPTARG};;
+    d) SAMPLESDIRPATH=${OPTARG};;
+    e) EXCLUDEPATTERNSSTR=${OPTARG};;
+    q) REQUIREPATTERNSSTR=${OPTARG};;
+    N) NEVENTSTOPROCESS=${OPTARG};;
+    c) CONDORSUBMIT=true;;
+    s) SUPPRESSLOG=true;;
+    k) USESKIMMED=true;;
+    h) usage;;
+    :) usage;;
+  esac
+done
+
+if [ -z ${SAMPLESDIRPATH} ]; then usage; fi
+
+# Shift away option strings
+shift $(($OPTIND - 1))
+
+# unflatten exclude pattern separated by commas
+EXCLUDEPATTERNS=(${EXCLUDEPATTERNSSTR//,/ })
+REQUIREPATTERNS=(${REQUIREPATTERNSSTR//,/ })
+
+if [ -z ${JOBTAG} ]; then JOBTAG=test; fi
+if [ -z ${SUPPRESSLOG} ]; then SUPPRESSLOG=false; fi
+if [ "$USESKIMMED" == "true" ]; then SAMPLESDIRPATH=${JOBTAG}/output/; fi
+
+# Verbose
+date
+echo "================================================"
+echo "$(basename $0) $*"
+echo "------------------------------------------------"
+echo "JOBTAG             : ${JOBTAG}"
+echo "SAMPLESDIRPATH     : ${SAMPLESDIRPATH}"
+echo "EXCLUDEPATTERNSSTR : ${EXCLUDEPATTERNSSTR}"
+echo "REQUIREPATTERNSSTR : ${REQUIREPATTERNSSTR}"
+echo "NEVENTSTOPROCESS   : ${NEVENTSTOPROCESS}"
+echo "USESKIMMED         : ${USESKIMMED}"
+echo "================================================"
+
+$MSG "Listing samples in SAMPLESDIRPATH=$SAMPLESDIRPATH"
+ls -lhB --color=auto $SAMPLESDIRPATH
+
+echo ""
+echo ""
+echo ""
+$MSG "Checking against exclude pattern string (if one was provided) and writing the command lines to /tmp/ditto_runana_jobs.txt"
+
+# Setting directory name
+OUTPUTDIRNAME=output
+LOGDIRNAME=log
+
+# If condor suppress log should be set to true
+if [ "${CONDORSUBMIT}" == "true" ]; then
+  SUPPRESSLOG=true
+  JOBTAG=.
+  OUTPUTDIRNAME=.
+  LOGDIRNAME=.
+fi
+
+# Clearing whatever is already in ditto_runana_jobs.txt
+rm -f /tmp/ditto_runana_jobs.txt
+
+# Main loop over the samples
+for SAMPLE in $(ls $SAMPLESDIRPATH); do
+
+  # Check it has .root
+  if [[ $SAMPLE != *".root"* ]]; then continue; fi
+
+  if [ "$USESKIMMED" == "true" ]; then
+    if [[ $SAMPLE != *"skimtree.root"* ]]; then continue; fi
+  fi
+
+  # Loop over exclude pattern to check whether I need to to exclud the sample
+  EXCLUDE=false
+  for EXCLUDEPATTERN in "${EXCLUDEPATTERNS[@]}"; do
+    if [[ $SAMPLE == *"${EXCLUDEPATTERN}"* ]]; then EXCLUDE=true; fi
+  done
+
+  # If the sample is to be excluded, continue.
+  if $EXCLUDE; then continue; fi
+
+  # Loop over exclude pattern to check whether I need to to exclud the sample
+  REQUIRE=false
+  for REQUIREPATTERN in "${REQUIREPATTERNS[@]}"; do
+    if [[ $SAMPLE == *"${REQUIREPATTERN}"* ]]; then REQUIRE=true; fi
+  done
+
+  if [ -z ${REQUIREPATTERNSSTR} ]; then
+    :
+  else
+    if [ "$REQUIRE" == "false"  ]; then
+      continue;
+    fi
+  fi
+
+  # Now we can add the job to the /tmp/ditto_runana_jobs.txt
+  if [ "$SUPPRESSLOG" == "false" ]; then
+    echo "ditto_ana_${PACKAGENAME} $SAMPLESDIRPATH/$SAMPLE ${JOBTAG}/${OUTPUTDIRNAME}/${SAMPLE//.root} ${NEVENTSTOPROCESS} &> ${JOBTAG}/${LOGDIRNAME}/${SAMPLE//.root}.log" >> /tmp/ditto_runana_jobs.txt
+  else
+    echo "ditto_ana_${PACKAGENAME} $SAMPLESDIRPATH/$SAMPLE ${JOBTAG}/${OUTPUTDIRNAME}/${SAMPLE//.root} ${NEVENTSTOPROCESS}" >> /tmp/ditto_runana_jobs.txt
+  fi
+
+done
+
+if [ "${CONDORSUBMIT}" == "true" ]; then
+  $MSG "Submitting condor jobs..."
+  CONDORJOBCOUNTER=0
+  #cat /tmp/ditto_runana_jobs.txt | while read LINE
+  while read -r LINE
+  do
+    ITEMS=($LINE)
+    ANALYSIS=${ITEMS[0]//ditto_ana_}
+    HADOOPDIR=${ITEMS[1]}
+    SAMPLEFILENAME=${ITEMS[2]//.\/.\/}
+    NEVENTS=${ITEMS[3]}
+    CONDORJOBNAME=${ANALYSIS}_${SAMPLEFILENAME}
+    mkdir -p /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/
+    mkdir -p /tmp/phchang/
+    rm -f /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/${SAMPLEFILENAME}.*
+    cp $DITTOPATH/condor/submit_template.cmd /tmp/phchang/temp.cmd
+    sed "s/ANALYSIS/${ANALYSIS}/" /tmp/phchang/temp.cmd  > /tmp/phchang/temp1.cmd
+    sed "s~HADOOPDIR~${HADOOPDIR}~" /tmp/phchang/temp1.cmd > /tmp/phchang/temp2.cmd
+    ##sed "s/HADOOPDIR/test/" /tmp/phchang/temp1.cmd > /tmp/phchang/temp2.cmd
+    sed "s/SAMPLEFILENAME/${SAMPLEFILENAME}/" /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
+    sed "s/NEVENTS/${NEVENTS}/" /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
+    sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp4.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
+    #condor_submit /tmp/phchang/${CONDORJOBNAME}.cmd
+    export CONDORJOBCOUNTER=$((CONDORJOBCOUNTER+1))
+    #echo $CONDORJOBCOUNTER
+  done < /tmp/ditto_runana_jobs.txt
+  rm /tmp/phchang/temp*.cmd
+  $MSG "Submitted all N=$CONDORJOBCOUNTER condor jobs!"
+  exit
+fi
+
+# Unless the jobtag contains the word "tag" check whether the job has already been run
+if [[ "$JOBTAG" == *"test"* ]]; then
+  : # move on
+else
+  # check whether the directory exists
+  if [ -d $JOBTAG ]; then
+    $ERROR "The output directory $JOBTAG/ already exists!"
+    $ERROR "Did you already ran with this -t $JOBTAG?"
+    $ERROR "If not delete $JOBTAG/ before running again."
+    exit
+  fi
+fi
+
+$MSG "Creating ${JOBTAG}output/ and ${JOBTAG}log/ in the local area, if it hasn't been done so."
+mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
+
+$MSG "Submitting xargs jobs via ditto_xargs"
+$DITTOPATH/bin/ditto_xargs /tmp/ditto_runana_jobs.txt
