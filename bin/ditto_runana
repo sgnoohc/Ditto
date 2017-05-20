@@ -194,7 +194,7 @@ for SAMPLE in $(ls $SAMPLESDIRPATH); do
   if [ "$SUPPRESSLOG" == "false" ]; then
     echo "ditto_ana_${PACKAGENAME} $SAMPLESDIRPATH/$SAMPLE ${JOBTAG}/${OUTPUTDIRNAME}/${SAMPLE//.root} ${NEVENTSTOPROCESS} &> ${JOBTAG}/${LOGDIRNAME}/${SAMPLE//.root}.log" >> /tmp/ditto_runana_jobs.txt
   else
-    echo "ditto_ana_${PACKAGENAME} $SAMPLESDIRPATH/$SAMPLE ${JOBTAG}/${OUTPUTDIRNAME}/${SAMPLE//.root} ${NEVENTSTOPROCESS}" >> /tmp/ditto_runana_jobs.txt
+    echo "ditto_ana_${PACKAGENAME} $SAMPLESDIRPATH/$SAMPLE ${JOBTAG}/${OUTPUTDIRNAME}/${SAMPLE//.root} ${NEVENTSTOPROCESS}" 2>&1 | tee ${JOBTAG}/${LOGDIRNAME}/${SAMPLE//.root}.log >> /tmp/ditto_runana_jobs.txt
   fi
 
 done
