@@ -70,13 +70,16 @@ mkdir -p ${PACKAGEPATH}/src/
 cd ${PACKAGEPATH}/src/
 $DITTOPATH/bin/ditto_root_makeclass $ROOTFILE $TREECLASSNAME $TREECLASSNAMESHORT
 #mv ${TREECLASSNAME}.cc ${TREECLASSNAME}.cxx
+$SUCCESS "Created ${PACKAGEPATH}/src/${TREECLASSNAME}.cxx [TTree class]"
+$SUCCESS "Created ${PACKAGEPATH}/src/${TREECLASSNAME}.h [TTree class]"
 
-$MSG "copying template tree loopers to the package directory..."
+$MSG "Creating tree loopers to the package directory..."
 
 # Copy TREELooper
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.h
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREELooper.cxx > /tmp/tmp.cxx
 sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx
+$SUCCESS "Created ${PACKAGEPATH}/src/${TREECLASSNAME}Looper.cxx [This is the event looper]"
 
 # Copy Binary
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/BINARYNAME.h   > /tmp/tmp.cxx
@@ -84,9 +87,15 @@ sed "s/BINARYNAME/${BINARYNAME}/"          /tmp/tmp.cxx                    > ${P
 sed "s/TEMPLATETREENAME/${TREECLASSNAME}/" $DIR/../template/BINARYNAME.cxx > /tmp/tmp.cxx
 sed "s/BINARYNAME/${BINARYNAME}/"          /tmp/tmp.cxx                    > /tmp/tmp2.cxx
 sed "s/TEMPLATETREESHORTNAME/${TREECLASSNAMESHORT}/" /tmp/tmp2.cxx         > ${PACKAGEPATH}/src/${BINARYNAME}.cxx
+$SUCCESS "Created ${PACKAGEPATH}/src/${BINARYNAME}.cxx [This is where main() is]"
 
 # Copy TREEConnector
 sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.h > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.h
 sed "s/TREECLASSNAME/${TREECLASSNAME}/" $DIR/../template/TEMPLATETREEConnector.cxx > ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx
+$SUCCESS "Created ${PACKAGEPATH}/src/${TREECLASSNAME}Connector.cxx [This is what connects given TTree to Looper]"
+
+# Copy setup.sh
+cp ${DITTOPATH}/template/setup.sh ${PACKAGEPATH}/
+$SUCCESS "Created ${PACKAGEPATH}/setup.sh [Setup script to set all the necessary environment for the analysis]"
 
 cd ../../

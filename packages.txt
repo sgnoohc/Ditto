@@ -1,2 +1,3 @@
-mybabymaker /home/users/phchang/analyses/mybabyframework/mybabymaker
-wwwanalysis /home/users/phchang/analyses/www/wwwanalysis
+mybabymaker   /home/users/phchang/analyses/mybabyframework/mybabymaker
+wwwanalysis   /home/users/phchang/analyses/www/wwwanalysis
+wwwhannsjoerg /home/users/phchang/analyses/www/wwwhannsjoerg

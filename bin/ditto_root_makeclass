@@ -7,7 +7,7 @@ echo ${PACKAGEPATH}
 usage(){
   echo "Usage:"
   echo ""
-  echo "  $0 ROOTFILE TTREENAME MAKECLASSNAME"
+  echo "  $0 ROOTFILE MAKECLASSNAME TTREENAME"
   echo ""
   echo ""
   exit
@@ -18,8 +18,8 @@ if [ -z $2 ]; then usage; fi
 if [ -z $3 ]; then usage; fi
 
 ROOTFILE=$1
-TTREENAME=$2
-MAKECLASSNAME=$3
+MAKECLASSNAME=$2
+TTREENAME=$3
 
 ROOTFILE=$('cd' $(dirname ${ROOTFILE}); pwd)/$(basename $1)
 
