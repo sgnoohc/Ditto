@@ -131,6 +131,7 @@ else
   DITTOVERSION=$(git rev-parse HEAD)
 fi
 popd
+exit
 
 #$MSG "Listing samples in SAMPLESDIRPATH=$SAMPLESDIRPATH"
 #ls -lhB --color=auto $SAMPLESDIRPATH
