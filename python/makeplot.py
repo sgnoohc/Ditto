@@ -440,6 +440,8 @@ class HistogramManager:
     def stylize_histogram(self, hist, histogram_fullpath):
         styles = self.parse_style(histogram_fullpath)
         #print 'size of histogram',histogram_fullpath,hist.Integral()
+        if self.args.show_overflow:
+            self.add_overflow(hist)
         for item in styles:
             if item == 'Scale':
                 if styles[item].find('norm')!=-1:
@@ -489,8 +491,6 @@ class HistogramManager:
                     getattr(hist, item)(styles[item])
                 except:
                     getattr(hist, item)(int(styles[item]))
-        if self.args.show_overflow:
-            self.add_overflow(hist)
     def add_overflow(self, hist):
         ofbinc = hist.GetBinContent(hist.GetNbinsX()+1)
         ofbine = hist.GetBinError(hist.GetNbinsX()+1)
@@ -1452,6 +1452,86 @@ class HistogramPainter:
         #    for i in xrange(1, hist.GetNbinsX() + 1):
         #        if accepthist.GetBinContent(i)
 
+    def draw_roc_curve(self):
+        self.args.canvas_def = "1,1:0-0-1-1-0.1-0.25-0.2-0.20"
+        canvas = self.canvasfactory.get_canvas()
+        canvas.cd(1).SetGridx(1)
+        canvas.cd(1).SetGridy(1)
+        #ROOT.gStyle.SetGridStyle(1)
+
+        bkghists = self.histmanager.get_background_histograms()
+        sighists = self.histmanager.get_signal_histograms()
+        datahists = self.histmanager.get_data_histograms()
+
+        # generalize later
+        if len(sighists) != len(bkghists):
+            print "number of siganl hists and bkg hists must match"
+            sys.exit(-1)
+
+
+        self.objs = []
+        graph = None
+        for index, sighist in enumerate(sighists):
+
+            bkghist = bkghists[index]
+
+            print "here", sighist.GetName(), bkghist.GetName()
+
+            error = ROOT.Double()
+
+            stot = sighist.IntegralAndError(0, 181, error)
+            btot = bkghist.IntegralAndError(0, 181, error)
+
+            x=[]
+            y=[]
+            for i in range(0, sighist.GetNbinsX()+1):
+                #s = sighist.IntegralAndError(sighist.GetNbinsX()-i, sighist.GetNbinsX()+1, error)
+                #b = bkghist.IntegralAndError(sighist.GetNbinsX()-i, bkghist.GetNbinsX()+1, error)
+                s = sighist.IntegralAndError(0, i, error)
+                b = bkghist.IntegralAndError(0, i, error)
+                seff = s / stot
+                beff = b / btot
+                print seff, beff
+                x.append(beff)
+                y.append(seff)
+
+            graph = ROOT.TGraph(len(x))
+            for index, i in enumerate(x):
+                graph.SetPoint(index, x[index], y[index])
+
+            graph.SetTitle("")
+            graph.SetName("")
+            if self.args.minimum:
+                graph.SetMinimum(eval(self.args.minimum))
+            else:
+                graph.SetMinimum(0.85)
+            if self.args.maximum:
+                graph.SetMaximum(eval(self.args.maximum))
+            else:
+                graph.SetMaximum(1)
+            graph.GetXaxis().SetRangeUser(0.01,1)
+            graph.SetLineColor(2)
+            graph.SetLineWidth(2)
+            graph.GetXaxis().SetTitle("Eff Background")
+            graph.GetYaxis().SetTitle("Eff Signal(prompt t#bar{t})")
+            self.histmanager.set_histaxis_settings(graph, 1.0)
+            from copy import deepcopy
+            self.objs.append(deepcopy(graph))
+
+        colors = [7002, 7003, 7004, 7005, 7006, 7007]
+        for index, graph in enumerate(self.objs):
+            graph.SetLineColor(colors[index])
+            if index == 0:
+                graph.Draw("acp")
+                print graph
+            else:
+                graph.Draw("cp")
+                print graph
+        print self.objs
+
+        self.canvassaver.save_canvas(canvas)
+
+
 if __name__ == '__main__':
 
     histpainter = HistogramPainter(args)
@@ -1460,4 +1540,5 @@ if __name__ == '__main__':
     if args.plottype == 'ratio1d'     : histpainter.draw_ratio_1d()
     if args.plottype == 'plot1dsig'   : histpainter.draw_standard_1d_with_sigscan()
     if args.plottype == 'plot1dindsig': histpainter.draw_standard_1d_with_individ_sigscan()
+    if args.plottype == 'roc'         : histpainter.draw_roc_curve()
 

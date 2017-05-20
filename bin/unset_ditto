@@ -15,10 +15,10 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   exit
 fi
 
-
 # Set the variables
 export PACKAGENAME=""
 export BINARYNAME=""
 export PACKAGEPATH=""
-export PATH=$DIR:$PATH
+export COREPATH=""
 export DITTOPATH=$DIR/../
+export PATH=$DIR:$PATH

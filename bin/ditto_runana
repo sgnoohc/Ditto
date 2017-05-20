@@ -28,6 +28,7 @@ usage() {
   echo "  -N    N number of events to restrict (e.g. -N 1000000)"
   echo "Options without arguments:"
   echo "  -c    Condor submit"
+  echo "  -f    Force run even if tagged output exists"
   echo "  -s    Suppress log output"
   echo "  -k    run skimmed version"
   echo
@@ -35,13 +36,14 @@ usage() {
 }
 
 # Command-line opts
-while getopts ":t:q:e:N:d:hsck" OPTION; do
+while getopts ":t:q:e:N:d:hfsck" OPTION; do
   case $OPTION in
     t) JOBTAG=${OPTARG};;
     d) SAMPLESDIRPATH=${OPTARG};;
     e) EXCLUDEPATTERNSSTR=${OPTARG};;
     q) REQUIREPATTERNSSTR=${OPTARG};;
     N) NEVENTSTOPROCESS=${OPTARG};;
+    f) FORCERUN=true;;
     c) CONDORSUBMIT=true;;
     s) SUPPRESSLOG=true;;
     k) USESKIMMED=true;;
@@ -75,6 +77,61 @@ echo "REQUIREPATTERNSSTR : ${REQUIREPATTERNSSTR}"
 echo "NEVENTSTOPROCESS   : ${NEVENTSTOPROCESS}"
 echo "USESKIMMED         : ${USESKIMMED}"
 echo "================================================"
+
+# Unless the jobtag contains the word "tag" check whether the job has already been run
+if [[ "$JOBTAG" == *"test"* ]]; then
+  : # move on
+else
+  # If condor do different check
+  # Check whether the directory exists
+  if [ "${CONDORSUBMIT}" == "true" ]; then
+    if [ -d /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_$JOBTAG ]; then
+      if [ "${FORCERUN}" == true ]; then
+        :
+      else
+        $ERROR "Did you already ran with this -t $JOBTAG?"
+        $ERROR "If not delete /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_$JOBTAG before running again."
+        exit
+      fi
+    fi
+  else
+    if [ -d $JOBTAG ]; then
+      if [ "${FORCERUN}" == true ]; then
+        :
+      else
+        $ERROR "The output directory $JOBTAG/ already exists!"
+        $ERROR "Did you already ran with this -t $JOBTAG?"
+        $ERROR "If not delete $JOBTAG/ before running again."
+        exit
+      fi
+    fi
+  fi
+
+fi
+
+$MSG "Checking repository status to tag current code..."
+pushd $PACKAGEPATH
+STATUS=$(git status)
+if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
+  :
+else
+  echo ${STATUS}
+  echo "NEEDS COMMIT"
+  git commit -a -m msg
+  PACKAGEVERSION=$(git rev-parse HEAD)
+fi
+cd $DITTOPATH
+STATUS=$(git status)
+if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
+  :
+else
+  echo ${STATUS}
+  echo "NEEDS COMMIT"
+  git commit -a -m msg
+  DITTOVERSION=$(git rev-parse HEAD)
+fi
+popd
+exit
 
 #$MSG "Listing samples in SAMPLESDIRPATH=$SAMPLESDIRPATH"
 #ls -lhB --color=auto $SAMPLESDIRPATH
@@ -162,21 +219,24 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     $MSG NEVENTS=${JOBTAG}
     $MSG NEVENTS=${NEVENTS}
     $MSG CONDORJOBNAME=${CONDORJOBNAME}
-    $MSG condor_err=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/${SAMPLEFILENAME}.err
-    $MSG condor_log=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/${SAMPLEFILENAME}.log
-    $MSG condor_out=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/${SAMPLEFILENAME}.out
-
+    $MSG condor_err=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}.err
+    $MSG condor_log=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}.log
+    $MSG condor_out=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}.out
+    $MSG OUTPUTHISTLOCATION=/hadoop/cms/store/user/phchang/ditto_output/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME//_skimtree}_hist.root
+    $MSG OUTPUTROOTLOCATION=/hadoop/cms/store/user/phchang/ditto_output/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}_skimtree.root
     # Cleaning up the condor log/err/out area
-    mkdir -p /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/
+    mkdir -p /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/
     mkdir -p /tmp/phchang/
-    rm -f /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}/${SAMPLEFILENAME}.*
+    rm -f /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}.*
+    echo "ditto git $DITTOVERSION" >> /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/gitversion
+    echo "ditto git $PACKAGEVERSION" >> /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/gitversion
 
     # Creating condor submit command
     cp $DITTOPATH/condor/submit_template.cmd /tmp/phchang/temp.cmd
     sed "s/ANALYSIS/${ANALYSIS}/"                              /tmp/phchang/temp.cmd  > /tmp/phchang/temp1.cmd
     sed "s~HADOOPDIR~${HADOOPDIR}~"                            /tmp/phchang/temp1.cmd > /tmp/phchang/temp2.cmd
     sed "s/SAMPLEFILENAME/${SAMPLEFILENAME}/"                  /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
-    sed "s/TAG/${JOBTAG}/"                                     /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
+    sed "s/JOBTAG/${JOBTAG}/"                                  /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
     sed "s/NEVENTS/${NEVENTS}/"                                /tmp/phchang/temp4.cmd > /tmp/phchang/temp5.cmd
     sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp5.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
 
@@ -194,21 +254,10 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
   exit
 fi
 
-# Unless the jobtag contains the word "tag" check whether the job has already been run
-if [[ "$JOBTAG" == *"test"* ]]; then
-  : # move on
-else
-  # check whether the directory exists
-  if [ -d $JOBTAG ]; then
-    $ERROR "The output directory $JOBTAG/ already exists!"
-    $ERROR "Did you already ran with this -t $JOBTAG?"
-    $ERROR "If not delete $JOBTAG/ before running again."
-    exit
-  fi
-fi
-
 $MSG "Creating ${JOBTAG}output/ and ${JOBTAG}log/ in the local area, if it hasn't been done so."
 mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
+echo "ditto git $DITTOVERSION" >> ${JOBTAG}/gitversion
+echo "ditto git $PACKAGEVERSION" >> ${JOBTAG}/gitversion
 
 $MSG "Submitting xargs jobs via ditto_xargs"
 $DITTOPATH/bin/ditto_xargs /tmp/ditto_runana_jobs.txt

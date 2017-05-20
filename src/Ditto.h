@@ -147,6 +147,12 @@ namespace Ditto
       TLorentzVector p4;
       TLorentzVector p4CorrUp;
       TLorentzVector p4CorrDn;
+      Particle()
+      {
+        p4.SetXYZT(0, 0, 0, 0);
+        p4CorrUp.SetXYZT(0, 0, 0, 0);
+        p4CorrDn.SetXYZT(0, 0, 0, 0);
+      }
     };
 
     struct Lepton : Particle
@@ -166,9 +172,12 @@ namespace Ditto
       float relIso03;
       float relIso03DB;
       float relIso03EA;
+      float relIso03EAv2;
       float relIso04EA;
+      float relIso04EAv2;
       float relIso04DB;
       float miniRelIsoCMS3_EA;
+      float miniRelIsoCMS3_EAv2;
       float miniRelIsoCMS3_DB;
       // Muon specifics
       float muPOverP;
@@ -188,6 +197,7 @@ namespace Ditto
       float elEtaSC;
       float elSigmaIEtaIEta_full5x5;
       float elHOverE;
+      float elMvaRaw;
       float elMva;
       float elDEtaIn;
       float elDPhiIn;
@@ -195,11 +205,59 @@ namespace Ditto
       int   elConvVeto;
       int   elNmiss;
       int   isFromX;
-      //float relIsoAn04;
-      //int   mcMatchId;
-      //int   lostHits;
-      //int   tightCharge;
-      //int   tightIdNoIso;
+
+      Lepton() : Particle()
+      {
+        // General
+        dxy = -999;
+        dz = -999;
+        ip3d = -999;
+        sip3d = -999;
+        tightcharge = -999;
+        charge = -999;
+        pdgId = -999;
+        id = -999;
+        // Isolation related
+        ptRatio = -999;
+        ptRel = -999;
+        relIso03 = -999;
+        relIso03DB = -999;
+        relIso03EA = -999;
+        relIso03EAv2 = -999;
+        relIso04DB = -999;
+        relIso04EA = -999;
+        relIso04EAv2 = -999;
+        miniRelIsoCMS3_EA = -999;
+        miniRelIsoCMS3_EAv2 = -999;
+        miniRelIsoCMS3_DB = -999;
+        // Muon specifics
+        muPOverP = -999;
+        muPidPFMuon = -999;
+        muType = -999;
+        muChi2OverNDof = -999;
+        muChi2LocalPosition = -999;
+        muTrkKink = -999;
+        //float muValidHitFraction;
+        muValidHitFraction = -999;
+        muSegmCompatibility = -999;
+        muGFitValidSTAHits = -999;
+        muNMatchedStations = -999;
+        muValidPixelHits = -999;
+        muNLayers = -999;
+        // Electron specifics
+        elEtaSC = -999;
+        elSigmaIEtaIEta_full5x5 = -999;
+        elHOverE = -999;
+        elMvaRaw = -999;
+        elMva = -999;
+        elDEtaIn = -999;
+        elDPhiIn = -999;
+        elEpRatio = -999;
+        elConvVeto = -999;
+        elNmiss = -999;
+        isFromX = -999;
+      }
+
       void print() {
         std::cout << "Lepton::print()  dxy = " << dxy << std::endl;;
         std::cout << "Lepton::print()  dz = " << dz << std::endl;;
@@ -234,6 +292,7 @@ namespace Ditto
         std::cout << "Lepton::print()  elEtaSC = " << elEtaSC << std::endl;;
         std::cout << "Lepton::print()  elSigmaIEtaIEta_full5x5 = " << elSigmaIEtaIEta_full5x5 << std::endl;;
         std::cout << "Lepton::print()  elHOverE = " << elHOverE << std::endl;;
+        std::cout << "Lepton::print()  elMvaRaw = " << elMvaRaw << std::endl;;
         std::cout << "Lepton::print()  elMva = " << elMva << std::endl;;
         std::cout << "Lepton::print()  elDEtaIn = " << elDEtaIn << std::endl;;
         std::cout << "Lepton::print()  elDPhiIn = " << elDPhiIn << std::endl;;
@@ -241,7 +300,9 @@ namespace Ditto
         std::cout << "Lepton::print()  elConvVeto = " << elConvVeto << std::endl;;
         std::cout << "Lepton::print()  elNmiss = " << elNmiss << std::endl;;
       }
+
     };
+
     typedef std::vector<Lepton> Leptons;
 
     struct Jet : Particle
@@ -270,12 +331,44 @@ namespace Ditto
       int   puId;
       int   puIdpuppi;
       int   FSveto;
+
+      Jet() : Particle()
+      {
+        btagCSV = -999;
+        rawPt = -999;
+        mcPt = -999;
+        mcFlavour = -999;
+        hadronFlavour = -999;
+        area = -999;
+        undoJEC = -999;
+        jecCorr = -999;
+        jecCorrUp = -999;
+        jecCorrDn = -999;
+        chf = -999;
+        nhf = -999;
+        cef = -999;
+        nef = -999;
+        muf = -999;
+        cm = -999;
+        nm = -999;
+        puValue = -999;
+        mcdr = -999;
+        npfcand = -999;
+        id = -999;
+        puId = -999;
+        puIdpuppi = -999;
+        FSveto = -999;
+      }
+
     };
+
     typedef std::vector<Jet> Jets;
 
     struct MET : Particle
     {
+      MET() : Particle() { }
     };
+
     /// I don't expect to use the above very often.
     /// I only plan to use this when there are multiple flavors of MET
     typedef std::vector<MET> METs;
@@ -286,7 +379,16 @@ namespace Ditto
       int status;
       int motherId;
       int grandmotherId;
+
+      Truth() : Particle()
+      {
+        pdgId = -999;
+        status = -999;
+        motherId = -999;
+        grandmotherId = -999;
+      }
     };
+
     typedef std::vector<Truth> Truths;
 
     struct EventInfo
@@ -294,7 +396,18 @@ namespace Ditto
       int run;
       int lumi;
       int event;
+      int nEvts;
       float scale1fb;
+
+      EventInfo()
+      {
+        run = -999;
+        lumi = -999;
+        event = -999;
+        nEvts = -999;
+        scale1fb = -999;
+      }
+
     };
 
     typedef std::map<TString, Leptons> LeptonsCollection;
@@ -354,9 +467,13 @@ namespace Ditto
     /// Object selections
     void selectObjects_SUSY_ISR_Soft2l_SUS_16_048(AnalysisData& a);
     void selectObjects_SM_WWW_SS(AnalysisData& a);
+    void selectObjects_SM_WWW_SS_For_Skimming(AnalysisData& a);
     void selectObjects_SM_WWW_SS_Isolation_Study(AnalysisData& a);
     void selectObjects_SM_VBS_WW_lvjj(AnalysisData& a);
     void selectObjects_PID_Isolation(AnalysisData& a);
+
+    /// Pass skimming selections
+    bool passSkimming_SM_WWW_SS(AnalysisData& a);
 
     /// Single object selections
     /// Electrons
@@ -378,6 +495,10 @@ namespace Ditto
     /// BJets
     bool isGoodMediumBJet(ObjUtil::Jet& jet);
     bool isGoodLooseBJet(ObjUtil::Jet& jet);
+    bool isLeptonPt10to25(ObjUtil::Lepton& lepton);
+    bool isLeptonPt25above(ObjUtil::Lepton& lepton);
+    bool isFromW(ObjUtil::Lepton& lepton);
+    bool isNotFromW(ObjUtil::Lepton& lepton);
 
     /// Analysis specifics
     /// SUSY_ISR_Soft2l_SUS_16_048
@@ -396,8 +517,8 @@ namespace Ditto
     bool isGoodBJet_SM_WWW_SS(ObjUtil::Jet& jet);
     bool isIsoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isIsoMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
-    bool isVetoLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isVetoElectron_SM_WWW_SS(ObjUtil::Lepton& lepton);
+    bool isVetoLepton_SM_WWW_SS(ObjUtil::Lepton& lepton);
     bool isVetoMuon_SM_WWW_SS(ObjUtil::Lepton& lepton);
 
     /// SM_VBS_WW_lvjj
@@ -598,40 +719,60 @@ namespace Ditto
     void fillLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
     void fillLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
     void fillLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillLepMiniIso03(string prefix, Analyses::AnalysisData& a);
+    void fillLepMiniIso  (string prefix, Analyses::AnalysisData& a);
     void fillLepPtRel    (string prefix, Analyses::AnalysisData& a);
     void fillLepPtRatio  (string prefix, Analyses::AnalysisData& a);
     void fillLepIsFromW  (string prefix, Analyses::AnalysisData& a);
     /// Leptons from W
-    void fillIsFromWLepDz        (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepDxy       (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepIp3d      (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepSip3d     (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepRelIso03  (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepAbsIso03  (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepRelIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepMiniIso03 (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepPtRel     (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepPtRatio   (string prefix, Analyses::AnalysisData& a);
-    void fillIsFromWLepIsFromW   (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPt          (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepEta         (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPhi         (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepDz          (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepDxy         (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepIp3d        (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepSip3d       (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03    (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03    (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso04EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso04EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso04EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso04EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepRelIso03DB  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepAbsIso03DB  (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepMiniIso     (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepMiniIsov2   (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPtRel       (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepPtRatio     (string prefix, Analyses::AnalysisData& a);
+    void fillIsFromWLepIsFromW     (string prefix, Analyses::AnalysisData& a);
     /// Leptons not from W
-    void fillIsNotFromWLepDz        (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepDxy       (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepIp3d      (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepSip3d     (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepRelIso03  (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepAbsIso03  (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepRelIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepAbsIso03EA(string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepRelIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepAbsIso03DB(string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepMiniIso03 (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepPtRel     (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepPtRatio   (string prefix, Analyses::AnalysisData& a);
-    void fillIsNotFromWLepIsFromW   (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPt          (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepEta         (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPhi         (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepDz          (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepDxy         (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepIp3d        (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepSip3d       (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03    (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03    (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso04EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso04EA  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso04EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso04EAv2(string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepRelIso03DB  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepAbsIso03DB  (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepMiniIso     (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepMiniIsov2   (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPtRel       (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepPtRatio     (string prefix, Analyses::AnalysisData& a);
+    void fillIsNotFromWLepIsFromW     (string prefix, Analyses::AnalysisData& a);
     /// Single object jet related
     void fillJetID       (string prefix, Analyses::AnalysisData& a);
     /// Fill cutflow

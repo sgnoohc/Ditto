@@ -46,4 +46,4 @@ export PACKAGEPATH=${PACKAGEPATH}
 export PATH=$DIR:$PATH
 export DITTOPATH=$DIR/../
 
-$DIR/ditto_setup_check
+$DIR/ditto_setup_check $2

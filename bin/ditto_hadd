@@ -188,7 +188,7 @@ hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${1}" 4 sig
 # Create output directory if not already
 mkdir -p ${HADDOUTPUTDIR}/
 mkdir -p ${HADDOUTPUTDIR}/log
-rm -f ${HADDOUTPUTDIR}/*
+rm -f ${HADDOUTPUTDIR}/* &> /dev/null
 
 # run the job
 $MSG "Running hadd in xargs"

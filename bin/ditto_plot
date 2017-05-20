@@ -21,6 +21,7 @@ usage()
   echo "Options with arguments:"
   echo "  -h    Help                   (Display this message)"
   echo "  -v    Var histogram name     (e.g. -v nlep)"
+  echo "  -d    output directory       (e.g. -d plots/)"
   echo "  -p    Plot options           (e.g. -p plot1d)"
   echo "  -o    Plot output prefix     (e.g. -o Prefix)"
   echo "  -L    Luminosity             (e.g. -L Prefix)"
@@ -28,6 +29,7 @@ usage()
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
   echo "  -S    Signal scale           (e.g. -S '*100' # must provide '*')"
   echo "Options without arguments:"
+  echo "  -D    Delete and plot"
   echo "  -s    Shape comparison"
   echo
   exit
@@ -47,8 +49,9 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":e:L:v:p:o:f:S:hs" OPTION; do
+while getopts ":d:e:L:v:p:o:f:S:hDs" OPTION; do
   case $OPTION in
+    d) OUTPUTDIR=${OPTARG};;
     e) EXTRAOPTION=${OPTARG};;
     v) VAR=${OPTARG};;
     p) PLOTOPTION=${OPTARG};;
@@ -56,6 +59,7 @@ while getopts ":e:L:v:p:o:f:S:hs" OPTION; do
     L) SCALE=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
     S) SIGSCALE=${OPTARG};;
+    D) DELETEANDPLOT="TRUE";;
     s) SHAPECOMPARISON="TRUE";;
     h) usage;;
     :) usage;;
@@ -70,6 +74,7 @@ done
 
 if [ -z ${PLOTOPTION} ]; then PLOTOPTION=plot1d; fi
 if [ -z ${OUTPUTPREFIX}  ]; then OUTPUTPREFIX=""; fi
+if [ -z ${OUTPUTDIR} ]; then OUTPUTDIR=plots; fi
 
 shift $(($OPTIND - 1))
 
@@ -126,7 +131,11 @@ done
 fi
 
 # create plots directory if needed
-mkdir -p plots/
+mkdir -p ${OUTPUTDIR}
+cd ${OUTPUTDIR}/
+ln -sf ~/syncfiles/miscfiles/index.php
+if [ "x${DELETEANDPLOT}" == "xTRUE" ]; then rm *pdf *png; fi
+cd -
 
 for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
 
@@ -196,12 +205,15 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
 
   echo python $DITTOPATH/python/makeplot.py \
     --plottype ${PLOTOPTION} \
-    --plotname plots/${OUTPUTPREFIX}${THISVAR} \
+    --plotname ${OUTPUTDIR}/${OUTPUTPREFIX}${THISVAR} \
     $PROCESSSTRING \
     ${EXTRAOPTION} >> /tmp/plotjobs.txt
 
 done
 
 ditto_xargs /tmp/plotjobs.txt
+
+PLOTPATH=$(echo $('cd' $(dirname ${OUTPUTDIR}); pwd)/$(basename ${OUTPUTDIR}))
+echo http://uaf-10.t2.ucsd.edu/~${USER}/${PLOTPATH//\/home\/users\/phchang\/public_html\/}
 
 #eof
