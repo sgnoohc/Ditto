@@ -260,7 +260,7 @@ mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
 echo "ditto git $DITTOVERSION" >> ${JOBTAG}/gitversion
 echo "ditto git $PACKAGEVERSION" >> ${JOBTAG}/gitversion
 
-if [ -z $COREPATH ]; then
+if [ -n ${COREPATH} ]; then
   ln -sf $COREPATH CORE
   ln -sf $COREPATH MVAinput
 fi
