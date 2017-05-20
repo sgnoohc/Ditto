@@ -1,0 +1,43 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+#$DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then return; fi
+
+ERROR=echo
+MSG=echo
+SUCCESS=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  MSG=e_msg
+  SUCCESS=e_success
+fi
+
+usage() {
+  $MSG "Usage:"
+  echo ""
+  echo "      sh $(basename $0) PACKAGENAME"
+  echo ""
+  echo "List of packages available:"
+  echo ""
+  cat $DITTOPATH/packages.txt
+  echo ""
+  echo ""
+  return
+}
+
+if [ -z $1 ]; then usage; return; fi
+
+
+while read -r LINE
+do
+  ITEMS=($LINE)
+  if [ "${ITEMS[0]}" == "$1" ]; then
+    source ${ITEMS[1]}/setup.sh
+    return
+  fi
+done < $DITTOPATH/packages.txt
+
+$ERROR "Requested pacakge=$1 not recognized!"
+usage

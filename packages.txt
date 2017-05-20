@@ -1,0 +1,2 @@
+mybabymaker /home/users/phchang/analyses/mybabyframework/mybabymaker
+wwwanalysis /home/users/phchang/analyses/www/wwwanalysis
