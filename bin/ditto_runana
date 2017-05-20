@@ -267,3 +267,5 @@ fi
 
 $MSG "Submitting xargs jobs via ditto_xargs"
 $DITTOPATH/bin/ditto_xargs /tmp/ditto_runana_jobs.txt
+
+rm CORE MVAinput
