@@ -118,6 +118,7 @@ else
   echo ${STATUS}
   echo "NEEDS COMMIT"
   git commit -a -m msg
+  git push
   PACKAGEVERSION=$(git rev-parse HEAD)
 fi
 cd $DITTOPATH
@@ -128,6 +129,7 @@ else
   echo ${STATUS}
   echo "NEEDS COMMIT"
   git commit -a -m msg
+  git push
   DITTOVERSION=$(git rev-parse HEAD)
 fi
 popd
