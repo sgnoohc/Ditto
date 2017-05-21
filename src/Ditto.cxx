@@ -202,269 +202,119 @@ namespace Ditto
 
   }
 
-
-  namespace HistUtil
-  {
-
-    //______________________________________________________________________________________
-    string catPrefix(string prefix1, string prefix2)
-    {
-      return TString::Format("%s_%s_", prefix1.c_str(), prefix2.c_str()).Data();
-    }
-
-    //______________________________________________________________________________________
-    void fillStdHistograms(string prefix, ObjUtil::AnalysisData& a)
-    {
-      /// fill all histogram types
-      fillNLep       (prefix, a);
-      fillNJet       (prefix, a);
-      fillNBjet      (prefix, a);
-      fillMET        (prefix, a);
-      fillLepPt      (prefix, a);
-      fillJetPt      (prefix, a);
-      fillBJetPt     (prefix, a);
-      fillLepEta     (prefix, a);
-      fillJetEta     (prefix, a);
-      fillBJetEta    (prefix, a);
-      fillLepPhi     (prefix, a);
-      fillJetPhi     (prefix, a);
-      fillBJetPhi    (prefix, a);
-      fillMjjW       (prefix, a);
-      fillMll        (prefix, a);
-      fillMljClose   (prefix, a);
-      fillVBFMjj     (prefix, a);
-      fillVBFMbb     (prefix, a);
-      fillMjj        (prefix, a);
-      fillPtjj       (prefix, a);
-      fillPtbb       (prefix, a);
-      fillMT         (prefix, a);
-      fillHT         (prefix, a);
-      fillMTll       (prefix, a);
-      fillDPhill     (prefix, a);
-      fillDEtajj     (prefix, a);
-      fillDRjj       (prefix, a);
-      fillDEtabb     (prefix, a);
-      fillDPhiLepMET (prefix, a);
-      fillDRjjW      (prefix, a);
-      //fillLepDz      (prefix, a);
-      //fillLepDxy     (prefix, a);
-      //fillLepIp3d    (prefix, a);
-      //fillLepSip3d   (prefix, a);
-      //fillLepRelIso03(prefix, a);
-      //fillLepAbsIso03(prefix, a);
-      //fillLepRelIso03EA(prefix, a);
-      //fillLepAbsIso03EA(prefix, a);
-      //fillLepRelIso03DB(prefix, a);
-      //fillLepAbsIso03DB(prefix, a);
-      //fillLepMiniIso03(prefix, a);
-      //fillLepPtRatio (prefix, a);
-      //fillLepPtRel   (prefix, a);
-      ////fillLepID      (prefix, a);
-      //fillLepIsFromW (prefix, a);
-      //fillJetID      (prefix, a);
-    }
-
-    //______________________________________________________________________________________
-    void fillLeptonIDHistograms(string prefix, ObjUtil::AnalysisData& a)
-    {
-      /// fill all histogram types
-      fillLepDz        (prefix, a);
-      fillLepDxy       (prefix, a);
-      fillLepIp3d      (prefix, a);
-      fillLepSip3d     (prefix, a);
-      fillLepRelIso03  (prefix, a);
-      fillLepAbsIso03  (prefix, a);
-      fillLepRelIso03EA(prefix, a);
-      fillLepAbsIso03EA(prefix, a);
-      fillLepRelIso03DB(prefix, a);
-      fillLepAbsIso03DB(prefix, a);
-      fillLepMiniIso   (prefix, a);
-      fillLepPtRatio   (prefix, a);
-      fillLepPtRel     (prefix, a);
-      fillLepIsFromW   (prefix, a);
-    }
-
-    //______________________________________________________________________________________
-    void fillIsFromWLeptonIDHistograms(string prefix, ObjUtil::AnalysisData& a)
-    {
-      /// fill all histogram types
-      fillIsFromWLepPt          (prefix, a);
-      fillIsFromWLepEta         (prefix, a);
-      fillIsFromWLepPhi         (prefix, a);
-      fillIsFromWLepPt          (prefix, a);
-      fillIsFromWLepEta         (prefix, a);
-      fillIsFromWLepDz          (prefix, a);
-      fillIsFromWLepDxy         (prefix, a);
-      fillIsFromWLepIp3d        (prefix, a);
-      fillIsFromWLepSip3d       (prefix, a);
-      fillIsFromWLepRelIso03    (prefix, a);
-      fillIsFromWLepAbsIso03    (prefix, a);
-      fillIsFromWLepRelIso03EA  (prefix, a);
-      fillIsFromWLepAbsIso03EA  (prefix, a);
-      fillIsFromWLepRelIso03EAv2(prefix, a);
-      fillIsFromWLepAbsIso03EAv2(prefix, a);
-      fillIsFromWLepRelIso04EA  (prefix, a);
-      fillIsFromWLepAbsIso04EA  (prefix, a);
-      fillIsFromWLepRelIso04EAv2(prefix, a);
-      fillIsFromWLepAbsIso04EAv2(prefix, a);
-      fillIsFromWLepRelIso03DB  (prefix, a);
-      fillIsFromWLepAbsIso03DB  (prefix, a);
-      fillIsFromWLepMiniIso     (prefix, a);
-      fillIsFromWLepMiniIsov2   (prefix, a);
-      fillIsFromWLepPtRatio     (prefix, a);
-      fillIsFromWLepPtRel       (prefix, a);
-      fillIsFromWLepIsFromW     (prefix, a);
-    }
-
-    //______________________________________________________________________________________
-    void fillIsNotFromWLeptonIDHistograms(string prefix, ObjUtil::AnalysisData& a)
-    {
-      /// fill all histogram types
-      fillIsNotFromWLepPt          (prefix, a);
-      fillIsNotFromWLepEta         (prefix, a);
-      fillIsNotFromWLepPhi         (prefix, a);
-      fillIsNotFromWLepDz          (prefix, a);
-      fillIsNotFromWLepDxy         (prefix, a);
-      fillIsNotFromWLepIp3d        (prefix, a);
-      fillIsNotFromWLepSip3d       (prefix, a);
-      fillIsNotFromWLepRelIso03    (prefix, a);
-      fillIsNotFromWLepAbsIso03    (prefix, a);
-      fillIsNotFromWLepRelIso03EA  (prefix, a);
-      fillIsNotFromWLepAbsIso03EA  (prefix, a);
-      fillIsNotFromWLepRelIso03EAv2(prefix, a);
-      fillIsNotFromWLepAbsIso03EAv2(prefix, a);
-      fillIsNotFromWLepRelIso04EA  (prefix, a);
-      fillIsNotFromWLepAbsIso04EA  (prefix, a);
-      fillIsNotFromWLepRelIso04EAv2(prefix, a);
-      fillIsNotFromWLepAbsIso04EAv2(prefix, a);
-      fillIsNotFromWLepRelIso03DB  (prefix, a);
-      fillIsNotFromWLepAbsIso03DB  (prefix, a);
-      fillIsNotFromWLepMiniIso     (prefix, a);
-      fillIsNotFromWLepMiniIsov2   (prefix, a);
-      fillIsNotFromWLepPtRatio     (prefix, a);
-      fillIsNotFromWLepPtRel       (prefix, a);
-      fillIsNotFromWLepIsFromW     (prefix, a);
-    }
-
-    //______________________________________________________________________________________
-    /// Multiplicity variables
-    void fillNLep      (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "N_{lep}" , 10 , 0. , 10. , prefix); }
-    void fillNJet      (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "N_{jet}" , 10 , 0. , 10. , prefix); }
-    void fillNBjet     (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "N_{b-jet}" , 10 , 0. , 10. , prefix); }
-    /// Single object kinematics
-    void fillMET       (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "MET [GeV]" , 180 , 0. , 500.   , prefix); }
-    void fillLepPt     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
-    void fillJetPt     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%dpt"   , ijet).Data()  , a.jets   [ijet].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, jet%d} [GeV]"  , ijet).Data()  , 180     , 0.      , 200. - ijet * 20  , prefix); }
-    void fillBJetPt    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%dpt"  , ibjet).Data() , a.bjets   [ibjet].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, bjet%d} [GeV]" , ibjet).Data() , 180     , 0.      , 200. - ibjet * 20 , prefix); }
-    void fillLepEta    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
-    void fillJetEta    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%deta"  , ijet).Data()  , a.jets   [ijet].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{jet%d}"        , ijet).Data()  , 180     , -5.     , 5.     , prefix); }
-    void fillBJetEta   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%deta" , ibjet).Data() , a.bjets   [ibjet].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{bjet%d}"       , ibjet).Data() , 180     , -5.     , 5.     , prefix); }
-    void fillLepPhi    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
-    void fillJetPhi    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%dphi"  , ijet).Data()  , a.jets   [ijet].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{jet%d}"        , ijet).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
-    void fillBJetPhi   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%dphi" , ibjet).Data() , a.bjets   [ibjet].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{bjet%d}"       , ibjet).Data() , 180     , -3.1416 , 3.1416 , prefix); }
-    /// Di object kinematics (GeV scales)
-    void fillMll       (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "M_{#ell#ell} [GeV]" , 180 , 0. , 180.   , prefix); }
-    void fillVBFMjj    (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("vbfmjj"    , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "M_{jj} [GeV]" , 180 , 0. , 2500.  , prefix); }
-    void fillVBFMbb    (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("vbfmbb"    , VarUtil::Mbb(a)        , a.wgt , a.hist_db , "M_{bb} [GeV]" , 180 , 0. , 2500.  , prefix); }
-    void fillPtjj      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("ptjj"      , VarUtil::Ptjj(a)       , a.wgt , a.hist_db , "p_{T,jj} [GeV]" , 180 , 0. , 1000.  , prefix); }
-    void fillPtbb      (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("ptbb"      , VarUtil::Ptbb(a)       , a.wgt , a.hist_db , "p_{T,bb} [GeV]" , 180 , 0. , 1000.  , prefix); }
-    void fillMjjW      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "M_{jj,close-to-W} [GeV]" , 180 , 0. , 180.   , prefix); }
-    void fillMjj       (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "M_{jj} [GeV]" , 180 , 0. , 180.   , prefix); }
-    void fillMT        (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "M_{T} [GeV]" , 180 , 0. , 180.   , prefix); }
-    void fillHT        (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 1) PlotUtil::plot1D("ht"        , VarUtil::HT(a)         , a.wgt , a.hist_db , "H_{T} [GeV]" , 180 , 0. , 1200.  , prefix); }
-    void fillMTll      (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mtll"      , VarUtil::MTll(a)       , a.wgt , a.hist_db , "M_{T,ll} [GeV]" , 180 , 0. , 400.   , prefix); }
-    void fillMljClose  (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 1) if (a.leptons.size() >= 1)PlotUtil::plot1D("mljclose"  , VarUtil::MljClosest(a)   , a.wgt , a.hist_db , "M_{lj,close} [GeV]" , 180 , 0. , 400.   , prefix); }
-    /// Di object kinematics (angular)
-    void fillDPhill    (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "#Delta#phi_{#ell#ell}" , 180 , 0. , 3.1416 , prefix); }
-    void fillDEtajj    (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "#Delta#eta_{jj}" , 180 , 0. , 9.     , prefix); }
-    void fillDRjj      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("drjj"      , VarUtil::DRjj(a)       , a.wgt , a.hist_db , "#DeltaR{jj}" , 180 , 0. , 9.   , prefix); }
-    void fillDEtabb    (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("detabb"    , VarUtil::DEtabb(a)     , a.wgt , a.hist_db , "#Delta#phi_{bb}" , 180 , 0. , 9.     , prefix); }
-    void fillDPhiLepMET(string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "#Delta#phi_{#ell,MET}" , 5   , 0. , 3.1416 , prefix); }
-    void fillDRjjW     (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("drjjw"     , VarUtil::DRjjWmass(a)  , a.wgt , a.hist_db , "#DeltaR{jj,close-to-W}" , 180 , 0. , 9.   , prefix); }
-    /// Single object ID-related
-    void fillLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                   , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
-    void fillLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                  , a.wgt , a.hist_db , "" , 180 , 0. , 0.01, prefix); }
-    void fillLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dip3d"      , ilep).Data() , a.leptons[ilep].ip3d                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
-    void fillLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                                , a.wgt , a.hist_db , "" , 180 , 0. , 10 , prefix); }
-    void fillLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                             , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
-    void fillLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
-    void fillLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
-    void fillLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
-    void fillLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
-    void fillLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
-    void fillLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
-    void fillLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
-    void fillLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dminiIso03" , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                    , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
-    void fillLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptrel"     , ilep).Data() , a.leptons[ilep].ptRel                                , a.wgt , a.hist_db , "" , 180 , 0. , 30., prefix); }
-    void fillLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptratio"   , ilep).Data() , a.leptons[ilep].ptRatio                              , a.wgt , a.hist_db , "" , 180 , 0.5, 1.0, prefix); }
-    void fillLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dIsFromW"   , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                   , a.wgt , a.hist_db , "" ,   2 , 0. , 2  , prefix); }
-    /// Leptons from W
-    void fillIsFromWLepPt          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
-    void fillIsFromWLepEta         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
-    void fillIsFromWLepPhi         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
-    void fillIsFromWLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddz"           , ilep).Data() , a.leptons[ilep].dz                                     , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
-    void fillIsFromWLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddxy"          , ilep).Data() , a.leptons[ilep].dxy                                    , a.wgt , a.hist_db , "" , 180  , 0.  , 0.01 , prefix); }
-    void fillIsFromWLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dip3d"         , ilep).Data() , a.leptons[ilep].ip3d                                   , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
-    void fillIsFromWLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dsip3d"        , ilep).Data() , a.leptons[ilep].sip3d                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 10   , prefix); }
-    void fillIsFromWLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03"     , ilep).Data() , a.leptons[ilep].relIso03                               , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03"     , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()     , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepRelIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepAbsIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                      , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepMiniIsov2   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dminiIsov2"    , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EAv2                    , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsFromWLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptrel"        , ilep).Data() , a.leptons[ilep].ptRel                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsFromWLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptratio"      , ilep).Data() , a.leptons[ilep].ptRatio                                , a.wgt , a.hist_db , "" , 180  , 0.5 , 1.0  , prefix); }
-    void fillIsFromWLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dIsFromW"      , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                     , a.wgt , a.hist_db , "" , 2    , 0.  , 2    , prefix); }
-    /// Leptons Is not from W
-    void fillIsNotFromWLepPt          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
-    void fillIsNotFromWLepEta         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
-    void fillIsNotFromWLepPhi         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
-    void fillIsNotFromWLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddz"           , ilep).Data() , a.leptons[ilep].dz                                     , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
-    void fillIsNotFromWLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddxy"          , ilep).Data() , a.leptons[ilep].dxy                                    , a.wgt , a.hist_db , "" , 180  , 0.  , 0.01 , prefix); }
-    void fillIsNotFromWLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dip3d"         , ilep).Data() , a.leptons[ilep].ip3d                                   , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
-    void fillIsNotFromWLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dsip3d"        , ilep).Data() , a.leptons[ilep].sip3d                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 10   , prefix); }
-    void fillIsNotFromWLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03"     , ilep).Data() , a.leptons[ilep].relIso03                               , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03"     , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()     , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepRelIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepAbsIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                      , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepMiniIsov2   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EAv2                    , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
-    void fillIsNotFromWLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptrel"        , ilep).Data() , a.leptons[ilep].ptRel                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
-    void fillIsNotFromWLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptratio"      , ilep).Data() , a.leptons[ilep].ptRatio                                , a.wgt , a.hist_db , "" , 180  , 0.5 , 1.0  , prefix); }
-    void fillIsNotFromWLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dIsFromW"      , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                     , a.wgt , a.hist_db , "" , 2    , 0.  , 2    , prefix); }
-    // Jet single object
-    void fillJetID        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                   , a.wgt , a.hist_db , "" ,   2 , 0. , 30 , prefix); }
-
-    void fillCutflow    (string prefix, ObjUtil::AnalysisData& a, int ibin)
-    {
-      PlotUtil::plot1D("cutflow"   , ibin, a.wgt, a.hist_db, "", 20, 0., 20., prefix);
-      PlotUtil::plot1D("rawcutflow", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
-    }
-
-  }
-
+  #include "DittoHistUtil.cxx"
   #include "DittoTreeUtil.cxx"
 
 }
 
 //eof
+//
+//	    //______________________________________________________________________________________
+//	    /// Multiplicity variables
+//	    void fillNLep      (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("nlep"  , a.leptons.size() , a.wgt , a.hist_db , "N_{lep}" , 10 , 0. , 10. , prefix); }
+//	    void fillNJet      (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("njet"  , a.jets.size()    , a.wgt , a.hist_db , "N_{jet}" , 10 , 0. , 10. , prefix); }
+//	    void fillNBjet     (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("nbjet" , a.bjets.size()   , a.wgt , a.hist_db , "N_{b-jet}" , 10 , 0. , 10. , prefix); }
+//	    /// Single object kinematics
+//	    void fillMET       (string prefix , ObjUtil::AnalysisData& a) { PlotUtil::plot1D("met"       , a.met.p4.Pt()          , a.wgt , a.hist_db , "MET [GeV]" , 180 , 0. , 500.   , prefix); }
+//	    void fillLepPt     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
+//	    void fillJetPt     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%dpt"   , ijet).Data()  , a.jets   [ijet].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, jet%d} [GeV]"  , ijet).Data()  , 180     , 0.      , 200. - ijet * 20  , prefix); }
+//	    void fillBJetPt    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%dpt"  , ibjet).Data() , a.bjets   [ibjet].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, bjet%d} [GeV]" , ibjet).Data() , 180     , 0.      , 200. - ibjet * 20 , prefix); }
+//	    void fillLepEta    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
+//	    void fillJetEta    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%deta"  , ijet).Data()  , a.jets   [ijet].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{jet%d}"        , ijet).Data()  , 180     , -5.     , 5.     , prefix); }
+//	    void fillBJetEta   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%deta" , ibjet).Data() , a.bjets   [ibjet].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{bjet%d}"       , ibjet).Data() , 180     , -5.     , 5.     , prefix); }
+//	    void fillLepPhi    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep  = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)  PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
+//	    void fillJetPhi    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet  = 0; ijet < a.jets   .size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)  PlotUtil ::plot1D(TString::Format("jet%dphi"  , ijet).Data()  , a.jets   [ijet].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{jet%d}"        , ijet).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
+//	    void fillBJetPhi   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ibjet = 0; ibjet < a.bjets .size() && ibjet< NMAX_INDIVD_OBJ_TO_PLOT; ++ibjet) PlotUtil ::plot1D(TString::Format("bjet%dphi" , ibjet).Data() , a.bjets   [ibjet].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{bjet%d}"       , ibjet).Data() , 180     , -3.1416 , 3.1416 , prefix); }
+//	    /// Di object kinematics (GeV scales)
+//	    void fillMll       (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mll"       , VarUtil::Mll(a)        , a.wgt , a.hist_db , "M_{#ell#ell} [GeV]" , 180 , 0. , 180.   , prefix); }
+//	    void fillVBFMjj    (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("vbfmjj"    , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "M_{jj} [GeV]" , 180 , 0. , 2500.  , prefix); }
+//	    void fillVBFMbb    (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("vbfmbb"    , VarUtil::Mbb(a)        , a.wgt , a.hist_db , "M_{bb} [GeV]" , 180 , 0. , 2500.  , prefix); }
+//	    void fillPtjj      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("ptjj"      , VarUtil::Ptjj(a)       , a.wgt , a.hist_db , "p_{T,jj} [GeV]" , 180 , 0. , 1000.  , prefix); }
+//	    void fillPtbb      (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("ptbb"      , VarUtil::Ptbb(a)       , a.wgt , a.hist_db , "p_{T,bb} [GeV]" , 180 , 0. , 1000.  , prefix); }
+//	    void fillMjjW      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjjw"      , VarUtil::MjjWmass(a)   , a.wgt , a.hist_db , "M_{jj,close-to-W} [GeV]" , 180 , 0. , 180.   , prefix); }
+//	    void fillMjj       (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("mjj"       , VarUtil::Mjj(a)        , a.wgt , a.hist_db , "M_{jj} [GeV]" , 180 , 0. , 180.   , prefix); }
+//	    void fillMT        (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("mt"        , VarUtil::MT(a)         , a.wgt , a.hist_db , "M_{T} [GeV]" , 180 , 0. , 180.   , prefix); }
+//	    void fillHT        (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 1) PlotUtil::plot1D("ht"        , VarUtil::HT(a)         , a.wgt , a.hist_db , "H_{T} [GeV]" , 180 , 0. , 1200.  , prefix); }
+//	    void fillMTll      (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("mtll"      , VarUtil::MTll(a)       , a.wgt , a.hist_db , "M_{T,ll} [GeV]" , 180 , 0. , 400.   , prefix); }
+//	    void fillMljClose  (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 1) if (a.leptons.size() >= 1)PlotUtil::plot1D("mljclose"  , VarUtil::MljClosest(a)   , a.wgt , a.hist_db , "M_{lj,close} [GeV]" , 180 , 0. , 400.   , prefix); }
+//	    /// Di object kinematics (angular)
+//	    void fillDPhill    (string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 2) PlotUtil::plot1D("dphill"    , VarUtil::DPhill(a)     , a.wgt , a.hist_db , "#Delta#phi_{#ell#ell}" , 180 , 0. , 3.1416 , prefix); }
+//	    void fillDEtajj    (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("detajj"    , VarUtil::DEtajj(a)     , a.wgt , a.hist_db , "#Delta#eta_{jj}" , 180 , 0. , 9.     , prefix); }
+//	    void fillDRjj      (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("drjj"      , VarUtil::DRjj(a)       , a.wgt , a.hist_db , "#DeltaR{jj}" , 180 , 0. , 9.   , prefix); }
+//	    void fillDEtabb    (string prefix , ObjUtil::AnalysisData& a) { if (a.bjets  .size() >= 2) PlotUtil::plot1D("detabb"    , VarUtil::DEtabb(a)     , a.wgt , a.hist_db , "#Delta#phi_{bb}" , 180 , 0. , 9.     , prefix); }
+//	    void fillDPhiLepMET(string prefix , ObjUtil::AnalysisData& a) { if (a.leptons.size() >= 1) PlotUtil::plot1D("dphilepmet", VarUtil::DPhiLepMET(a) , a.wgt , a.hist_db , "#Delta#phi_{#ell,MET}" , 5   , 0. , 3.1416 , prefix); }
+//	    void fillDRjjW     (string prefix , ObjUtil::AnalysisData& a) { if (a.jets   .size() >= 2) PlotUtil::plot1D("drjjw"     , VarUtil::DRjjWmass(a)  , a.wgt , a.hist_db , "#DeltaR{jj,close-to-W}" , 180 , 0. , 9.   , prefix); }
+//	    /// Single object ID-related
+//	    void fillLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddz"        , ilep).Data() , a.leptons[ilep].dz                                   , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+//	    void fillLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%ddxy"       , ilep).Data() , a.leptons[ilep].dxy                                  , a.wgt , a.hist_db , "" , 180 , 0. , 0.01, prefix); }
+//	    void fillLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dip3d"      , ilep).Data() , a.leptons[ilep].ip3d                                 , a.wgt , a.hist_db , "" , 180 , 0. , 0.05, prefix); }
+//	    void fillLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dsip3d"     , ilep).Data() , a.leptons[ilep].sip3d                                , a.wgt , a.hist_db , "" , 180 , 0. , 10 , prefix); }
+//	    void fillLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03"  , ilep).Data() , a.leptons[ilep].relIso03                             , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+//	    void fillLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03"  , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+//	    void fillLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+//	    void fillLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+//	    void fillLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+//	    void fillLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA", ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+//	    void fillLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%drelIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB                           , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+//	    void fillLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB", ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180 , 0. , 20. , prefix); }
+//	    void fillLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dminiIso03" , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                    , a.wgt , a.hist_db , "" , 1080 , 0. , 1.5, prefix); }
+//	    void fillLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptrel"     , ilep).Data() , a.leptons[ilep].ptRel                                , a.wgt , a.hist_db , "" , 180 , 0. , 30., prefix); }
+//	    void fillLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dptratio"   , ilep).Data() , a.leptons[ilep].ptRatio                              , a.wgt , a.hist_db , "" , 180 , 0.5, 1.0, prefix); }
+//	    void fillLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) PlotUtil::plot1D(TString::Format("lep%dIsFromW"   , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                   , a.wgt , a.hist_db , "" ,   2 , 0. , 2  , prefix); }
+//	    /// Leptons from W
+//	    void fillIsFromWLepPt          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
+//	    void fillIsFromWLepEta         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
+//	    void fillIsFromWLepPhi         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
+//	    void fillIsFromWLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddz"           , ilep).Data() , a.leptons[ilep].dz                                     , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
+//	    void fillIsFromWLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%ddxy"          , ilep).Data() , a.leptons[ilep].dxy                                    , a.wgt , a.hist_db , "" , 180  , 0.  , 0.01 , prefix); }
+//	    void fillIsFromWLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dip3d"         , ilep).Data() , a.leptons[ilep].ip3d                                   , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
+//	    void fillIsFromWLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dsip3d"        , ilep).Data() , a.leptons[ilep].sip3d                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 10   , prefix); }
+//	    void fillIsFromWLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03"     , ilep).Data() , a.leptons[ilep].relIso03                               , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03"     , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()     , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepRelIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%drelIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepAbsIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dabsIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                      , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepMiniIsov2   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dminiIsov2"    , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EAv2                    , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsFromWLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptrel"        , ilep).Data() , a.leptons[ilep].ptRel                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsFromWLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dptratio"      , ilep).Data() , a.leptons[ilep].ptRatio                                , a.wgt , a.hist_db , "" , 180  , 0.5 , 1.0  , prefix); }
+//	    void fillIsFromWLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (a.leptons[ilep].isFromX & (1<<0)) PlotUtil::plot1D(TString::Format("lep%dIsFromW"      , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                     , a.wgt , a.hist_db , "" , 2    , 0.  , 2    , prefix); }
+//	    /// Leptons Is not from W
+//	    void fillIsNotFromWLepPt          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%dpt"   , ilep).Data()  , a.leptons[ilep].p4.Pt()    , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]"  , ilep).Data()  , 180     , 0.      , 200. - ilep * 20  , prefix); }
+//	    void fillIsNotFromWLepEta         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%deta"  , ilep).Data()  , a.leptons[ilep].p4.Eta()   , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"        , ilep).Data()  , 180     , -3.     , 3.     , prefix); }
+//	    void fillIsNotFromWLepPhi         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil ::plot1D(TString::Format("lep%dphi"  , ilep).Data()  , a.leptons[ilep].p4.Phi()   , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"        , ilep).Data()  , 180     , -3.1416 , 3.1416 , prefix); }
+//	    void fillIsNotFromWLepDz          (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddz"           , ilep).Data() , a.leptons[ilep].dz                                     , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
+//	    void fillIsNotFromWLepDxy         (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%ddxy"          , ilep).Data() , a.leptons[ilep].dxy                                    , a.wgt , a.hist_db , "" , 180  , 0.  , 0.01 , prefix); }
+//	    void fillIsNotFromWLepIp3d        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dip3d"         , ilep).Data() , a.leptons[ilep].ip3d                                   , a.wgt , a.hist_db , "" , 180  , 0.  , 0.05 , prefix); }
+//	    void fillIsNotFromWLepSip3d       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dsip3d"        , ilep).Data() , a.leptons[ilep].sip3d                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 10   , prefix); }
+//	    void fillIsNotFromWLepRelIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03"     , ilep).Data() , a.leptons[ilep].relIso03                               , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso03    (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03"     , ilep).Data() , a.leptons[ilep].relIso03 * a.leptons[ilep].p4.Pt()     , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso03EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03EA"   , ilep).Data() , a.leptons[ilep].relIso03EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso03EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03EAv2" , ilep).Data() , a.leptons[ilep].relIso03EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso03DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso03DB"   , ilep).Data() , a.leptons[ilep].relIso03DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso04EA  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04EA"   , ilep).Data() , a.leptons[ilep].relIso04EA * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2                           , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso04EAv2(string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04EAv2" , ilep).Data() , a.leptons[ilep].relIso04EAv2 * a.leptons[ilep].p4.Pt() , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepRelIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%drelIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB                             , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepAbsIso04DB  (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dabsIso04DB"   , ilep).Data() , a.leptons[ilep].relIso04DB * a.leptons[ilep].p4.Pt()   , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepMiniIso     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EA                      , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepMiniIsov2   (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dminiIso"      , ilep).Data() , a.leptons[ilep].miniRelIsoCMS3_EAv2                    , a.wgt , a.hist_db , "" , 1080 , 0.  , 0.25  , prefix); }
+//	    void fillIsNotFromWLepPtRel       (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptrel"        , ilep).Data() , a.leptons[ilep].ptRel                                  , a.wgt , a.hist_db , "" , 180  , 0.  , 30.  , prefix); }
+//	    void fillIsNotFromWLepPtRatio     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dptratio"      , ilep).Data() , a.leptons[ilep].ptRatio                                , a.wgt , a.hist_db , "" , 180  , 0.5 , 1.0  , prefix); }
+//	    void fillIsNotFromWLepIsFromW     (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep) if (!(a.leptons[ilep].isFromX & (1<<0))) PlotUtil::plot1D(TString::Format("lep%dIsFromW"      , ilep).Data() , (a.leptons[ilep].isFromX) & (1<<0)                     , a.wgt , a.hist_db , "" , 2    , 0.  , 2    , prefix); }
+//	    // Jet single object
+//	    void fillJetID        (string prefix , ObjUtil::AnalysisData& a) { for (unsigned int ijet = 0; ijet < a.jets   .size(); ++ijet) PlotUtil::plot1D(TString::Format("jet%dID"        , ijet).Data() , a.jets   [ijet].id                                   , a.wgt , a.hist_db , "" ,   2 , 0. , 30 , prefix); }
+
