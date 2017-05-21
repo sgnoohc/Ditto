@@ -1479,12 +1479,15 @@ class HistogramPainter:
 
             error = ROOT.Double()
 
-            stot = sighist.IntegralAndError(0, 181, error)
-            btot = bkghist.IntegralAndError(0, 181, error)
+            stot = sighist.IntegralAndError(0, sighist.GetNbinsX()+1, error)
+            btot = bkghist.IntegralAndError(0, bkghist.GetNbinsX()+1, error)
+            sighist.Print("all")
+            bkghist.Print("all")
+            print stot, btot
 
             x=[]
             y=[]
-            for i in range(0, sighist.GetNbinsX()+1):
+            for i in range(0, sighist.GetNbinsX()+2):
                 #s = sighist.IntegralAndError(sighist.GetNbinsX()-i, sighist.GetNbinsX()+1, error)
                 #b = bkghist.IntegralAndError(sighist.GetNbinsX()-i, bkghist.GetNbinsX()+1, error)
                 s = sighist.IntegralAndError(0, i, error)
