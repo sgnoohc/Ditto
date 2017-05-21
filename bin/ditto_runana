@@ -210,14 +210,14 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     ANALYSIS=${ITEMS[0]//ditto_ana_}
     HADOOPDIR=${ITEMS[1]}
     SAMPLEFILENAME=${ITEMS[2]//${JOBTAG}\/.\/}
-    NEVENTS=${ITEMS[3]}
+    NEVENTS=${ITEMS[3]//2>&1}
     CONDORJOBNAME=${ANALYSIS}_${SAMPLEFILENAME}
 
     $MSG ==============================================
     $MSG ANALYSIS=${ANALYSIS}
     $MSG HADOOPDIR=${HADOOPDIR}
     $MSG SAMPLEFILENAME=${SAMPLEFILENAME}
-    $MSG NEVENTS=${JOBTAG}
+    $MSG JOBTAG=${JOBTAG}
     $MSG NEVENTS=${NEVENTS}
     $MSG CONDORJOBNAME=${CONDORJOBNAME}
     $MSG condor_err=/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${ANALYSIS}_${JOBTAG}/${SAMPLEFILENAME}.err
@@ -243,6 +243,7 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
 
     # Submitting the job
     $MSG "Submitting "${CONDORJOBNAME}
+    $MSG "condor.cmd="/tmp/phchang/${CONDORJOBNAME}.cmd
     $MSG "----------------------------------------------"
     condor_submit /tmp/phchang/${CONDORJOBNAME}.cmd
 
