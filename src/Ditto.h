@@ -411,15 +411,15 @@ namespace Ditto
     };
 
     typedef std::map<TString, Leptons> LeptonsCollection;
+    typedef std::map<TString, Jets> JetsCollection;
 
     struct AnalysisData {
       LeptonsCollection lepcol;
+      JetsCollection jetcol;
       Leptons leptons;
-      Leptons vetoleptons;
       Jets jets;
       Jets bjets;
       MET met;
-      //ObjUtil::METs mets;
       Truths truths;
       EventInfo eventinfo;
       PlotUtil::Hist_DB hist_db;
@@ -459,6 +459,13 @@ namespace Ditto
     /// Muons
     bool isLooseMuonPOG(ObjUtil::Lepton& lepton);
     bool isMediumMuonPOG(ObjUtil::Lepton& lepton);
+
+    /// Jets
+    bool isLoosePFJet_Summer16_v1(ObjUtil::Jet& jet);
+
+    /// B-tagging
+    bool isMediumBJet(ObjUtil::Jet& jet);
+    bool isLooseBJet(ObjUtil::Jet& jet);
 
   }
 

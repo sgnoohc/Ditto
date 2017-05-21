@@ -124,6 +124,61 @@ namespace Ditto
       return true;
     }
 
+    //______________________________________________________________________________________
+    bool isLoosePFJet_Summer16_v1(ObjUtil::Jet& jet)
+    {
+      float pfjet_chf_ = jet.chf;
+      float pfjet_nhf_ = jet.nhf;
+      float pfjet_cef_ = jet.cef;
+      float pfjet_nef_ = jet.nef;
+      int   pfjet_cm_  = jet.cm;
+      int   pfjet_nm_  = jet.nm;
+      float pfjet_eta  = fabs(jet.p4.Eta());
+
+      if (pfjet_eta <= 2.7)
+      {
+        if (pfjet_nhf_ >= 0.99       ) return false;
+        if (pfjet_nef_ >= 0.99       ) return false;
+        if (pfjet_cm_ + pfjet_nm_ < 2) return false;
+
+        if (pfjet_eta < 2.4){
+          if (!(pfjet_cm_  >   0.  ) ) return false;
+          if (!(pfjet_chf_ >   0.  ) ) return false;
+          if (!(pfjet_cef_ <   0.99) ) return false;
+        }
+      }
+      else if( pfjet_eta > 2.7 && pfjet_eta <= 3.0 )
+      {
+        if (!(pfjet_nef_ < 0.9 ) ) return false;
+        if (!(pfjet_nm_  > 2   ) ) return false;
+      }
+      else if( pfjet_eta > 3.0 )
+      {
+        if (!(pfjet_nef_ < 0.9 ) ) return false;
+        if (!(pfjet_nm_  > 10  ) ) return false;
+      }
+
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isMediumBJet(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 20.        ) ) return false;
+      if ( !(fabs(jet.p4.Eta()) < 2.4 ) ) return false;
+      if ( !(jet.btagCSV > 0.8484     ) ) return false;
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isLooseBJet(ObjUtil::Jet& jet)
+    {
+      if ( !(jet.p4.Pt() > 20.        ) ) return false;
+      if ( !(fabs(jet.p4.Eta()) < 2.4 ) ) return false;
+      if ( !(jet.btagCSV > 0.5426     ) ) return false;
+      return true;
+    }
+
 
   }
 
