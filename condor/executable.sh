@@ -29,5 +29,7 @@ OUTPUTFILES=$(ls ${SAMPLEFILENAME//_skimtree}_*.root)
 if [[ ${OUTPUTFILES} == *"No such"* ]]; then
   echo "Ditto::CondorExecutuable:: No other output files to copy..."
 else
-  gfal-copy -p -f -t 4200 file://`pwd`/${SAMPLEFILENAME//_skimtree}_*.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=/hadoop/cms/store/user/phchang/ditto_output/${ANALYSIS}_${TAG}/${SAMPLEFILENAME//_skimtree}_hist.root --checksum ADLER32
+  for OUTPUTFILE in ${OUTPUTFILES}; do 
+    gfal-copy -p -f -t 4200 file://`pwd`/${OUTPUTFILE} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=/hadoop/cms/store/user/phchang/ditto_output/${ANALYSIS}_${TAG}/${SAMPLEFILENAME//_skimtree}_hist.root --checksum ADLER32
+  done
 fi
