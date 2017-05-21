@@ -436,13 +436,29 @@ namespace Ditto
   namespace Analyses
   {
 
-    extern bool do_object_cutflow;
-
-    void doObjectCutflow();
-    void doNotObjectCutflow();
-
     template <class T>
-    void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj);
+    void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj)
+    {
+      std::vector<T> goodobjs;
+      for (auto& obj: objs) if (isgoodobj(obj)) goodobjs.push_back(obj);
+      objs = std::vector<T>(goodobjs);
+    }
+
+    /// Electrons
+    bool isElectronPOGMVAIDCut(ObjUtil::Lepton& lepton,
+                               float barrel_highpt_mvacut    , float barrel_lowpt_mvacut    , float barrel_lowerpt_mvacut    ,
+                               float transition_highpt_mvacut, float transition_lowpt_mvacut, float transition_lowerpt_mvacut,
+                               float endcap_highpt_mvacut    , float endcap_lowpt_mvacut    , float endcap_lowerpt_mvacut);
+    bool isElectronPOGCutBasedIDCut(ObjUtil::Lepton& lepton,
+                                    float barrel_elSigmaIEtaIEta_full5x5_cut , float barrel_abs_elDEtaIn_cut , float barrel_abs_elDPhiIn_cut ,
+                                    float barrel_elHOverE_cut                , float barrel_relIso03EA_cut   , float barrel_elEpRatio_cut    , int barrel_elNmiss_cut ,
+                                    float endcap_elSigmaIEtaIEta_full5x5_cut , float endcap_abs_elDEtaIn_cut , float endcap_abs_elDPhiIn_cut ,
+                                    float endcap_elHOverE_cut                , float endcap_relIso03EA_cut   , float endcap_elEpRatio_cut    , int endcap_elNmiss_cut);
+    bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton);
+
+    /// Muons
+    bool isLooseMuonPOG(ObjUtil::Lepton& lepton);
+    bool isMediumMuonPOG(ObjUtil::Lepton& lepton);
 
   }
 

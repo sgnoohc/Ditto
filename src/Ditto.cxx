@@ -24,20 +24,106 @@ namespace Ditto
   namespace Analyses
   {
 
-    bool do_object_cutflow = false;
-
     //______________________________________________________________________________________
-    void doObjectCutflow() { do_object_cutflow = true; }
-    void doNotObjectCutflow() { do_object_cutflow = false; }
-
-    //______________________________________________________________________________________
-    template <class T>
-    void selectObjs(std::vector<T>& objs, std::function<bool (T&)> isgoodobj)
+    bool isElectronPOGMVAIDCut(ObjUtil::Lepton& lepton,
+                               float barrel_highpt_mvacut    , float barrel_lowpt_mvacut    , float barrel_lowerpt_mvacut    ,
+                               float transition_highpt_mvacut, float transition_lowpt_mvacut, float transition_lowerpt_mvacut,
+                               float endcap_highpt_mvacut    , float endcap_lowpt_mvacut    , float endcap_lowerpt_mvacut)
     {
-      std::vector<T> goodobjs;
-      for (auto& obj: objs) if (isgoodobj(obj)) goodobjs.push_back(obj);
-      objs = std::vector<T>(goodobjs);
+      // for morioned MVA WPs: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSLeptonSF#ID_IP_ISO_AN1
+      // returns A if pt<ptmin, B if pt>ptmax, and linear interpolation between. if pt<10, use C
+      float ptmin = 15;
+      float ptmax = 25;
+      auto mvacut = [ptmin,ptmax](float A, float B, float C, float pt_) {
+        return pt_>10 ? std::min(A, std::max(B,A + (B-A)/(ptmax-ptmin)*(pt_-ptmin))) : C;
+      };
+
+      float aeta = fabs(lepton.elEtaSC);
+      if (aeta < 0.8)                     return lepton.elMva > mvacut(barrel_highpt_mvacut, barrel_lowpt_mvacut, barrel_lowerpt_mvacut, lepton.p4.Pt());
+      if ((aeta >= 0.8 && aeta <= 1.479)) return lepton.elMva > mvacut(transition_highpt_mvacut, transition_lowpt_mvacut, transition_lowerpt_mvacut, lepton.p4.Pt());
+      if (aeta > 1.479)                   return lepton.elMva > mvacut(endcap_highpt_mvacut, endcap_lowpt_mvacut, endcap_lowerpt_mvacut, lepton.p4.Pt());
+      return false;
     }
+
+    //______________________________________________________________________________________
+    bool isElectronPOGCutBasedIDCut(ObjUtil::Lepton& lepton,
+                                    float barrel_elSigmaIEtaIEta_full5x5_cut , float barrel_abs_elDEtaIn_cut , float barrel_abs_elDPhiIn_cut ,
+                                    float barrel_elHOverE_cut                , float barrel_relIso03EA_cut   , float barrel_elEpRatio_cut    , int barrel_elNmiss_cut ,
+                                    float endcap_elSigmaIEtaIEta_full5x5_cut , float endcap_abs_elDEtaIn_cut , float endcap_abs_elDPhiIn_cut ,
+                                    float endcap_elHOverE_cut                , float endcap_relIso03EA_cut   , float endcap_elEpRatio_cut    , int endcap_elNmiss_cut)
+    {
+      if (fabs(lepton.elEtaSC) <= 1.479)
+      {
+        if (!( lepton.elSigmaIEtaIEta_full5x5 <  barrel_elSigmaIEtaIEta_full5x5_cut )) return false;
+        if (!( fabs(lepton.elDEtaIn)          <  barrel_abs_elDEtaIn_cut            )) return false;
+        if (!( fabs(lepton.elDPhiIn)          <  barrel_abs_elDPhiIn_cut            )) return false;
+        if (!( lepton.elHOverE                <  barrel_elHOverE_cut                )) return false;
+        if (!( lepton.relIso03EA              <  barrel_relIso03EA_cut              )) return false;
+        if (!( lepton.elEpRatio               <  barrel_elEpRatio_cut               )) return false;
+        if (!( lepton.elNmiss                 <= barrel_elNmiss_cut                 )) return false;
+        if (!(!lepton.elConvVeto                                                    )) return false;
+        return true;
+      }
+      else
+      {
+        if (!( lepton.elSigmaIEtaIEta_full5x5 <  endcap_elSigmaIEtaIEta_full5x5_cut )) return false;
+        if (!( fabs(lepton.elDEtaIn)          <  endcap_abs_elDEtaIn_cut            )) return false;
+        if (!( fabs(lepton.elDPhiIn)          <  endcap_abs_elDPhiIn_cut            )) return false;
+        if (!( lepton.elHOverE                <  endcap_elHOverE_cut                )) return false;
+        if (!( lepton.relIso03EA              <  endcap_relIso03EA_cut              )) return false;
+        if (!( lepton.elEpRatio               <  endcap_elEpRatio_cut               )) return false;
+        if (!( lepton.elNmiss                 <= endcap_elNmiss_cut                 )) return false;
+        if (!(!lepton.elConvVeto                                                    )) return false;
+        return true;
+      }
+    }
+
+    //______________________________________________________________________________________
+    bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton)
+    {
+      if (fabs(lepton.elEtaSC) <= 1.479) {
+        if (lepton.elSigmaIEtaIEta_full5x5 >= 0.011) return false;
+        if (lepton.elHOverE >= 0.08) return false;
+        if (fabs(lepton.elDEtaIn) >= 0.01) return false;
+        if (fabs(lepton.elDPhiIn) >= 0.04) return false;
+        if (fabs(lepton.elEpRatio) >= 0.01) return false; // ????
+      } else if ((fabs(lepton.elEtaSC) > 1.479) && (fabs(lepton.elEtaSC) < 2.5)) {
+        if (lepton.elSigmaIEtaIEta_full5x5 >= 0.031) return false;
+        if (lepton.elHOverE >= 0.08) return false;
+        if (fabs(lepton.elDEtaIn) >= 0.01) return false;
+        if (fabs(lepton.elDPhiIn) >= 0.08) return false;
+        if (fabs(lepton.elEpRatio) >= 0.01) return false; // ????
+      }
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isLooseMuonPOG(ObjUtil::Lepton& lepton)
+    {
+      // Loose criteria
+      if ( !(lepton.muPidPFMuon                                   ) ) return false;
+      if ( !((lepton.muType & (1<<1)) || (lepton.muType & (1<<2)) ) ) return false;
+      //      ^^^^^^^^^^^^^^^^^^^^^       ^^^^^^^^^^^^^^^^^^^^^
+      //      isGlobal muon               isTracker muon
+      return true;
+    }
+
+    //______________________________________________________________________________________
+    bool isMediumMuonPOG(ObjUtil::Lepton& lepton)
+    {
+      bool goodGlb = (lepton.muType & (1<<1))   != 0  &&
+                     lepton.muChi2OverNDof      <  3. &&
+                     lepton.muChi2LocalPosition < 12. &&
+                     lepton.muTrkKink           < 20.;
+      double segmCompatibilityCut = goodGlb ? 0.303 : 0.451;
+
+      // Medium criteria
+      if ( !(lepton.muValidHitFraction  >  0.8                  ) ) return false;
+      if ( !(lepton.muSegmCompatibility >= segmCompatibilityCut ) ) return false;
+      if ( !(isLooseMuonPOG(lepton)                             ) ) return false;
+      return true;
+    }
+
 
   }
 
