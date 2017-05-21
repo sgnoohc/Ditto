@@ -13,10 +13,21 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
-  void fillCutflow    (string prefix, ObjUtil::AnalysisData& a, int ibin)
+  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int ibin)
   {
     PlotUtil::plot1D("cutflow"   , ibin, a.wgt, a.hist_db, "", 20, 0., 20., prefix);
     PlotUtil::plot1D("rawcutflow", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
   }
 
+  //______________________________________________________________________________________
+  void fillMET(string prefix, ObjUtil::AnalysisData& a)
+  {
+    PlotUtil::plot1D("met", a.met.p4.Pt(), a.wgt, a.hist_db , "MET [GeV]", 180, 0., 500., prefix);
+  }
+
+  //______________________________________________________________________________________
+  void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a)
+  {
+    PlotUtil::plot1D("lepsumpt", VarUtil::LepSumPt(a), a.wgt, a.hist_db , "MET [GeV]", 180, 0., 500., prefix);
+  }
 }

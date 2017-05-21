@@ -479,6 +479,8 @@ namespace Ditto
 
     string catPrefix(string prefix1, string prefix2);
     void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int ibin);
+    void fillMET(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
 
   }
 

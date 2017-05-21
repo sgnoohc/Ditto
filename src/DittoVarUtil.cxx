@@ -147,6 +147,14 @@ namespace VarUtil
     return MjjCloseToX(a.jets, 80.385);
   }
 
+  float LepSumPt(ObjUtil::AnalysisData& a)
+  {
+    float lepsumpt = 0;
+    for (auto& lepton : a.leptons)
+      lepsumpt += lepton.p4.Pt();
+    return lepsumpt;
+  }
+
   float HT(ObjUtil::AnalysisData& a)
   {
     float ht = 0;
