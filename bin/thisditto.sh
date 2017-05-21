@@ -26,6 +26,15 @@ error()
   echo ""
 }
 
+
+# Environment setting same as my ditto environment
+source /code/osgcode/cmssoft/cmsset_default.sh  > /dev/null 2>&1
+export SCRAM_ARCH=slc6_amd64_gcc530   # or whatever scram_arch you need for your desired CMSSW release
+export CMSSW_VERSION=CMSSW_8_0_18
+cd /cvmfs/cms.cern.ch/$SCRAM_ARCH/cms/cmssw/$CMSSW_VERSION/src
+eval `scramv1 runtime -sh`
+cd -
+
 if [ "x${SCRAM_ARCH}" == "x" ]; then error; return; fi
 if [ "x${CMSSW_VERSION}" == "x" ]; then error; return; fi
 

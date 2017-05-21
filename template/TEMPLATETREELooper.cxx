@@ -6,7 +6,7 @@
 #include "TEMPLATETREENAMELooper.h"
 
 //TEMPLATETREENAME mytree;
-Analyses::AnalysisData ana_data;
+ObjUtil::AnalysisData ana_data;
 TString output_name;
 
 //______________________________________________________________________________________
