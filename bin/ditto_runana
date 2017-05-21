@@ -270,4 +270,9 @@ fi
 $MSG "Submitting xargs jobs via ditto_xargs"
 $DITTOPATH/bin/ditto_xargs /tmp/ditto_runana_jobs.txt
 
-rm CORE MVAinput
+if [ -z ${COREPATH} ]; then
+  :
+else
+  rm CORE MVAinput
+fi
+
