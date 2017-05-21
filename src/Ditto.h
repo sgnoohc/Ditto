@@ -467,6 +467,9 @@ namespace Ditto
     bool isMediumBJet(ObjUtil::Jet& jet);
     bool isLooseBJet(ObjUtil::Jet& jet);
 
+    /// Overlap Removal
+    void removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons);
+
   }
 
   #include "DittoVarUtil.h"

@@ -180,6 +180,26 @@ namespace Ditto
     }
 
 
+    //______________________________________________________________________________________
+    void removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
+    {
+
+      ObjUtil::Jets ORedjets;
+      for (auto& jet : jets)
+      {
+        bool pass = true;
+        for (auto& lepton : leptons)
+        {
+          if (jet.p4.DeltaR(lepton.p4) < 0.3)
+            pass = false;
+        }
+        if (pass)
+          ORedjets.push_back(jet);
+      }
+      jets = ObjUtil::Jets(ORedjets);
+
+    }
+
   }
 
 
