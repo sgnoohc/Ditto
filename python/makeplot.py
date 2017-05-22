@@ -1494,7 +1494,7 @@ class HistogramPainter:
                 b = bkghist.IntegralAndError(0, i, error)
                 seff = s / stot
                 beff = b / btot
-                print seff, beff
+                print seff, beff, sighist.GetBinLowEdge(i);
                 x.append(beff)
                 y.append(seff)
 
