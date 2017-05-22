@@ -512,6 +512,8 @@ class HistogramManager:
         if self.args.nbinx:
             if hist.GetNbinsX() == 180 or hist.GetNbinsX() == 1080:
                 hist.Rebin(hist.GetNbinsX() / self.args.nbinx)
+            elif hist.GetNbinsX() > 1000:
+                hist.Rebin(hist.GetNbinsX() / self.args.nbinx)
             #pass
     def get_background_stacked_histograms(self):
         return self.get_stacked_histograms(self.get_background_histograms())
