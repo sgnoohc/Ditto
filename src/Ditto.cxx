@@ -181,8 +181,11 @@ namespace Ditto
 
 
     //______________________________________________________________________________________
-    void removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
+    int removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
     {
+
+      /// return number of jets that are removed
+      int njet_removed = 0;
 
       ObjUtil::Jets ORedjets;
       for (auto& jet : jets)
@@ -195,9 +198,12 @@ namespace Ditto
         }
         if (pass)
           ORedjets.push_back(jet);
+        else
+          njet_removed++;
       }
       jets = ObjUtil::Jets(ORedjets);
 
+      return njet_removed;
     }
 
   }

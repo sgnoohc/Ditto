@@ -64,6 +64,7 @@ namespace TreeUtil
     createVFloatBranch(tree, name+"_relIso03DB");
     createVFloatBranch(tree, name+"_relIso03EA");
     createVFloatBranch(tree, name+"_relIso03EAv2");
+    createVFloatBranch(tree, name+"_relIso04");
     createVFloatBranch(tree, name+"_relIso04DB");
     createVFloatBranch(tree, name+"_relIso04EA");
     createVFloatBranch(tree, name+"_relIso04EAv2");
@@ -174,6 +175,7 @@ namespace TreeUtil
       pushbackVFloatBranch(name+"_relIso03DB", lepton.relIso03DB);
       pushbackVFloatBranch(name+"_relIso03EA", lepton.relIso03EA);
       pushbackVFloatBranch(name+"_relIso03EAv2", lepton.relIso03EAv2);
+      pushbackVFloatBranch(name+"_relIso04", lepton.relIso04);
       pushbackVFloatBranch(name+"_relIso04DB", lepton.relIso04DB);
       pushbackVFloatBranch(name+"_relIso04EA", lepton.relIso04EA);
       pushbackVFloatBranch(name+"_relIso04EAv2", lepton.relIso04EAv2);

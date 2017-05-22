@@ -42,6 +42,10 @@ namespace VarUtil
   float Pt  (ObjUtil::Particle, TLorentzVector);
   float MT  (ObjUtil::Particle, TLorentzVector);
 
+  /// Two object containers
+  float MinDR(ObjUtil::Leptons&, ObjUtil::Jets&);
+  float MinDR(ObjUtil::Jets&, ObjUtil::Leptons&);
+
   /// calculator with some additional arguments
   float MjjCloseToX(ObjUtil::AnalysisData& a, float X);
   float MTNthLep(ObjUtil::AnalysisData& a, int lep_idx);

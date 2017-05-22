@@ -40,6 +40,27 @@ namespace VarUtil
   float Pt  (ObjUtil::Particle obj1, TLorentzVector obj2) { return Pt  (obj1.p4, obj2); }
   float MT  (ObjUtil::Particle obj1, TLorentzVector obj2) { return MT  (obj1.p4, obj2); }
 
+  float MinDR(ObjUtil::Leptons& leptons, ObjUtil::Jets& jets)
+  {
+    float mindr = 9999;
+    for (auto& lepton: leptons)
+      for (auto& jet: jets)
+      {
+        float tmpdr = DR(jet, lepton);
+        if (mindr > tmpdr)
+          mindr = tmpdr;
+      }
+    if (mindr < 10)
+      return mindr;
+    else
+      return -999;
+  }
+
+  float MinDR(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
+  {
+    return MinDR(leptons, jets);
+  }
+
   // Closest to mass = X, not closest to dR = X
   float DRCloseToX(ObjUtil::Jets& jets, float X)
   {

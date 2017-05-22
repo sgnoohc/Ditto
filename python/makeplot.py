@@ -1487,6 +1487,9 @@ class HistogramPainter:
             bkghist.Print("all")
             print stot, btot
 
+            print 'sighist.GetMean()', sighist.GetMean()
+            print 'bkghist.GetMean()', bkghist.GetMean()
+
             x=[]
             y=[]
             for i in range(0, sighist.GetNbinsX()+2):

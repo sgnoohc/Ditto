@@ -173,6 +173,7 @@ namespace Ditto
       float relIso03DB;
       float relIso03EA;
       float relIso03EAv2;
+      float relIso04;
       float relIso04EA;
       float relIso04EAv2;
       float relIso04DB;
@@ -224,6 +225,7 @@ namespace Ditto
         relIso03DB = -999;
         relIso03EA = -999;
         relIso03EAv2 = -999;
+        relIso04 = -999;
         relIso04DB = -999;
         relIso04EA = -999;
         relIso04EAv2 = -999;
@@ -468,7 +470,7 @@ namespace Ditto
     bool isLooseBJet(ObjUtil::Jet& jet);
 
     /// Overlap Removal
-    void removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons);
+    int removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons);
 
   }
 
