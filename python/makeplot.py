@@ -1514,7 +1514,7 @@ class HistogramPainter:
                 graph.SetMaximum(eval(self.args.maximum))
             else:
                 graph.SetMaximum(1)
-            graph.GetXaxis().SetRangeUser(0.1,1)
+            graph.GetXaxis().SetRangeUser(0.005,1)
             graph.SetLineColor(2)
             graph.SetLineWidth(2)
             graph.GetXaxis().SetTitle("Eff Background")
