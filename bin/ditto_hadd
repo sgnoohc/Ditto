@@ -156,7 +156,7 @@ hadd_category(){
 
   BKGHADDSTR=""
   for BKG in "${BKGS[@]}"; do
-    BKGHADDSTR_NEW=$(echo $(ls $OUTPUTDIR/*${BKG}*hist.root))
+    BKGHADDSTR_NEW=$(echo $(ls $OUTPUTDIR/*${BKG}*.root))
     BKGHADDSTR=${BKGHADDSTR}" "$BKGHADDSTR_NEW
   done
   if [ -z "${BKGHADDSTR}" ]; then
