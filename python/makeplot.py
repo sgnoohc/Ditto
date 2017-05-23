@@ -1532,11 +1532,11 @@ class HistogramPainter:
             if index == 0:
                 graph.Draw("acp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.0001,1)
+                graph.GetXaxis().SetRangeUser(0.001,1)
             else:
                 graph.Draw("cp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.0001,1)
+                graph.GetXaxis().SetRangeUser(0.001,1)
         print self.objs
 
         self.canvassaver.save_canvas(canvas)
