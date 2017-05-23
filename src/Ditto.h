@@ -180,6 +180,15 @@ namespace Ditto
       float miniRelIsoCMS3_EA;
       float miniRelIsoCMS3_EAv2;
       float miniRelIsoCMS3_DB;
+      float relIso005EAstudy;
+      float relIso010EAstudy;
+      float relIso015EAstudy;
+      float relIso020EAstudy;
+      float relIso025EAstudy;
+      float relIso030EAstudy;
+      float relIso035EAstudy;
+      float relIso045EAstudy;
+      float relIso050EAstudy;
       // Muon specifics
       float muPOverP;
       int   muPidPFMuon;
@@ -232,6 +241,15 @@ namespace Ditto
         miniRelIsoCMS3_EA = -999;
         miniRelIsoCMS3_EAv2 = -999;
         miniRelIsoCMS3_DB = -999;
+        relIso005EAstudy = -999;
+        relIso010EAstudy = -999;
+        relIso015EAstudy = -999;
+        relIso020EAstudy = -999;
+        relIso025EAstudy = -999;
+        relIso030EAstudy = -999;
+        relIso035EAstudy = -999;
+        relIso045EAstudy = -999;
+        relIso050EAstudy = -999;
         // Muon specifics
         muPOverP = -999;
         muPidPFMuon = -999;

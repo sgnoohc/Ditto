@@ -71,6 +71,15 @@ namespace TreeUtil
     createVFloatBranch(tree, name+"_miniRelIsoCMS3_EA");
     createVFloatBranch(tree, name+"_miniRelIsoCMS3_EAv2");
     createVFloatBranch(tree, name+"_miniRelIsoCMS3_DB");
+    createVFloatBranch(tree, name+"_relIso005EAstudy");
+    createVFloatBranch(tree, name+"_relIso010EAstudy");
+    createVFloatBranch(tree, name+"_relIso015EAstudy");
+    createVFloatBranch(tree, name+"_relIso020EAstudy");
+    createVFloatBranch(tree, name+"_relIso025EAstudy");
+    createVFloatBranch(tree, name+"_relIso030EAstudy");
+    createVFloatBranch(tree, name+"_relIso035EAstudy");
+    createVFloatBranch(tree, name+"_relIso045EAstudy");
+    createVFloatBranch(tree, name+"_relIso050EAstudy");
     // Muon specifics
     createVFloatBranch(tree, name+"_muPOverP");
     createVIntBranch  (tree, name+"_muPidPFMuon");
@@ -182,6 +191,15 @@ namespace TreeUtil
       pushbackVFloatBranch(name+"_miniRelIsoCMS3_EA", lepton.miniRelIsoCMS3_EA);
       pushbackVFloatBranch(name+"_miniRelIsoCMS3_EAv2", lepton.miniRelIsoCMS3_EAv2);
       pushbackVFloatBranch(name+"_miniRelIsoCMS3_DB", lepton.miniRelIsoCMS3_DB);
+      pushbackVFloatBranch(name+"_relIso005EAstudy", lepton.relIso005EAstudy);
+      pushbackVFloatBranch(name+"_relIso010EAstudy", lepton.relIso010EAstudy);
+      pushbackVFloatBranch(name+"_relIso015EAstudy", lepton.relIso015EAstudy);
+      pushbackVFloatBranch(name+"_relIso020EAstudy", lepton.relIso020EAstudy);
+      pushbackVFloatBranch(name+"_relIso025EAstudy", lepton.relIso025EAstudy);
+      pushbackVFloatBranch(name+"_relIso030EAstudy", lepton.relIso030EAstudy);
+      pushbackVFloatBranch(name+"_relIso035EAstudy", lepton.relIso035EAstudy);
+      pushbackVFloatBranch(name+"_relIso045EAstudy", lepton.relIso045EAstudy);
+      pushbackVFloatBranch(name+"_relIso050EAstudy", lepton.relIso050EAstudy);
       // Muon specifics
       pushbackVFloatBranch(name+"_muPOverP", lepton.muPOverP);
       pushbackVIntBranch  (name+"_muPidPFMuon", lepton.muPidPFMuon);
