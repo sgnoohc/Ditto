@@ -44,16 +44,15 @@ namespace VarUtil
   {
     float mindr = 9999;
     for (auto& lepton: leptons)
+    {
       for (auto& jet: jets)
       {
         float tmpdr = DR(jet, lepton);
         if (mindr > tmpdr)
           mindr = tmpdr;
       }
-    if (mindr < 10)
-      return mindr;
-    else
-      return -999;
+    }
+    return mindr;
   }
 
   float MinDR(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
