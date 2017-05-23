@@ -45,6 +45,6 @@ export BINARYNAME=ditto_ana_${PACKAGENAME}
 export PACKAGEPATH=${PACKAGEPATH}
 export PATH=$DIR:$PATH
 export DITTOPATH=$DIR/../
-PS1='\[\e[1;90;42m\][\h@\u \w ]\[\e[0m\]\n[\[\e[4;49;'92'm\]'$PACKAGENAME'\[\e[0m\]]$ '
+PS1='[\[\e[1;7;90m\]\h@\u \w \[\e[0m\]]\n[\[\e[4;49;'92'm\]'$PACKAGENAME'\[\e[0m\]]$ '
 
 $DIR/ditto_setup_check $2
