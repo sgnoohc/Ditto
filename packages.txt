@@ -2,3 +2,4 @@ mybabymaker   /home/users/phchang/analyses/mybabyframework/mybabymaker
 wwwanalysis   /home/users/phchang/analyses/www/wwwanalysis
 wwwhannsjoerg /home/users/phchang/analyses/www/wwwhannsjoerg
 wwwisolation  /home/users/phchang/analyses/www/wwwisolation
+wwwcommon     /home/users/phchang/analyses/www/wwwcommon
