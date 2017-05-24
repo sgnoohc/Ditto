@@ -811,14 +811,19 @@ class HistogramPainter:
 
             index = 0
             for yields, errors in zip(yields_table_transpose, errors_table_transpose):
-                row_string = ""
+                row_string = "|"
                 for y, e in zip(yields, errors):
                     if index == 0:
-                        row_string += '%30s,,,'%y
+                        row_string += '%30s|||'%y
                     else:
                         #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                        row_string += '%10.1f,'%y + "+-" + ', %10.1f, '%e
+                        row_string += '%10.1f|'%y + "+-" + '| %10.1f| '%e
                 row_string += '\n'
+                if index == 0:
+                    row_string += "|"
+                    for y, e in zip(yields, errors):
+                        row_string += '---------|-----|-----------|'
+                    row_string += '\n'
                 cutflow_file.write(row_string)
                 index += 1
 
@@ -862,6 +867,7 @@ class HistogramPainter:
             totalbkghist.SetFillColor(12)
             totalbkghist.Draw('E2 same')
         if totalbkghist:
+            print 'totalbkghist'
             totalbkghist.Print('all')
         #print totalbkghist.Integral(2,3)
         #print totalbkghist.Integral(19,25)

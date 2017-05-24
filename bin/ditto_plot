@@ -57,7 +57,7 @@ while getopts ":d:e:L:v:p:o:f:S:I:hDs" OPTION; do
     v) VAR=${OPTARG};;
     p) PLOTOPTION=${OPTARG};;
     o) OUTPUTPREFIX=${OPTARG};;
-    L) SCALE=${OPTARG};;
+    L) LUMISCALE=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
     S) SIGSCALE=${OPTARG};;
     I) INPUTDIR=${OPTARG};;
@@ -156,6 +156,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
   BKGCOUNTER=0
   PROCESSSTRING="  "
   for item in $(ls ${INPUTDIR}/hist*root); do
+    SCALE=${LUMISCALE}
     if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
     CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
     NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
@@ -182,6 +183,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
 
   # if no bkg, then add a sig to bkg
   if [ "x${BKGCOUNTER}" == "x0" ]; then
+    SCALE=${LUMISCALE}
     for item in $(ls ${INPUTDIR}/hist*root); do
       if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
       CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
