@@ -36,6 +36,7 @@ usage() {
   echo "  -4    Signal #4                      (e.g. -3 \'wz,ttv\')"
   echo " (-5    Signal #5? What?! Why would you want to create a terrible plot???)"
   echo "  -d    /path/to/output/hadds/to       (e.g. -d ./)"
+  echo "  -i    /path/to/input/to/hadd         (e.g. -i ./)"
   echo "Options without arguments:"
   echo "  -s    Shape comparison"
   echo
@@ -43,7 +44,7 @@ usage() {
 }
 
 # Command-line opts
-while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:h" OPTION; do
+while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:h" OPTION; do
   case $OPTION in
     r) BKG1STR=${OPTARG};;
     b) BKG2STR=${OPTARG};;
@@ -68,6 +69,7 @@ while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:h" OPTION; do
     "#") SIG3NICENAME=${OPTARG};;
     "$") SIG4NICENAME=${OPTARG};;
     d) HADDOUTPUTDIR=${OPTARG};;
+    i) HADDINPUTDIR=${OPTARG};;
     h) usage;;
     :) usage;;
   esac
@@ -113,12 +115,13 @@ fi
 fi
 fi
 
-if [ -z $1 ]; then
+if [ -z ${HADDOUTPUTDIR} ]; then
+  $ERROR "Please specify where to output! (option -d)"
   usage;
 fi
 
-if [ -z ${HADDOUTPUTDIR} ]; then
-  $ERROR "Please specify where to output"
+if [ -z ${HADDINPUTDIR} ]; then
+  $ERROR "Please specify where the histogram root files are! (option -i)"
   usage;
 fi
 
@@ -156,7 +159,7 @@ hadd_category(){
 
   BKGHADDSTR=""
   for BKG in "${BKGS[@]}"; do
-    BKGHADDSTR_NEW=$(echo $(ls $OUTPUTDIR/*${BKG}*.root))
+    BKGHADDSTR_NEW=$(echo $(ls $OUTPUTDIR/*${BKG}*hist.root))
     BKGHADDSTR=${BKGHADDSTR}" "$BKGHADDSTR_NEW
   done
   if [ -z "${BKGHADDSTR}" ]; then
@@ -172,18 +175,18 @@ hadd_category(){
 }
 
 # Now write each category hadd command to tmp area
-hadd_category BKG1s "${BKG1NICENAME}" "red"     "${1}" 6 bkg
-hadd_category BKG2s "${BKG2NICENAME}" "blue"    "${1}" 5 bkg
-hadd_category BKG3s "${BKG3NICENAME}" "yellow"  "${1}" 4 bkg
-hadd_category BKG4s "${BKG4NICENAME}" "green"   "${1}" 3 bkg
-hadd_category BKG5s "${BKG5NICENAME}" "skyblue" "${1}" 2 bkg
-hadd_category BKG6s "${BKG6NICENAME}" "orange"  "${1}" 1 bkg
-hadd_category BKG7s "${BKG7NICENAME}" "purple"  "${1}" 0 bkg
+hadd_category BKG1s "${BKG1NICENAME}" "red"     "${HADDINPUTDIR}" 6 bkg
+hadd_category BKG2s "${BKG2NICENAME}" "blue"    "${HADDINPUTDIR}" 5 bkg
+hadd_category BKG3s "${BKG3NICENAME}" "yellow"  "${HADDINPUTDIR}" 4 bkg
+hadd_category BKG4s "${BKG4NICENAME}" "green"   "${HADDINPUTDIR}" 3 bkg
+hadd_category BKG5s "${BKG5NICENAME}" "skyblue" "${HADDINPUTDIR}" 2 bkg
+hadd_category BKG6s "${BKG6NICENAME}" "orange"  "${HADDINPUTDIR}" 1 bkg
+hadd_category BKG7s "${BKG7NICENAME}" "purple"  "${HADDINPUTDIR}" 0 bkg
 
-hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${1}" 1 sig
-hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${1}" 2 sig
-hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${1}" 3 sig
-hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${1}" 4 sig
+hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${HADDINPUTDIR}" 1 sig
+hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${HADDINPUTDIR}" 2 sig
+hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${HADDINPUTDIR}" 3 sig
+hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${HADDINPUTDIR}" 4 sig
 
 # Create output directory if not already
 mkdir -p ${HADDOUTPUTDIR}/

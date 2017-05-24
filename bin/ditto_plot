@@ -28,6 +28,7 @@ usage()
   echo "  -e    Extra plot option      (e.g. -e '--autostack')"
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
   echo "  -S    Signal scale           (e.g. -S '*100' # must provide '*')"
+  echo "  -I    Input directory path   (e.g. -I haddoutput/)"
   echo "Options without arguments:"
   echo "  -D    Delete and plot"
   echo "  -s    Shape comparison"
@@ -40,7 +41,7 @@ too_many_entries()
   echo "ERROR - Too many to plot! (more than 7) I do not recommend putting more than 7 items on a plot!"
   echo ""
   echo "Asked for following root files to be plotted"
-  for item in $@; do
+  for item in $(ls ${INPUTDIR}/hist*root); do
     echo $item
   done
   echo ""
@@ -49,7 +50,7 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":d:e:L:v:p:o:f:S:hDs" OPTION; do
+while getopts ":d:e:L:v:p:o:f:S:I:hDs" OPTION; do
   case $OPTION in
     d) OUTPUTDIR=${OPTARG};;
     e) EXTRAOPTION=${OPTARG};;
@@ -59,6 +60,7 @@ while getopts ":d:e:L:v:p:o:f:S:hDs" OPTION; do
     L) SCALE=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
     S) SIGSCALE=${OPTARG};;
+    I) INPUTDIR=${OPTARG};;
     D) DELETEANDPLOT="TRUE";;
     s) SHAPECOMPARISON="TRUE";;
     h) usage;;
@@ -75,6 +77,8 @@ done
 if [ -z ${PLOTOPTION} ]; then PLOTOPTION=plot1d; fi
 if [ -z ${OUTPUTPREFIX}  ]; then OUTPUTPREFIX=""; fi
 if [ -z ${OUTPUTDIR} ]; then OUTPUTDIR=plots; fi
+
+if [ -z ${INPUTDIR} ]; then usage; fi
 
 shift $(($OPTIND - 1))
 
@@ -116,14 +120,15 @@ SIGCOLORARRAY=(1 2 4 8 9 6 7)
 echo "" > /tmp/plotjobs.txt
 
 REFFILE=""
-for item in $@; do
+for item in $(ls ${INPUTDIR}/hist*root); do
+  echo $item
   CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
   if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
   if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
 done
 
 if [ -z ${REFFILE} ]; then
-for item in $@; do
+  for item in $(ls ${INPUTDIR}/hist*root); do
   CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
   if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
   if [ "x${CATEGORY}" == "xbkg" ]; then REFFILE=$item; break; fi
@@ -150,7 +155,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
   SIGCOUNTER=0
   BKGCOUNTER=0
   PROCESSSTRING="  "
-  for item in $@; do
+  for item in $(ls ${INPUTDIR}/hist*root); do
     if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
     CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
     NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
@@ -177,7 +182,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
 
   # if no bkg, then add a sig to bkg
   if [ "x${BKGCOUNTER}" == "x0" ]; then
-    for item in $@; do
+    for item in $(ls ${INPUTDIR}/hist*root); do
       if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
       CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
       NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
@@ -214,6 +219,6 @@ done
 ditto_xargs /tmp/plotjobs.txt
 
 PLOTPATH=$(echo $('cd' $(dirname ${OUTPUTDIR}); pwd)/$(basename ${OUTPUTDIR}))
-echo http://uaf-10.t2.ucsd.edu/~${USER}/${PLOTPATH//\/home\/users\/phchang\/public_html\/}
+echo http://uaf-7.t2.ucsd.edu/~${USER}/${PLOTPATH//\/home\/users\/phchang\/public_html\/}
 
 #eof
