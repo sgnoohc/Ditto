@@ -1517,7 +1517,7 @@ class HistogramPainter:
                 graph.SetMaximum(eval(self.args.maximum))
             else:
                 graph.SetMaximum(1)
-            graph.GetXaxis().SetRangeUser(0.001,1)
+            graph.GetXaxis().SetRangeUser(0.01,1)
             graph.SetLineColor(2)
             graph.SetLineWidth(2)
             graph.GetXaxis().SetTitle("Eff Background")
@@ -1532,11 +1532,11 @@ class HistogramPainter:
             if index == 0:
                 graph.Draw("acp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.001,1)
+                graph.GetXaxis().SetRangeUser(0.01,1)
             else:
                 graph.Draw("cp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.001,1)
+                graph.GetXaxis().SetRangeUser(0.01,1)
         print self.objs
 
         self.canvassaver.save_canvas(canvas)
