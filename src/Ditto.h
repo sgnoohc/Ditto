@@ -501,6 +501,7 @@ namespace Ditto
     void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int ibin);
     void fillMET(string prefix, ObjUtil::AnalysisData& a);
     void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepRelIso03EA(string prefix, ObjUtil::AnalysisData& a);
 
   }
 
