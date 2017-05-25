@@ -1,0 +1,44 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+$DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+ERROR=echo
+MSG=echo
+SUCCESS=echo
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+  ERROR=e_error
+  MSG=e_msg
+  SUCCESS=e_success
+fi
+
+JOBTAG=$1
+
+# Verbose
+date
+echo "================================================"
+echo "$(basename $0) $*"
+echo "------------------------------------------------"
+echo "JOBTAG             : ${JOBTAG}"
+echo "================================================"
+
+FAILEDJOBCOUNTER=0
+for ITEM in $(ls /nfs-7/userdata/phchang/ditto_skimmed_babies/log/${PACKAGENAME}_${JOBTAG}/*.err); do
+  if [ "$(cat $ITEM | wc -l)" != "0" ]; then
+    FAILEDJOBCOUNTER=$((FAILEDJOBCOUNTER+1))
+    echo $(basename ${ITEM//.err}) $ITEM;
+  fi;
+done
+
+if [ "${FAILEDJOBCOUNTER}" == "0" ]; then
+  $SUCCESS "All jobs for the tag=${JOBTAG} succeeded!"
+  $MSG "/hadoop/cms/store/user/phchang/ditto_output/${PACKAGENAME}_${JOBTAG}"
+  $MSG "/hadoop/cms/store/user/phchang/ditto_skimmed_babies/${PACKAGENAME}_${JOBTAG}"
+else
+  $ERROR "Above N=${FAILEDJOBCOUNTER} jobs failed for the tag=${JOBTAG}!"
+  $MSG "/nfs-7/userdata/phchang/ditto_skimmed_babies/log/${PACKAGENAME}_${JOBTAG}/*.err"
+fi
+
+#eof
