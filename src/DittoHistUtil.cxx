@@ -34,6 +34,16 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
+  void fillLepMTs(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%dmt", ilep).Data(), VarUtil::MT(lepton, a.met), a.wgt, a.hist_db , TString::Format("lep%dmt", ilep).Data(), 180, 0., 180, prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
   void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a)
   {
     PlotUtil::plot1D("lepsumpt", VarUtil::LepSumPt(a), a.wgt, a.hist_db , "MET [GeV]", 180, 0., 500., prefix);
