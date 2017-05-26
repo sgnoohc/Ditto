@@ -49,4 +49,14 @@ namespace HistUtil
     }
   }
 
+  //______________________________________________________________________________________
+  void fillLepAbsIso03EA(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%d_absiso03EA", ilep).Data(), lepton.relIso03EA * lepton.p4.Pt(), a.wgt, a.hist_db , TString::Format("lep%d_relIso03EA", ilep).Data(), 10000, 0., 0.15, prefix);
+    }
+  }
+
 }

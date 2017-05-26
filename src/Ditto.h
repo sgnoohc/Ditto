@@ -503,6 +503,7 @@ namespace Ditto
     void fillMET(string prefix, ObjUtil::AnalysisData& a);
     void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
     void fillLepRelIso03EA(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepAbsIso03EA(string prefix, ObjUtil::AnalysisData& a);
 
   }
 
