@@ -748,7 +748,7 @@ class HistogramPainter:
             self.objs.append(totalbkghist)
 
         print self.args.plotname
-        if self.args.plotname.find("cutflow") == -1:
+        if self.args.plotname.find("cutflow") == -1 and self.args.plotname.find("counter") == -1 :
             self.args.print_cutflow = False
 
         if self.args.print_cutflow:
@@ -837,8 +837,12 @@ class HistogramPainter:
                         name = y.split('%')[0]
                         row_string += '<sub>%s</sub>|'%name
                     else:
-                        #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                        row_string += '<sub>%.2f'%y + "+-" + ' %.2f</sub>| '%e
+                        if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
+                            #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
+                            row_string += '<sub>%.2f'%y+'</sub>| '
+                        else:
+                            #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
+                            row_string += '<sub>%.2f'%y + "+-" + ' %.2f</sub>| '%e
                 row_string += '\n'
                 if index == 0:
                     row_string += "|"

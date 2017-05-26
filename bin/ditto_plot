@@ -183,6 +183,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
     if [ -z ${SCALE} ]; then SCALE=70; fi
     if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
+    if [[ ${THISVAR} == *"rawcounter"* ]]; then SCALE=1; fi
     if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
@@ -211,6 +212,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
       if [ -z ${SCALE} ]; then SCALE=70; fi
       if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
+      if [[ ${THISVAR} == *"rawcounter"* ]]; then SCALE=1; fi
       if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
       TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
       CATEGORY=bkg
