@@ -100,6 +100,7 @@ namespace Ditto
     extern bool isdata;
     extern bool isfastsim;
     extern bool doskim;
+    extern bool doprintprogressbar;
     extern TString output_name;
 
     void loadFileIter();

@@ -16,6 +16,7 @@ namespace LoopUtil
   TObjArrayIter* file_iter               =   0;
   int bar_id                             =   0;
   int print_rate                         = 432;
+  bool doprintprogressbar                = false;
   bool isdata                            = false;
   bool isfastsim                         = false;
   bool doskim                            = false;
@@ -193,7 +194,8 @@ namespace LoopUtil
     incrementCurrentTTreeEventIndex();
     int loadresult = loadCurrentTTreeEvent();
     incrementTotalNEventsProcessed();
-//	    printProgressBar();
+    if (doprintprogressbar)
+      printProgressBar();
     if (loadresult == -2) // TTree::LoadTree returns -2 if no entry exist
       return false;
     else
