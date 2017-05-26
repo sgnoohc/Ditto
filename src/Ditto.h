@@ -561,6 +561,8 @@ namespace Ditto
 
 // comparators
 template <class T>
+bool comparator_abspdgId(T p0, T p1) { return abs(p0.pdgId) > abs(p1.pdgId); }
+template <class T>
 bool comparator_pdgId(T p0, T p1) { return p0.pdgId > p1.pdgId; }
 template <class T>
 bool comparator_pt(T p0, T p1) { return p0.p4.Pt() > p1.p4.Pt(); }
