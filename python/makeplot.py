@@ -47,6 +47,7 @@ parser.add_argument('--minimum_logy', dest='minimum_logy', type=float, help='Ran
 parser.add_argument('--maximum'     , dest='maximum'     , type=str,   help='Range maximum')
 parser.add_argument('--minimum'     , dest='minimum'     , type=str,   help='Range minimum')
 parser.add_argument('--show_overflow',dest='show_overflow',action='store_true',help='show overflow bin', default=False)
+parser.add_argument('--show_overflow_sigonly',dest='show_overflow_sigonly',action='store_true',help='show overflow bin for signal only', default=False)
 parser.add_argument('--do_cutflow_style',dest='do_cutflow_style',action='store_true',help='show overflow bin', default=False)
 parser.add_argument('--print_cutflow',dest='print_cutflow',action='store_true',help='print cutflow table to csv format', default=False)
 parser.add_argument('--print_cutflow_bins',dest='print_cutflow_bins',type=str,help='choose which bins of the cutflow you want to print out')
@@ -442,7 +443,11 @@ class HistogramManager:
         styles = self.parse_style(histogram_fullpath)
         #print 'size of histogram',histogram_fullpath,hist.Integral()
         if self.args.show_overflow:
-            self.add_overflow(hist)
+            if self.args.show_overflow_sigonly:
+                if histogram_fullpath.find("hist_sig_") != -1:
+                    self.add_overflow(hist)
+            else:
+                self.add_overflow(hist)
         for item in styles:
             if item == 'Scale':
                 if styles[item].find('norm')!=-1:
@@ -493,6 +498,7 @@ class HistogramManager:
                 except:
                     getattr(hist, item)(int(styles[item]))
     def add_overflow(self, hist):
+        print hist, 'added overflow'
         ofbinc = hist.GetBinContent(hist.GetNbinsX()+1)
         ofbine = hist.GetBinError(hist.GetNbinsX()+1)
         lastbinc = hist.GetBinContent(hist.GetNbinsX())
@@ -853,8 +859,10 @@ class HistogramPainter:
                 index += 1
 
         try:
-            stacked.SetMaximum(self.get_max(totalbkghist, datahist) * self.args.maximum_scale) # assuming bkg matches data
+            #stacked.SetMaximum(self.get_max(totalbkghist, datahist) * self.args.maximum_scale) # assuming bkg matches data
+            stacked.SetMaximum(self.get_max(totalbkghist, sighists[0], datahist) * self.args.maximum_scale) # assuming bkg matches data
         except:
+            print 'failed'
             stacked.SetMaximum(self.get_max(totalbkghist) * self.args.maximum_scale)
         if self.args.minimum_logy:
             stacked.SetMinimum(self.args.minimum_logy)
@@ -1512,8 +1520,8 @@ class HistogramPainter:
 
             error = ROOT.Double()
 
-            stot = sighist.IntegralAndError(0, sighist.GetNbinsX()+1, error)
-            btot = bkghist.IntegralAndError(0, bkghist.GetNbinsX()+1, error)
+            stot = sighist.IntegralAndError(0, sighist.GetNbinsX(), error)
+            btot = bkghist.IntegralAndError(0, bkghist.GetNbinsX(), error)
             #sighist.Print("all")
             #bkghist.Print("all")
             print stot, btot
@@ -1530,14 +1538,14 @@ class HistogramPainter:
                 b = bkghist.IntegralAndError(0, i, error)
                 seff = s / stot
                 beff = b / btot
-                #if abs(sighist.GetBinLowEdge(i) - 0.25) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                #if abs(sighist.GetBinLowEdge(i) - 0.15) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                #if abs(sighist.GetBinLowEdge(i) - 0.10) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                #if abs(sighist.GetBinLowEdge(i) - 0.07) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                #if abs(beff - 0.07) < 0.02: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                #if abs(beff - 0.04) < 0.02: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
-                if beff != 0:
-                    print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(sighist.GetBinLowEdge(i) - 0.25) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(sighist.GetBinLowEdge(i) - 0.15) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(sighist.GetBinLowEdge(i) - 0.10) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(sighist.GetBinLowEdge(i) - 0.07) < 0.01: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(beff - 0.07) < 0.02: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                if abs(beff - 0.04) < 0.02: print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff)
+                #if beff != 0:
+                #    print seff, beff, sighist.GetBinLowEdge(i), seff*seff / math.sqrt(beff), seff / math.sqrt(beff), s, b, stot, btot
                 x.append(beff)
                 y.append(seff)
 
@@ -1579,6 +1587,82 @@ class HistogramPainter:
 
         self.canvassaver.save_canvas(canvas)
 
+    def draw_effmaxcut_curve(self):
+        self.args.canvas_def = "1,1:0-0-1-1-0.1-0.25-0.2-0.20"
+        canvas = self.canvasfactory.get_canvas()
+        canvas.cd(1).SetGridx(1)
+        canvas.cd(1).SetGridy(1)
+        #ROOT.gStyle.SetGridStyle(1)
+
+        bkghists = self.histmanager.get_background_histograms()
+        sighists = self.histmanager.get_signal_histograms()
+        datahists = self.histmanager.get_data_histograms()
+        hists = bkghists + sighists + datahists
+
+        self.objs = []
+        graph = None
+        for index, hist in enumerate(hists):
+
+            error = ROOT.Double()
+
+            print hist.Print()
+
+            tot = hist.IntegralAndError(0, hist.GetNbinsX()+1, error)
+            print tot
+
+            print 'hist.GetMean()', hist.GetMean()
+
+            x=[]
+            y=[]
+            for i in range(0, hist.GetNbinsX()+2):
+                s = hist.IntegralAndError(0, i, error)
+                seff = s / tot
+                x.append(hist.GetBinLowEdge(i))
+                y.append(seff)
+
+            graph = ROOT.TGraph(len(x))
+            for index, i in enumerate(x):
+                graph.SetPoint(index, x[index], y[index])
+
+            graph.SetTitle("")
+            graph.SetName("")
+            if self.args.minimum:
+                graph.SetMinimum(eval(self.args.minimum))
+            else:
+                graph.SetMinimum(0.85)
+            if self.args.maximum:
+                graph.SetMaximum(eval(self.args.maximum))
+            else:
+                graph.SetMaximum(1)
+            graph.GetXaxis().SetRangeUser(0.0001,12)
+            graph.SetLineColor(2)
+            graph.SetLineWidth(2)
+            graph.GetXaxis().SetTitle("Cut value")
+            graph.GetYaxis().SetTitle("Eff")
+            self.histmanager.set_histaxis_settings(graph, 1.0)
+            from copy import deepcopy
+            self.objs.append(deepcopy(graph))
+
+        colors = [7002, 7003, 7004, 7005, 7006, 7007]
+        for index, graph in enumerate(self.objs):
+            linecolor = hists[index].GetLineColor()
+            fillcolor = hists[index].GetFillColor()
+            print linecolor, fillcolor
+            color = colors[index]
+            if linecolor > 0: color = linecolor
+            if fillcolor > 0: color = fillcolor
+            graph.SetLineColor(color)
+            if index == 0:
+                graph.Draw("alp")
+                graph.GetXaxis().SetRangeUser(0.0001,12)
+                print graph
+            else:
+                graph.Draw("lp")
+                print graph
+        print self.objs
+
+        self.canvassaver.save_canvas(canvas)
+
 
 if __name__ == '__main__':
 
@@ -1589,4 +1673,5 @@ if __name__ == '__main__':
     if args.plottype == 'plot1dsig'   : histpainter.draw_standard_1d_with_sigscan()
     if args.plottype == 'plot1dindsig': histpainter.draw_standard_1d_with_individ_sigscan()
     if args.plottype == 'roc'         : histpainter.draw_roc_curve()
+    if args.plottype == 'effmaxcut'   : histpainter.draw_effmaxcut_curve()
 
