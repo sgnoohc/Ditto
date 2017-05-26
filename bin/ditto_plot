@@ -30,6 +30,7 @@ usage()
   echo "  -S    Signal scale           (e.g. -S '*100' # must provide '*')"
   echo "  -I    Input directory path   (e.g. -I haddoutput/)"
   echo "Options without arguments:"
+  echo "  -V    verbose"
   echo "  -D    Delete and plot"
   echo "  -s    Shape comparison"
   echo
@@ -50,7 +51,7 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":d:e:L:v:p:o:f:S:I:hDs" OPTION; do
+while getopts ":d:e:L:v:p:o:f:S:I:hDsV" OPTION; do
   case $OPTION in
     d) OUTPUTDIR=${OPTARG};;
     e) EXTRAOPTION=${OPTARG};;
@@ -63,6 +64,7 @@ while getopts ":d:e:L:v:p:o:f:S:I:hDs" OPTION; do
     I) INPUTDIR=${OPTARG};;
     D) DELETEANDPLOT="TRUE";;
     s) SHAPECOMPARISON="TRUE";;
+    V) VERBOSE="TRUE";;
     h) usage;;
     :) usage;;
   esac
@@ -121,10 +123,16 @@ echo "" > /tmp/plotjobs.txt
 
 REFFILE=""
 for item in $(ls ${INPUTDIR}/hist*root); do
-  echo $item
-  CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
+  ITEMNAME=$(basename $item)
+  CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<${ITEMNAME})
+  NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<${ITEMNAME})
+  COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<${ITEMNAME})
   if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
-  if [ "x${CATEGORY}" == "xsig" ]; then REFFILE=$item; break; fi
+  if [ "x${CATEGORY}" == "xsig" ]; then
+    if [ "x${COLORINDEX}" == "x1" ]; then
+      REFFILE=$item; break;
+    fi
+  fi
 done
 
 if [ -z ${REFFILE} ]; then
@@ -136,10 +144,10 @@ done
 fi
 
 # create plots directory if needed
-mkdir -p ${OUTPUTDIR}
+mkdir -p ${OUTPUTDIR}/log
 cd ${OUTPUTDIR}/
 ln -sf ~/syncfiles/miscfiles/index.php
-if [ "x${DELETEANDPLOT}" == "xTRUE" ]; then rm *pdf *png; fi
+if [ "x${DELETEANDPLOT}" == "xTRUE" ]; then rm *pdf *png *csv; fi
 cd -
 
 for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
@@ -158,9 +166,10 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
   for item in $(ls ${INPUTDIR}/hist*root); do
     SCALE=${LUMISCALE}
     if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
-    CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<$item)
-    NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<$item)
-    COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<$item)
+    ITEMNAME=$(basename $item)
+    CATEGORY=$(grep -Po 'hist_\K[^_]+' <<<${ITEMNAME})
+    NAME=$(grep -Po $CATEGORY'_\K[^_]+' <<<${ITEMNAME})
+    COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<${ITEMNAME})
     if [ "x${CATEGORY}" == "xbkg" ]; then LEGENDSTYLE=f; fi
     if [ "x${CATEGORY}" == "xsig" ]; then LEGENDSTYLE=l; fi
     if [ "x${CATEGORY}" == "xbkg" ]; then BKGCOUNTER=$((BKGCOUNTER+1)); fi
@@ -210,11 +219,19 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     done
   fi
 
-  echo python $DITTOPATH/python/makeplot.py \
-    --plottype ${PLOTOPTION} \
-    --plotname ${OUTPUTDIR}/${OUTPUTPREFIX}${THISVAR} \
-    $PROCESSSTRING \
-    ${EXTRAOPTION} >> /tmp/plotjobs.txt
+  if [ "x${VERBOSE}" == "xTRUE" ]; then
+    echo python $DITTOPATH/python/makeplot.py \
+      --plottype ${PLOTOPTION} \
+      --plotname ${OUTPUTDIR}/${OUTPUTPREFIX}${THISVAR} \
+      $PROCESSSTRING \
+      ${EXTRAOPTION} >> /tmp/plotjobs.txt
+  else
+    echo "python $DITTOPATH/python/makeplot.py \
+      --plottype ${PLOTOPTION} \
+      --plotname ${OUTPUTDIR}/${OUTPUTPREFIX}${THISVAR} \
+      $PROCESSSTRING \
+      ${EXTRAOPTION} &> ${OUTPUTDIR}/log/${OUTPUTPREFIX}${THISVAR}.log" >> /tmp/plotjobs.txt
+  fi
 
 done
 

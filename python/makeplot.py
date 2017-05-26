@@ -48,7 +48,8 @@ parser.add_argument('--maximum'     , dest='maximum'     , type=str,   help='Ran
 parser.add_argument('--minimum'     , dest='minimum'     , type=str,   help='Range minimum')
 parser.add_argument('--show_overflow',dest='show_overflow',action='store_true',help='show overflow bin', default=False)
 parser.add_argument('--do_cutflow_style',dest='do_cutflow_style',action='store_true',help='show overflow bin', default=False)
-parser.add_argument('--print_cutflow',dest='print_cutflow',action='store_true',help='show overflow bin', default=False)
+parser.add_argument('--print_cutflow',dest='print_cutflow',action='store_true',help='print cutflow table to csv format', default=False)
+parser.add_argument('--print_cutflow_bins',dest='print_cutflow_bins',type=str,help='choose which bins of the cutflow you want to print out')
 parser.add_argument('--no_legend'    ,dest='no_legend'    ,action='store_true',help='do not draw legend', default=False)
 parser.add_argument('--ratio_maximum', dest='ratio_maximum', type=float, help='Range maximum', default=3.5)
 parser.add_argument('--ratio_minimum', dest='ratio_minimum', type=float, help='Range minimum', default=-1.5)
@@ -746,7 +747,14 @@ class HistogramPainter:
                 totalbkghist = self.histmanager.get_summed_histograms(bkghists)
             self.objs.append(totalbkghist)
 
+        print self.args.plotname
+        if self.args.plotname.find("cutflow") == -1:
+            self.args.print_cutflow = False
+
         if self.args.print_cutflow:
+
+            if self.args.print_cutflow_bins:
+                bins_to_print = [ int(x) for x in self.args.print_cutflow_bins.split(',') ]
 
             yields_table = []
             errors_table = []
@@ -757,30 +765,39 @@ class HistogramPainter:
                 yields.append(sighist.GetName())
                 errors.append(sighist.GetName())
                 for i in xrange(1, sighist.GetNbinsX()+1):
+                    if self.args.print_cutflow_bins:
+                        if i not in bins_to_print:
+                            continue;
                     binc = sighist.GetBinContent(i)
                     bine = sighist.GetBinError(i)
                     yields.append(binc)
                     errors.append(bine)
                 yields_table.append(yields)
                 errors_table.append(errors)
-            if totalbkghist:
-                yields = []
-                errors = []
-                yields.append("Total Background")
-                errors.append("Total Background")
-                for i in xrange(1, totalbkghist.GetNbinsX()+1):
-                    binc = totalbkghist.GetBinContent(i)
-                    bine = totalbkghist.GetBinError(i)
-                    yields.append(binc)
-                    errors.append(bine)
-                yields_table.append(yields)
-                errors_table.append(errors)
+            #if totalbkghist:
+            #    yields = []
+            #    errors = []
+            #    yields.append("Total Background")
+            #    errors.append("Total Background")
+            #    for i in xrange(1, totalbkghist.GetNbinsX()+1):
+            #        if self.args.print_cutflow_bins:
+            #            if i not in bins_to_print:
+            #                continue;
+            #        binc = totalbkghist.GetBinContent(i)
+            #        bine = totalbkghist.GetBinError(i)
+            #        yields.append(binc)
+            #        errors.append(bine)
+            #    yields_table.append(yields)
+            #    errors_table.append(errors)
             for bkghist in bkghists:
                 yields = []
                 errors = []
                 yields.append(bkghist.GetName())
                 errors.append(bkghist.GetName())
                 for i in xrange(1, bkghist.GetNbinsX()+1):
+                    if self.args.print_cutflow_bins:
+                        if i not in bins_to_print:
+                            continue;
                     binc = bkghist.GetBinContent(i)
                     bine = bkghist.GetBinError(i)
                     yields.append(binc)
@@ -793,6 +810,9 @@ class HistogramPainter:
                 yields.append("Data")
                 errors.append("Data")
                 for i in xrange(1, datahist.GetNbinsX()+1):
+                    if self.args.print_cutflow_bins:
+                        if i not in bins_to_print:
+                            continue;
                     binc = datahist.GetBinContent(i)
                     bine = datahist.GetBinError(i)
                     yields.append(binc)
@@ -814,15 +834,16 @@ class HistogramPainter:
                 row_string = "|"
                 for y, e in zip(yields, errors):
                     if index == 0:
-                        row_string += '%30s|||'%y
+                        name = y.split('%')[0]
+                        row_string += '<sub>%s</sub>|'%name
                     else:
                         #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                        row_string += '%10.1f|'%y + "+-" + '| %10.1f| '%e
+                        row_string += '<sub>%.2f'%y + "+-" + ' %.2f</sub>| '%e
                 row_string += '\n'
                 if index == 0:
                     row_string += "|"
                     for y, e in zip(yields, errors):
-                        row_string += '---------|-----|-----------|'
+                        row_string += '---------|'
                     row_string += '\n'
                 cutflow_file.write(row_string)
                 index += 1

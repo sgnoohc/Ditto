@@ -193,7 +193,7 @@ namespace LoopUtil
     incrementCurrentTTreeEventIndex();
     int loadresult = loadCurrentTTreeEvent();
     incrementTotalNEventsProcessed();
-    printProgressBar();
+//	    printProgressBar();
     if (loadresult == -2) // TTree::LoadTree returns -2 if no entry exist
       return false;
     else
