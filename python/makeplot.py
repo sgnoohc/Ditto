@@ -1568,11 +1568,11 @@ class HistogramPainter:
         for index, graph in enumerate(self.objs):
             graph.SetLineColor(colors[index])
             if index == 0:
-                graph.Draw("acp")
+                graph.Draw("alp")
                 print graph
                 graph.GetXaxis().SetRangeUser(0.01,1)
             else:
-                graph.Draw("cp")
+                graph.Draw("lp")
                 print graph
                 graph.GetXaxis().SetRangeUser(0.01,1)
         print self.objs
