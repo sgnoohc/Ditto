@@ -26,6 +26,7 @@ usage() {
   echo "  -e    comma separated exclude filter (e.g. -e \"ht\")"
   echo "  -q    comma separated require filter (e.g. -q \"www\")"
   echo "  -N    N number of events to restrict (e.g. -N 1000000)"
+  echo "  -l    Job list                       (e.g. -l joblist.txt)"
   echo "Options without arguments:"
   echo "  -c    Condor submit"
   echo "  -f    Force run even if tagged output exists"
@@ -36,12 +37,13 @@ usage() {
 }
 
 # Command-line opts
-while getopts ":t:q:e:N:d:hfsck" OPTION; do
+while getopts ":t:q:e:N:d:l:hfsck" OPTION; do
   case $OPTION in
     t) JOBTAG=${OPTARG};;
     d) SAMPLESDIRPATH=${OPTARG};;
     e) EXCLUDEPATTERNSSTR=${OPTARG};;
     q) REQUIREPATTERNSSTR=${OPTARG};;
+    l) JOBLISTTXTFILEPATH=${OPTARG};;
     N) NEVENTSTOPROCESS=${OPTARG};;
     f) FORCERUN=true;;
     c) CONDORSUBMIT=true;;
@@ -74,6 +76,7 @@ echo "JOBTAG             : ${JOBTAG}"
 echo "SAMPLESDIRPATH     : ${SAMPLESDIRPATH}"
 echo "EXCLUDEPATTERNSSTR : ${EXCLUDEPATTERNSSTR}"
 echo "REQUIREPATTERNSSTR : ${REQUIREPATTERNSSTR}"
+echo "JOBLISTTXTPATH     : ${JOBLISTTXTPATH}"
 echo "NEVENTSTOPROCESS   : ${NEVENTSTOPROCESS}"
 echo "USESKIMMED         : ${USESKIMMED}"
 echo "================================================"
@@ -186,6 +189,20 @@ for SAMPLE in $(ls $SAMPLESDIRPATH); do
     :
   else
     if [ "$REQUIRE" == "false"  ]; then
+      continue;
+    fi
+  fi
+
+  # Loop over job list txt file content to check whether this job is to be run over
+  if [ "x${JOBLISTTXTFILEPATH}" == "x" ]; then
+    :
+  else
+    INJOBLIST=false
+    while read -r LINE
+    do
+      if [[ $SAMPLE == *"${LINE}"* ]]; then INJOBLIST=true; fi
+    done < ${JOBLISTTXTFILEPATH}
+    if [ "${INJOBLIST}" == "false" ]; then
       continue;
     fi
   fi
