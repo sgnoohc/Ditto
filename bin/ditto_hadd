@@ -38,13 +38,13 @@ usage() {
   echo "  -d    /path/to/output/hadds/to       (e.g. -d ./)"
   echo "  -i    /path/to/input/to/hadd         (e.g. -i ./)"
   echo "Options without arguments:"
-  echo "  -s    Shape comparison"
+  echo "  -D    Don't delete"
   echo
   exit
 }
 
 # Command-line opts
-while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:h" OPTION; do
+while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:Dh" OPTION; do
   case $OPTION in
     r) BKG1STR=${OPTARG};;
     b) BKG2STR=${OPTARG};;
@@ -70,6 +70,7 @@ while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:h" OPTION; do
     "$") SIG4NICENAME=${OPTARG};;
     d) HADDOUTPUTDIR=${OPTARG};;
     i) HADDINPUTDIR=${OPTARG};;
+    D) DONTDELETE=TRUE;;
     h) usage;;
     :) usage;;
   esac
@@ -191,7 +192,11 @@ hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${HADDINPUTDIR}" 4 sig
 # Create output directory if not already
 mkdir -p ${HADDOUTPUTDIR}/
 mkdir -p ${HADDOUTPUTDIR}/log
-rm -f ${HADDOUTPUTDIR}/* &> /dev/null
+if [ "x${DONTDELETE}" == "xTRUE" ]; then
+  :
+else
+  rm -f ${HADDOUTPUTDIR}/* &> /dev/null
+fi
 
 # run the job
 $MSG "Running hadd in xargs"
