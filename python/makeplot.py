@@ -1634,7 +1634,7 @@ class HistogramPainter:
                 graph.SetMaximum(eval(self.args.maximum))
             else:
                 graph.SetMaximum(1)
-            graph.GetXaxis().SetRangeUser(0.0001,12)
+            graph.GetXaxis().SetRangeUser(0.001,12)
             graph.SetLineColor(2)
             graph.SetLineWidth(2)
             graph.GetXaxis().SetTitle("Cut value")
@@ -1654,10 +1654,11 @@ class HistogramPainter:
             graph.SetLineColor(color)
             if index == 0:
                 graph.Draw("alp")
-                graph.GetXaxis().SetRangeUser(0.0001,12)
+                graph.GetXaxis().SetRangeUser(0.001,12)
                 print graph
             else:
                 graph.Draw("lp")
+                graph.GetXaxis().SetRangeUser(0.001,12)
                 print graph
         print self.objs
 
