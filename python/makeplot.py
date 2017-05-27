@@ -1568,7 +1568,7 @@ class HistogramPainter:
             graph.SetLineColor(2)
             graph.SetLineWidth(2)
             graph.GetXaxis().SetTitle("Eff Background")
-            graph.GetYaxis().SetTitle("Eff Signal(prompt t#bar{t})")
+            graph.GetYaxis().SetTitle("Eff Signal")
             self.histmanager.set_histaxis_settings(graph, 1.0)
             from copy import deepcopy
             self.objs.append(deepcopy(graph))

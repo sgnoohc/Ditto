@@ -78,8 +78,19 @@ namespace TreeUtil
     createVFloatBranch(tree, name+"_relIso025EAstudy");
     createVFloatBranch(tree, name+"_relIso030EAstudy");
     createVFloatBranch(tree, name+"_relIso035EAstudy");
+    createVFloatBranch(tree, name+"_relIso040EAstudy");
     createVFloatBranch(tree, name+"_relIso045EAstudy");
     createVFloatBranch(tree, name+"_relIso050EAstudy");
+    createVFloatBranch(tree, name+"_relIso005EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso010EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso015EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso020EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso025EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso030EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso035EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso040EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso045EAstudyv2");
+    createVFloatBranch(tree, name+"_relIso050EAstudyv2");
     // Muon specifics
     createVFloatBranch(tree, name+"_muPOverP");
     createVIntBranch  (tree, name+"_muPidPFMuon");
@@ -148,6 +159,8 @@ namespace TreeUtil
     createIntBranch(tree, name+"_lumi");
     createIntBranch(tree, name+"_event");
     createIntBranch(tree, name+"_nEvts");
+//	    createIntBranch(tree, name+"_pileup");
+    createIntBranch(tree, name+"_nvtx");
     createFloatBranch(tree, name+"_scale1fb");
   }
 
@@ -198,8 +211,19 @@ namespace TreeUtil
       pushbackVFloatBranch(name+"_relIso025EAstudy", lepton.relIso025EAstudy);
       pushbackVFloatBranch(name+"_relIso030EAstudy", lepton.relIso030EAstudy);
       pushbackVFloatBranch(name+"_relIso035EAstudy", lepton.relIso035EAstudy);
+      pushbackVFloatBranch(name+"_relIso040EAstudy", lepton.relIso040EAstudy);
       pushbackVFloatBranch(name+"_relIso045EAstudy", lepton.relIso045EAstudy);
       pushbackVFloatBranch(name+"_relIso050EAstudy", lepton.relIso050EAstudy);
+      pushbackVFloatBranch(name+"_relIso005EAstudyv2", lepton.relIso005EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso010EAstudyv2", lepton.relIso010EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso015EAstudyv2", lepton.relIso015EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso020EAstudyv2", lepton.relIso020EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso025EAstudyv2", lepton.relIso025EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso030EAstudyv2", lepton.relIso030EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso035EAstudyv2", lepton.relIso035EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso040EAstudyv2", lepton.relIso040EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso045EAstudyv2", lepton.relIso045EAstudyv2);
+      pushbackVFloatBranch(name+"_relIso050EAstudyv2", lepton.relIso050EAstudyv2);
       // Muon specifics
       pushbackVFloatBranch(name+"_muPOverP", lepton.muPOverP);
       pushbackVIntBranch  (name+"_muPidPFMuon", lepton.muPidPFMuon);
@@ -273,6 +297,8 @@ namespace TreeUtil
     setIntBranch(name+"_lumi", ana_data.eventinfo.lumi);
     setIntBranch(name+"_event", ana_data.eventinfo.event);
     setIntBranch(name+"_nEvts", ana_data.eventinfo.nEvts);
+//	    setIntBranch(name+"_pileup", ana_data.eventinfo.pileup);
+    setIntBranch(name+"_nvtx", ana_data.eventinfo.nvtx);
     setFloatBranch(name+"_scale1fb", ana_data.eventinfo.scale1fb);
   }
 

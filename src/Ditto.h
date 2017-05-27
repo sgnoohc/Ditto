@@ -188,8 +188,19 @@ namespace Ditto
       float relIso025EAstudy;
       float relIso030EAstudy;
       float relIso035EAstudy;
+      float relIso040EAstudy;
       float relIso045EAstudy;
       float relIso050EAstudy;
+      float relIso005EAstudyv2;
+      float relIso010EAstudyv2;
+      float relIso015EAstudyv2;
+      float relIso020EAstudyv2;
+      float relIso025EAstudyv2;
+      float relIso030EAstudyv2;
+      float relIso035EAstudyv2;
+      float relIso040EAstudyv2;
+      float relIso045EAstudyv2;
+      float relIso050EAstudyv2;
       // Muon specifics
       float muPOverP;
       int   muPidPFMuon;
@@ -249,8 +260,19 @@ namespace Ditto
         relIso025EAstudy = -999;
         relIso030EAstudy = -999;
         relIso035EAstudy = -999;
+        relIso040EAstudy = -999;
         relIso045EAstudy = -999;
         relIso050EAstudy = -999;
+        relIso005EAstudyv2 = -999;
+        relIso010EAstudyv2 = -999;
+        relIso015EAstudyv2 = -999;
+        relIso020EAstudyv2 = -999;
+        relIso025EAstudyv2 = -999;
+        relIso030EAstudyv2 = -999;
+        relIso035EAstudyv2 = -999;
+        relIso040EAstudyv2 = -999;
+        relIso045EAstudyv2 = -999;
+        relIso050EAstudyv2 = -999;
         // Muon specifics
         muPOverP = -999;
         muPidPFMuon = -999;
@@ -419,6 +441,8 @@ namespace Ditto
       int event;
       int nEvts;
       float scale1fb;
+      float pileup;
+      int nvtx;
 
       EventInfo()
       {
