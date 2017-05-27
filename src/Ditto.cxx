@@ -98,6 +98,17 @@ namespace Ditto
     }
 
     //______________________________________________________________________________________
+    bool isMediumElectronPOGCutbased(ObjUtil::Lepton& lepton)
+    {
+      if (!(isElectronPOGCutBasedIDCut(lepton,
+      /*barrel_elSigmaIEtaIEta_full5x5_cut , barrel_abs_elDEtaIn_cut , barrel_abs_elDPhiIn_cut ,                       */ 0.00998, 0.00311, 0.103,
+      /*barrel_elHOverE_cut                , barrel_relIso03EA_cut   , barrel_elEpRatio_cut    , barrel_elNmiss_cut ,  */ 0.253  , 0.0695 , 0.134, 1,
+      /*endcap_elSigmaIEtaIEta_full5x5_cut , endcap_abs_elDEtaIn_cut , endcap_abs_elDPhiIn_cut ,                       */ 0.0298 , 0.00609, 0.045,
+      /*endcap_elHOverE_cut                , endcap_relIso03EA_cut   , endcap_elEpRatio_cut    , endcap_elNmiss_cut    */ 0.0878 , 0.0821 , 0.13 , 1) )) return false;
+      return true;
+    }
+
+    //______________________________________________________________________________________
     bool isLooseMuonPOG(ObjUtil::Lepton& lepton)
     {
       // Loose criteria

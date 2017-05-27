@@ -476,6 +476,7 @@ namespace Ditto
                                     float endcap_elSigmaIEtaIEta_full5x5_cut , float endcap_abs_elDEtaIn_cut , float endcap_abs_elDPhiIn_cut ,
                                     float endcap_elHOverE_cut                , float endcap_relIso03EA_cut   , float endcap_elEpRatio_cut    , int endcap_elNmiss_cut);
     bool isTriggerSafenoIso_v1(ObjUtil::Lepton& lepton);
+    bool isMediumElectronPOGCutbased(ObjUtil::Lepton& lepton);
 
     /// Muons
     bool isLooseMuonPOG(ObjUtil::Lepton& lepton);
