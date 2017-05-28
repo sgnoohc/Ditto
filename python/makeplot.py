@@ -1506,6 +1506,7 @@ class HistogramPainter:
 
         # generalize later
         if len(sighists) != len(bkghists):
+            print len(sighists), len(bkghists)
             print "number of siganl hists and bkg hists must match"
             sys.exit(-1)
 
