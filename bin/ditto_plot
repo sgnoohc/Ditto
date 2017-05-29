@@ -28,7 +28,7 @@ usage()
   echo "  -e    Extra plot option      (e.g. -e '--autostack')"
   echo "  -f    Filter pattern         (e.g. -f '10.root')"
   echo "  -S    Signal scale           (e.g. -S '*100' # must provide '*')"
-  echo "  -I    Input directory path   (e.g. -I haddoutput/)"
+  echo "  -i    Input directory path   (e.g. -i haddoutput/)"
   echo "Options without arguments:"
   echo "  -V    verbose"
   echo "  -D    Delete and plot"
@@ -51,7 +51,7 @@ too_many_entries()
 }
 
 # Command-line opts
-while getopts ":d:e:L:v:p:o:f:S:I:hDsV" OPTION; do
+while getopts ":d:e:L:v:p:o:f:S:i:hDsV" OPTION; do
   case $OPTION in
     d) OUTPUTDIR=${OPTARG};;
     e) EXTRAOPTION=${OPTARG};;
@@ -61,7 +61,7 @@ while getopts ":d:e:L:v:p:o:f:S:I:hDsV" OPTION; do
     L) LUMISCALE=${OPTARG};;
     f) FILTERPATTERN=${OPTARG};;
     S) SIGSCALE=${OPTARG};;
-    I) INPUTDIR=${OPTARG};;
+    i) INPUTDIR=${OPTARG};;
     D) DELETEANDPLOT="TRUE";;
     s) SHAPECOMPARISON="TRUE";;
     V) VERBOSE="TRUE";;
