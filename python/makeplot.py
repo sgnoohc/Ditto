@@ -409,6 +409,7 @@ class HistogramManager:
                 hist.Add(self.copy_histogram(tmphist))
         if not hist:
             return None
+        print hist.GetMean()
         hist.SetTitle("")
         self.set_histaxis_settings(hist)
         self.set_histaxis_labels(hist)
@@ -1565,7 +1566,7 @@ class HistogramPainter:
                 graph.SetMaximum(eval(self.args.maximum))
             else:
                 graph.SetMaximum(1)
-            graph.GetXaxis().SetRangeUser(0.01,1)
+            graph.GetXaxis().SetRangeUser(0.05,1)
             graph.SetLineColor(2)
             graph.SetLineWidth(2)
             graph.GetXaxis().SetTitle("Eff Background")
@@ -1580,11 +1581,11 @@ class HistogramPainter:
             if index == 0:
                 graph.Draw("alp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.01,1)
+                graph.GetXaxis().SetRangeUser(0.05,1)
             else:
                 graph.Draw("lp")
                 print graph
-                graph.GetXaxis().SetRangeUser(0.01,1)
+                graph.GetXaxis().SetRangeUser(0.05,1)
         print self.objs
 
         self.canvassaver.save_canvas(canvas)
@@ -1645,7 +1646,7 @@ class HistogramPainter:
             from copy import deepcopy
             self.objs.append(deepcopy(graph))
 
-        colors = [7002, 7003, 7004, 7005, 7006, 7007]
+        colors = [7002, 7003, 7004, 7005, 7006, 7007, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         for index, graph in enumerate(self.objs):
             linecolor = hists[index].GetLineColor()
             fillcolor = hists[index].GetFillColor()
