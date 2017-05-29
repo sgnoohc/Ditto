@@ -5,7 +5,7 @@
 #  .
 # ..: P. Chang, philip@physics.ucsd.edu
 
-cores=16
+cores=36
 
 # must provide the job
 if [ "x${1}" == "x" ]; then
