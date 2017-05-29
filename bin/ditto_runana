@@ -119,9 +119,10 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
 else
   echo ${STATUS}
-  echo "NEEDS COMMIT"
-  git commit -a -m msg
-  git push
+  echo "The $PACKAGEPATH package needs commit"
+  exit
+#	  git commit -a -m msg
+#	  git push
   PACKAGEVERSION=$(git rev-parse HEAD)
 fi
 cd $DITTOPATH
@@ -130,9 +131,10 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
 else
   echo ${STATUS}
-  echo "NEEDS COMMIT"
-  git commit -a -m msg
-  git push
+  echo "The Ditto package needs commit"
+  exit
+#	  git commit -a -m msg
+#	  git push
   DITTOVERSION=$(git rev-parse HEAD)
 fi
 popd
