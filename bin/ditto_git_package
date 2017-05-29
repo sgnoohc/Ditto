@@ -23,28 +23,7 @@ if [ -z $1 ]; then usage; fi
 if [ -z $DITTOPATH ]; then $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi; fi
 #DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check; if [ $? -eq 1 ]; then exit; fi
 
-cd $DITTOPATH
-if [ "$LOGINEXISTS" = true ]; then
-  e_msg "Ditto:: Committing changes ..."
-else
-  echo "Ditto:: Committing changes ..."
-fi
-git commit -a -m "$1"
-if [ "$LOGINEXISTS" = true ]; then
-  e_msg "Ditto:: Pulling changes from the master ... "
-else
-  echo "Ditto:: Pulling changes from the master ... "
-fi
-git pull --rebase
-if [ "$LOGINEXISTS" = true ]; then
-  e_msg "Ditto:: Pushing changes to the master ... "
-else
-  echo "Ditto:: Pushing changes to the master ... "
-fi
-git push --quiet
-cd -
-
-#	cd $PACKAGEPATH
+#	cd $DITTOPATH
 #	if [ "$LOGINEXISTS" = true ]; then
 #	  e_msg "Ditto:: Committing changes ..."
 #	else
@@ -64,6 +43,27 @@ cd -
 #	fi
 #	git push --quiet
 #	cd -
+
+cd $PACKAGEPATH
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "Ditto:: Committing changes ..."
+else
+  echo "Ditto:: Committing changes ..."
+fi
+git commit -a -m "$1"
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "Ditto:: Pulling changes from the master ... "
+else
+  echo "Ditto:: Pulling changes from the master ... "
+fi
+git pull --rebase
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "Ditto:: Pushing changes to the master ... "
+else
+  echo "Ditto:: Pushing changes to the master ... "
+fi
+git push --quiet
+cd -
 
 
 
