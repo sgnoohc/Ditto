@@ -36,11 +36,28 @@ namespace HistUtil
   //______________________________________________________________________________________
   void fillLepMTs(string prefix, ObjUtil::AnalysisData& a)
   {
+    float minmt = -999;
+    float maxmt = -999;
     for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
-      PlotUtil::plot1D(TString::Format("lep%dmt", ilep).Data(), VarUtil::MT(lepton, a.met), a.wgt, a.hist_db , TString::Format("lep%dmt", ilep).Data(), 180, 0., 180, prefix);
+      float tmpmt = VarUtil::MT(lepton, a.met);
+      if (ilep == 0)
+      {
+        minmt = tmpmt;
+        maxmt = tmpmt;
+      }
+      else
+      {
+        if (tmpmt < minmt)
+          minmt = tmpmt;
+        if (tmpmt > maxmt)
+          maxmt = tmpmt;
+      }
+      PlotUtil::plot1D(TString::Format("lep%dmt", ilep).Data(), VarUtil::MT(lepton, a.met), a.wgt, a.hist_db , "", 180, 0., 180, prefix);
     }
+    PlotUtil::plot1D("lepminmt", minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+    PlotUtil::plot1D("lepmaxmt", maxmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
   }
 
   //______________________________________________________________________________________
@@ -55,7 +72,7 @@ namespace HistUtil
     for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
-      PlotUtil::plot1D(TString::Format("lep%d_reliso03EA", ilep).Data(), lepton.relIso03EA, a.wgt, a.hist_db , TString::Format("lep%d_relIso03EA", ilep).Data(), 10000, 0., 0.15, prefix);
+      PlotUtil::plot1D(TString::Format("lep%d_reliso03EA", ilep).Data(), lepton.relIso03EA, a.wgt, a.hist_db , "", 10000, 0., 0.25, prefix);
     }
   }
 
@@ -65,7 +82,7 @@ namespace HistUtil
     for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
-      PlotUtil::plot1D(TString::Format("lep%d_absiso03EA", ilep).Data(), lepton.relIso03EA * lepton.p4.Pt(), a.wgt, a.hist_db , TString::Format("lep%d_relIso03EA", ilep).Data(), 10000, 0., 0.15, prefix);
+      PlotUtil::plot1D(TString::Format("lep%d_absiso03EA", ilep).Data(), lepton.relIso03EA * lepton.p4.Pt(), a.wgt, a.hist_db , "", 10000, 0., 7., prefix);
     }
   }
 
