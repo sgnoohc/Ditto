@@ -113,13 +113,13 @@ else
 fi
 
 $MSG "Checking repository status to tag current code..."
-pushd $PACKAGEPATH
+pushd $PACKAGEPATH > /dev/null
 STATUS=$(git status)
 if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
 else
-  echo ${STATUS}
-  echo "The $PACKAGEPATH package needs commit"
+  #echo ${STATUS}
+  $ERROR "Error: The $PACKAGEPATH package needs commit"
   exit
 #	  git commit -a -m msg
 #	  git push
@@ -130,8 +130,8 @@ STATUS=$(git status)
 if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
 else
-  echo ${STATUS}
-  echo "The Ditto package needs commit"
+  #echo ${STATUS}
+  $ERROR "Error: The Ditto package needs commit"
   exit
 #	  git commit -a -m msg
 #	  git push
