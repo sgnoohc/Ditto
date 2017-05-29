@@ -1,6 +1,6 @@
 universe=Vanilla
 +DESIRED_Sites="T2_US_UCSD"
-executable=/home/users/phchang/ditto/condor/executable.sh
+executable=DITTOPATH/condor/executable.sh
 arguments=ANALYSIS HADOOPDIR SAMPLEFILENAME JOBTAG NEVENTS
 transfer_executable=True
 transfer_input_files=INPUTFILES

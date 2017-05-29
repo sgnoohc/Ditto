@@ -256,7 +256,8 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     sed "s/SAMPLEFILENAME/${SAMPLEFILENAME}/"                  /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
     sed "s/JOBTAG/${JOBTAG}/"                                  /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
     sed "s/NEVENTS/${NEVENTS}/"                                /tmp/phchang/temp4.cmd > /tmp/phchang/temp5.cmd
-    sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp5.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
+    sed "s~DITTOPATH~${DITTOPATH}~"                            /tmp/phchang/temp5.cmd > /tmp/phchang/temp6.cmd
+    sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp6.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
 
     # Submitting the job
     $MSG "Submitting "${CONDORJOBNAME}
