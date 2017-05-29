@@ -44,6 +44,12 @@ if [ -z $DITTOPATH ]; then $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then e
 #	git push --quiet
 #	cd -
 
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "git committing and pushing for the $PACKAGENAME Package"
+else
+  echo
+fi
+
 cd $PACKAGEPATH
 if [ "$LOGINEXISTS" = true ]; then
   e_msg "Ditto:: Committing changes ..."
