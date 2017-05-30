@@ -94,4 +94,14 @@ namespace HistUtil
     }
   }
 
+  //______________________________________________________________________________________
+  void fillLepTightCharge(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%d_tightcharge", ilep).Data(), lepton.tightcharge, a.wgt, a.hist_db , "", 3, 0., 3, prefix);
+    }
+  }
+
 }
