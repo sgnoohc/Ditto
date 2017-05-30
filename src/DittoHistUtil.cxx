@@ -56,8 +56,12 @@ namespace HistUtil
       }
       PlotUtil::plot1D(TString::Format("lep%dmt", ilep).Data(), VarUtil::MT(lepton, a.met), a.wgt, a.hist_db , "", 180, 0., 180, prefix);
     }
-    PlotUtil::plot1D("lepminmt", minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
-    PlotUtil::plot1D("lepmaxmt", maxmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+    if (a.leptons.size() > 1)
+    {
+      PlotUtil::plot1D("lepminmt", minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepmaxmt", maxmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepdmt", maxmt-minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+    }
   }
 
   //______________________________________________________________________________________
