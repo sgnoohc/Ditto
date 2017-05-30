@@ -120,6 +120,7 @@ namespace HistUtil
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
       PlotUtil::plot1D(TString::Format("lep%d_reliso03EA", ilep).Data(), lepton.relIso03EA, a.wgt, a.hist_db , "", 10000, 0., 0.25, prefix);
+      PlotUtil::plot1D("lep_reliso03EA", lepton.relIso03EA, a.wgt, a.hist_db , "", 10000, 0., 0.25, prefix);
     }
   }
 
@@ -130,6 +131,7 @@ namespace HistUtil
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
       PlotUtil::plot1D(TString::Format("lep%d_absiso03EA", ilep).Data(), lepton.relIso03EA * lepton.p4.Pt(), a.wgt, a.hist_db , "", 10000, 0., 7., prefix);
+      PlotUtil::plot1D("lep_absiso03EA", lepton.relIso03EA * lepton.p4.Pt(), a.wgt, a.hist_db , "", 10000, 0., 7., prefix);
     }
   }
 
