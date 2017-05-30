@@ -38,6 +38,7 @@ namespace HistUtil
   {
     float minmt = -999;
     float maxmt = -999;
+    float summt = -999;
     for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
     {
       ObjUtil::Lepton lepton = a.leptons[ilep];
@@ -46,6 +47,7 @@ namespace HistUtil
       {
         minmt = tmpmt;
         maxmt = tmpmt;
+        summt = tmpmt;
       }
       else
       {
@@ -53,14 +55,16 @@ namespace HistUtil
           minmt = tmpmt;
         if (tmpmt > maxmt)
           maxmt = tmpmt;
+        summt += tmpmt;
       }
       PlotUtil::plot1D(TString::Format("lep%dmt", ilep).Data(), VarUtil::MT(lepton, a.met), a.wgt, a.hist_db , "", 180, 0., 180, prefix);
     }
     if (a.leptons.size() > 1)
     {
-      PlotUtil::plot1D("lepminmt", minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
-      PlotUtil::plot1D("lepmaxmt", maxmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
-      PlotUtil::plot1D("lepdmt", maxmt-minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepminmt", minmt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepmaxmt", maxmt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepdmt"  , maxmt-minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepsummt", summt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
     }
   }
 
