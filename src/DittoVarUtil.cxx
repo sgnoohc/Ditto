@@ -398,6 +398,14 @@ namespace VarUtil
     {
       metpz_sol0 = (-b + sqrt(mid)) / 2.;
       metpz_sol1 = (-b - sqrt(mid)) / 2.;
+      // sanity check
+      TLorentzVector vp4_sol0;
+      TLorentzVector vp4_sol1;
+      vp4_sol0.SetPxPyPzE(vpx,vpy,metpz_sol0,sqrt(vpx*vpx+vpy*vpy+metpz_sol0*metpz_sol0));
+      vp4_sol1.SetPxPyPzE(vpx,vpy,metpz_sol1,sqrt(vpx*vpx+vpy*vpy+metpz_sol1*metpz_sol1));
+
+      std::cout << __LINE__ << " " << (lepton.p4 + vp4_sol0).M() << std::endl;
+      std::cout << __LINE__ << " " << (lepton.p4 + vp4_sol1).M() << std::endl;
       return 2;
     }
     return -1;
