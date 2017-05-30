@@ -528,6 +528,7 @@ namespace Ditto
     void fillCounter(string prefix, ObjUtil::AnalysisData& a, int ibin);
     void fillMET(string prefix, ObjUtil::AnalysisData& a);
     void fillLepMTs(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepMlvjs(string prefix, ObjUtil::AnalysisData& a);
     void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
     void fillLepRelIso03EA(string prefix, ObjUtil::AnalysisData& a);
     void fillLepAbsIso03EA(string prefix, ObjUtil::AnalysisData& a);

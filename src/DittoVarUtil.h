@@ -69,8 +69,9 @@ namespace VarUtil
   float MT(ObjUtil::AnalysisData& a);
   float MTll(ObjUtil::AnalysisData& a);
   float Mtt(ObjUtil::AnalysisData& a);
-  float Mlvjj(ObjUtil::AnalysisData& a, int lepidx = 0, int jetidx0 = 0, int jetidx1 = 1);
-  float NeutrinoSolver(ObjUtil::AnalysisData& a, int lepidx = 0);
+//	  float Mlvjj(ObjUtil::AnalysisData& a, int lepidx = 0, int jetidx0 = 0, int jetidx1 = 1);
+  float Mlvj(ObjUtil::AnalysisData& a, int lepidx = 0, int jetidx = 0);
+//	  float NeutrinoSolver(ObjUtil::AnalysisData& a, int lepidx = 0);
   int NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx, float& metpz_sol0, float& metpz_sol1);
   bool isOSEEChannel(ObjUtil::AnalysisData& a);
   bool isOSMMChannel(ObjUtil::AnalysisData& a);

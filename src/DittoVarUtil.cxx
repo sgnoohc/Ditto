@@ -344,31 +344,50 @@ namespace VarUtil
     return mtt;
   }
 
-  float Mlvjj(ObjUtil::AnalysisData& a, int lepidx, int jetidx0, int jetidx1)
+//	  float Mlvjj(ObjUtil::AnalysisData& a, int lepidx, int jetidx0, int jetidx1)
+//	  {
+//	    if (a.leptons.size() < (unsigned int) lepidx+1) return -999;
+//	    if (a.jets.size() < (unsigned int) jetidx1+1) return -999;
+//	    float metpz = NeutrinoSolver(a);
+//	    TLorentzVector metp4;
+//	    metp4.SetXYZM(a.met.p4.Px(), a.met.p4.Py(), metpz, 0);
+//	    return (a.leptons[lepidx].p4 + metp4 + a.jets[jetidx0].p4 + a.jets[jetidx1].p4).M();
+//	  }
+
+  float Mlvj(ObjUtil::AnalysisData& a, int lepidx, int jetidx)
   {
     if (a.leptons.size() < (unsigned int) lepidx+1) return -999;
-    if (a.jets.size() < (unsigned int) jetidx1+1) return -999;
-    float metpz = NeutrinoSolver(a);
+    if (a.jets.size() < (unsigned int) jetidx+1) return -999;
+    float metpz0;
+    float metpz1;
+    int nsol = NeutrinoSolver(a, lepidx, metpz0, metpz1);
+    float metpz;
+    if (nsol == 1)
+      metpz = metpz0;
+    else if (nsol == 2)
+      metpz = fabs(metpz0) < fabs(metpz1) ? metpz0 : metpz1;
+    else
+      return 0;
     TLorentzVector metp4;
     metp4.SetXYZM(a.met.p4.Px(), a.met.p4.Py(), metpz, 0);
-    return (a.leptons[lepidx].p4 + metp4 + a.jets[jetidx0].p4 + a.jets[jetidx1].p4).M();
+    return (a.leptons[lepidx].p4 + metp4 + a.jets[jetidx].p4).M();
   }
 
-  float NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx)
-  {
-    if (adb.leptons.size() < (unsigned int) lepidx + 1) return 0.;
-    ObjUtil::Lepton lepton = adb.leptons[lepidx];
-    float lpx = lepton.p4.Px();
-    float lpy = lepton.p4.Py();
-    float lpz = lepton.p4.Pz();
-    float vpx = adb.met.p4.Px();
-    float vpy = adb.met.p4.Py();
-    float c = lpz*lpz + (lpx+vpx)*(lpx+vpx) + (lpy+vpy)*(lpy+vpy) - 80.385*80.385;
-    float b = 2*lpz;
-    float xp = (-b + sqrt(b*b - 4*c)) / 2.;
-    float xm = (-b - sqrt(b*b - 4*c)) / 2.;
-    return fabs(xp) < fabs(xm) ? xp : xm;
-  }
+//	  float NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx)
+//	  {
+//	    if (adb.leptons.size() < (unsigned int) lepidx + 1) return 0.;
+//	    ObjUtil::Lepton lepton = adb.leptons[lepidx];
+//	    float lpx = lepton.p4.Px();
+//	    float lpy = lepton.p4.Py();
+//	    float lpz = lepton.p4.Pz();
+//	    float vpx = adb.met.p4.Px();
+//	    float vpy = adb.met.p4.Py();
+//	    float c = lpz*lpz + (lpx+vpx)*(lpx+vpx) + (lpy+vpy)*(lpy+vpy) - 80.385*80.385;
+//	    float b = 2*lpz;
+//	    float xp = (-b + sqrt(b*b - 4*c)) / 2.;
+//	    float xm = (-b - sqrt(b*b - 4*c)) / 2.;
+//	    return fabs(xp) < fabs(xm) ? xp : xm;
+//	  }
 
   int NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx, float& metpz_sol0, float& metpz_sol1)
   {
