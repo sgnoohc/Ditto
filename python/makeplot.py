@@ -842,14 +842,17 @@ class HistogramPainter:
                 for y, e in zip(yields, errors):
                     if index == 0:
                         name = y.split('%')[0]
-                        row_string += '<sub>%s</sub>|'%name
+                        if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
+                            row_string += '<sub>%s</sub>|'%name
+                        else:
+                            row_string += '%s|%s err|'%(name, name)
                     else:
                         if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
                             row_string += '<sub>%.2f'%y+'</sub>| '
                         else:
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                            row_string += '<sub>%.2f'%y + "+-" + ' %.2f</sub>| '%e
+                            row_string += '<sub>%.2f'%y + "</sub>|<sub>" + ' %.2f</sub>| '%e
                 row_string += '\n'
                 if index == 0:
                     row_string += "|"
