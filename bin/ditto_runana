@@ -280,8 +280,8 @@ fi
 
 $MSG "Creating ${JOBTAG}output/ and ${JOBTAG}log/ in the local area, if it hasn't been done so."
 mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
-echo "ditto git $DITTOVERSION" >> ${JOBTAG}/gitversion
-echo "ditto git $PACKAGEVERSION" >> ${JOBTAG}/gitversion
+echo "ditto git $DITTOVERSION" > ${JOBTAG}/gitversion
+echo "ditto git $PACKAGEVERSION" > ${JOBTAG}/gitversion
 
 if [ -z ${COREPATH} ]; then
   :
