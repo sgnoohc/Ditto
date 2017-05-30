@@ -406,19 +406,20 @@ namespace VarUtil
     metpz_sol0 = A * num_m;
     metpz_sol1 = A * num_p;
 
-    TLorentzVector vp4_m;
-    TLorentzVector vp4_p;
-    vp4_m.SetPxPyPzE(vpx, vpy, metpz_sol0, sqrt(vpx*vpx + vpy*vpy + metpz_sol0*metpz_sol0));
-    vp4_p.SetPxPyPzE(vpx, vpy, metpz_sol1, sqrt(vpx*vpx + vpy*vpy + metpz_sol1*metpz_sol1));
-    if (B2sq == 0)
-    {
-      std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
-    }
-    else
-    {
-      std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
-      std::cout << __LINE__ << " " << (lepton.p4 + vp4_p).M() << std::endl;
-    }
+//	    // Sanity check
+//	    TLorentzVector vp4_m;
+//	    TLorentzVector vp4_p;
+//	    vp4_m.SetPxPyPzE(vpx, vpy, metpz_sol0, sqrt(vpx*vpx + vpy*vpy + metpz_sol0*metpz_sol0));
+//	    vp4_p.SetPxPyPzE(vpx, vpy, metpz_sol1, sqrt(vpx*vpx + vpy*vpy + metpz_sol1*metpz_sol1));
+//	    if (B2sq == 0)
+//	    {
+//	      std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
+//	    }
+//	    else
+//	    {
+//	      std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
+//	      std::cout << __LINE__ << " " << (lepton.p4 + vp4_p).M() << std::endl;
+//	    }
 
     if (B2sq == 0)
       return 1;
