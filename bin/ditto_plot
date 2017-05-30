@@ -188,7 +188,8 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     TOTALCOUNTER=$((${BKGCOUNTER}+${SIGCOUNTER}))
     #echo $CATEGORY $NAME $COLOR ${PRETTYNAME} ${SCALE}
     if [ "x${CATEGORY}" == "xbkg" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetFillColor=>${COLOR},SetLineWidth=>0,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}\'"; fi
-    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}${SIGSCALE}\'"; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SIGSCALE}\'"; fi
+#	    if [ "x${CATEGORY}" == "xsig" ]; then PROCESSSTRING=$PROCESSSTRING"  --${CATEGORY}hist \'${item}:::${THISVAR}:::SetLineColor=>${COLOR},SetLineWidth=>4,SetName=>${NAME}%${LEGENDSTYLE},Scale=>${SCALE}${SIGSCALE}\'"; fi
   done
 
   # if no bkg, then add a sig to bkg
