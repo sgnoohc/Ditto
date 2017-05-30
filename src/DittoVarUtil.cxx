@@ -391,7 +391,7 @@ namespace VarUtil
     float M = 80.385*80.385 + (vpx+lpx)*(vpx+lpx) + (vpy+lpy)*(vpy+lpy);
 
     float A = 1./(2.*(a*a-c*c));
-    float B2 = a*a*a*a*a*a - 2*a*a*a*a*b*b* - 2*a*a*a*a*c*c - 2*a*a*a*a*M + a*a*b*b*b*b + 2*a*a*b*b*c*c - 2*a*a*b*b*M + a*a*c*c*c*c + 2*a*a*c*c*M + a*a*M*M;
+    float B2 = a*a*a*a*a*a - 2*a*a*a*a*b*b - 2*a*a*a*a*c*c - 2*a*a*a*a*M + a*a*b*b*b*b + 2*a*a*b*b*c*c - 2*a*a*b*b*M + a*a*c*c*c*c + 2*a*a*c*c*M + a*a*M*M;
     if (B2 < 0)
     {
       metpz_sol0 = -999;
