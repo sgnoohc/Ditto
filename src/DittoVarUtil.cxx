@@ -401,9 +401,8 @@ namespace VarUtil
     float B2sq = sqrt(B2);
     float AC4 = -b*b*c + c*c*c + c*M;
     float B = -a*a*c;
-    float S = B2sq+AC4;
-    float num_m = B - S;
-    float num_p = B + S;
+    float num_m = B - B2sq + AC4;
+    float num_p = B + B2sq + AC4;
     metpz_sol0 = A * num_m;
     metpz_sol1 = A * num_p;
 
@@ -414,7 +413,7 @@ namespace VarUtil
     std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
     std::cout << __LINE__ << " " << (lepton.p4 + vp4_p).M() << std::endl;
 
-    if (S == 0)
+    if (B2sq == 0)
       return 1;
     else
       return 2;
