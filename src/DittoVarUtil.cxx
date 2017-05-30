@@ -377,38 +377,47 @@ namespace VarUtil
     float lpx = lepton.p4.Px();
     float lpy = lepton.p4.Py();
     float lpz = lepton.p4.Pz();
+    float lpe = lepton.p4.E();
     float vpx = adb.met.p4.Px();
     float vpy = adb.met.p4.Py();
-    float c = lpz*lpz + (lpx+vpx)*(lpx+vpx) + (lpy+vpy)*(lpy+vpy) - 80.385*80.385;
-    float b = 2*lpz;
-    float mid = b*b - 4*c;
-    if (mid < 0)
+    float vpt = adb.met.p4.Pt();
+
+    // neutrino solver obtained from here:
+    // https://www.wolframalpha.com/input/?i=Solve%5B+((b%5E2%2Bx%5E2)%5E(1%2F2)%2Ba)%5E2+-+(c%2Bx)%5E2+%3D%3D+M,+x+%5D
+
+    float a = lpe;
+    float b = vpt;
+    float c = lpz;
+    float M = 80.385*80.385 + (vpx+lpx)*(vpx+lpx) + (vpy+lpy)*(vpy+lpy);
+
+    float A = 1./(2.*(a*a-c*c));
+    float B2 = a*a*a*a*a*a - 2*a*a*a*a*b*b* - 2*a*a*a*a*c*c - 2*a*a*a*a*M + a*a*b*b*b*b + 2*a*a*b*b*c*c - 2*a*a*b*b*M + a*a*c*c*c*c + 2*a*a*c*c*M + a*a*M*M;
+    if (B2 < 0)
     {
       metpz_sol0 = -999;
       metpz_sol1 = -999;
       return 0;
     }
-    else if (mid == 0)
-    {
-      metpz_sol0 = -b / 2.;
-      metpz_sol1 = -999;
-      return 1;
-    }
-    else if (mid > 0)
-    {
-      metpz_sol0 = (-b + sqrt(mid)) / 2.;
-      metpz_sol1 = (-b - sqrt(mid)) / 2.;
-      // sanity check
-      TLorentzVector vp4_sol0;
-      TLorentzVector vp4_sol1;
-      vp4_sol0.SetPxPyPzE(vpx,vpy,metpz_sol0,sqrt(vpx*vpx+vpy*vpy+metpz_sol0*metpz_sol0));
-      vp4_sol1.SetPxPyPzE(vpx,vpy,metpz_sol1,sqrt(vpx*vpx+vpy*vpy+metpz_sol1*metpz_sol1));
+    float B2sq = sqrt(B2);
+    float AC4 = -b*b*c + c*c*c + c*M;
+    float B = -a*a*c;
+    float S = B2sq+AC4;
+    float num_m = B - S;
+    float num_p = B + S;
+    metpz_sol0 = A * num_m;
+    metpz_sol1 = A * num_p;
 
-      std::cout << __LINE__ << " " << (lepton.p4 + vp4_sol0).M() << std::endl;
-      std::cout << __LINE__ << " " << (lepton.p4 + vp4_sol1).M() << std::endl;
+    TLorentzVector vp4_m;
+    TLorentzVector vp4_p;
+    vp4_m.SetPxPyPzE(vpx, vpy, metpz_sol0, sqrt(vpx*vpx + vpy*vpy + metpz_sol0*metpz_sol0));
+    vp4_p.SetPxPyPzE(vpx, vpy, metpz_sol1, sqrt(vpx*vpx + vpy*vpy + metpz_sol0*metpz_sol1));
+    std::cout << __LINE__ << " " << (lepton.p4 + vp4_m).M() << std::endl;
+    std::cout << __LINE__ << " " << (lepton.p4 + vp4_p).M() << std::endl;
+
+    if (S == 0)
+      return 1;
+    else
       return 2;
-    }
-    return -1;
   }
 
   bool checkDilepPdgIdProduct(ObjUtil::AnalysisData& a, int check)
