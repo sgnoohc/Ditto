@@ -1333,9 +1333,9 @@ class HistogramPainter:
             all_bkg = bkghist.IntegralAndError(0,bkghist.GetNbinsX()+1,all_bkg_err)
             error_term = math.sqrt(0.1*0.1+(all_bkg_err/all_bkg)*(all_bkg_err/all_bkg))
             signif_base = ROOT.RooStats.NumberCountingUtils.BinomialExpZ(all_sig,all_bkg,error_term)
-            print all_sig, all_sig_err, all_bkg, all_bkg_err, signif_base
             if option == "s/sqrt(b)":
                 signif_base = all_sig / math.sqrt(all_bkg)
+            print all_sig, all_sig_err, all_bkg, all_bkg_err, signif_base
 
             passed_sig_err = ROOT.Double()
             passed_bkg_err = ROOT.Double()
@@ -1347,13 +1347,16 @@ class HistogramPainter:
                     if option == "s/sqrt(b)":
                         signif = passed_sig / math.sqrt(passed_bkg)
                         signif /= signif_base
+                        print i, signif, signif_base, passed_sig, passed_bkg, all_sig, all_bkg
                     else:
                         error_term = math.sqrt(0.1*0.1+(passed_bkg_err/passed_bkg)*(passed_bkg_err/passed_bkg))
                         signif = ROOT.RooStats.NumberCountingUtils.BinomialExpZ(passed_sig,passed_bkg,error_term)
                         print i, signif, signif_base
                         signif /= signif_base
-                sig_scan_lower_hist.SetBinContent(i+1,signif)
-                sig_scan_lower_hists_accept[index].SetBinContent(i+1,passed_sig/all_sig)
+#	                sig_scan_lower_hist.SetBinContent(i+1,signif)
+#	                sig_scan_lower_hists_accept[index].SetBinContent(i+1,passed_sig/all_sig)
+                sig_scan_lower_hist.SetBinContent(i,signif)
+                sig_scan_lower_hists_accept[index].SetBinContent(i,passed_sig/all_sig)
 
         for index, sig_scan_upper_hist in enumerate(sig_scan_upper_hists):
 
@@ -1371,9 +1374,9 @@ class HistogramPainter:
             all_bkg = bkghist.IntegralAndError(0,bkghist.GetNbinsX()+1,all_bkg_err)
             error_term = math.sqrt(0.1*0.1+(all_bkg_err/all_bkg)*(all_bkg_err/all_bkg))
             signif_base = ROOT.RooStats.NumberCountingUtils.BinomialExpZ(all_sig,all_bkg,error_term)
-            print all_sig, all_sig_err, all_bkg, all_bkg_err, signif_base
             if option == "s/sqrt(b)":
                 signif_base = all_sig / math.sqrt(all_bkg)
+            print all_sig, all_sig_err, all_bkg, all_bkg_err, signif_base
 
             passed_sig_err = ROOT.Double()
             passed_bkg_err = ROOT.Double()
@@ -1385,6 +1388,7 @@ class HistogramPainter:
                     if option == "s/sqrt(b)":
                         signif = passed_sig / math.sqrt(passed_bkg)
                         signif /= signif_base
+                        print i, signif, signif_base
                     else:
                         error_term = math.sqrt(0.1*0.1+(passed_bkg_err/passed_bkg)*(passed_bkg_err/passed_bkg))
                         signif = ROOT.RooStats.NumberCountingUtils.BinomialExpZ(passed_sig,passed_bkg,error_term)
