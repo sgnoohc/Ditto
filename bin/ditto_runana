@@ -117,25 +117,27 @@ pushd $PACKAGEPATH > /dev/null
 STATUS=$(git status)
 if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
+  PACKAGEVERSION=$(git rev-parse HEAD)
 else
   #echo ${STATUS}
   $ERROR "Error: The $PACKAGEPATH package needs commit"
   exit
 #	  git commit -a -m msg
 #	  git push
-  PACKAGEVERSION=$(git rev-parse HEAD)
+#	  PACKAGEVERSION=$(git rev-parse HEAD)
 fi
 cd $DITTOPATH
 STATUS=$(git status)
 if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
   :
+  DITTOVERSION=$(git rev-parse HEAD)
 else
   #echo ${STATUS}
   $ERROR "Error: The Ditto package needs commit"
   exit
 #	  git commit -a -m msg
 #	  git push
-  DITTOVERSION=$(git rev-parse HEAD)
+#	  DITTOVERSION=$(git rev-parse HEAD)
 fi
 popd > /dev/null
 
