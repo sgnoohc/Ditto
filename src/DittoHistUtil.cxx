@@ -62,9 +62,9 @@ namespace HistUtil
     if (a.leptons.size() > 1)
     {
       PlotUtil::plot1D("lepminmt", minmt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
-      PlotUtil::plot1D("lepmaxmt", maxmt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepmaxmt", maxmt      , a.wgt, a.hist_db , "", 180, 0., 220, prefix);
       PlotUtil::plot1D("lepdmt"  , maxmt-minmt, a.wgt, a.hist_db , "", 180, 0., 180, prefix);
-      PlotUtil::plot1D("lepsummt", summt      , a.wgt, a.hist_db , "", 180, 0., 180, prefix);
+      PlotUtil::plot1D("lepsummt", summt      , a.wgt, a.hist_db , "", 180, 0., 300, prefix);
     }
   }
 
