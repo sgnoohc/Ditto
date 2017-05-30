@@ -104,4 +104,16 @@ namespace HistUtil
     }
   }
 
+  //______________________________________________________________________________________
+  void fillLepNeutrinoNSol(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      float metpz_sol0 = 0;
+      float metpz_sol1 = 0;
+      PlotUtil::plot1D(TString::Format("lep%d_neutrinonsol", ilep).Data(), VarUtil::NeutrinoSolver(a, ilep, metpz_sol0, metpz_sol1), a.wgt, a.hist_db , "", 3, 0., 3, prefix);
+    }
+  }
+
 }

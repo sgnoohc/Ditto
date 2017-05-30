@@ -370,6 +370,39 @@ namespace VarUtil
     return fabs(xp) < fabs(xm) ? xp : xm;
   }
 
+  int NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx, float& metpz_sol0, float& metpz_sol1)
+  {
+    if (adb.leptons.size() < (unsigned int) lepidx + 1) return 0.;
+    ObjUtil::Lepton lepton = adb.leptons[lepidx];
+    float lpx = lepton.p4.Px();
+    float lpy = lepton.p4.Py();
+    float lpz = lepton.p4.Pz();
+    float vpx = adb.met.p4.Px();
+    float vpy = adb.met.p4.Py();
+    float c = lpz*lpz + (lpx+vpx)*(lpx+vpx) + (lpy+vpy)*(lpy+vpy) - 80.385*80.385;
+    float b = 2*lpz;
+    float mid = b*b - 4*c;
+    if (mid < 0)
+    {
+      metpz_sol0 = -999;
+      metpz_sol1 = -999;
+      return 0;
+    }
+    else if (mid == 0)
+    {
+      metpz_sol0 = -b / 2.;
+      metpz_sol1 = -999;
+      return 1;
+    }
+    else if (mid > 0)
+    {
+      metpz_sol0 = (-b + sqrt(mid)) / 2.;
+      metpz_sol1 = (-b - sqrt(mid)) / 2.;
+      return 2;
+    }
+    return -1;
+  }
+
   bool checkDilepPdgIdProduct(ObjUtil::AnalysisData& a, int check)
   {
     if (a.leptons.size() != 2) return false;
