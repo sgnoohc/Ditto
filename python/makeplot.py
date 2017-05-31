@@ -845,14 +845,14 @@ class HistogramPainter:
                         if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
                             row_string += '%10s|'%name
                         else:
-                            row_string += '%10s|%10s|'%(name, name)
+                            row_string += '%10s|%3s|%10s|'%(name, "", "")
                     else:
                         if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
                             row_string += '%10d'%y+'|'
                         else:
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                            row_string += '%10.2f'%y + "|" + '%10.2f|'%e
+                            row_string += '%10.2f'%y + "| " + u'\u00b1' + " |" + '%10.2f|'%e
                 row_string += '\n'
                 if index == 0:
                     row_string += "|"
@@ -861,6 +861,7 @@ class HistogramPainter:
                             row_string += '----------|'
                         else:
                             row_string += '----------|'
+                            row_string += '---|'
                             row_string += '----------|'
                     row_string += '\n'
                 cutflow_file.write(row_string)
