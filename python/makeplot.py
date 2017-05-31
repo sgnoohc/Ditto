@@ -843,21 +843,25 @@ class HistogramPainter:
                     if index == 0:
                         name = y.split('%')[0]
                         if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
-                            row_string += '<sub>%s</sub>|'%name
+                            row_string += '%10s|'%name
                         else:
-                            row_string += '%s|%s err|'%(name, name)
+                            row_string += '%10s|%10s|'%(name, name)
                     else:
                         if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                            row_string += '<sub>%.2f'%y+'</sub>| '
+                            row_string += '%10d'%y+'|'
                         else:
                             #row_string += '%10.1f,'%y + u"\u00B1" + ', %10.1f, '%e
-                            row_string += '<sub>%.2f'%y + "</sub>|<sub>" + ' %.2f</sub>| '%e
+                            row_string += '%10.2f'%y + "|" + '%10.2f|'%e
                 row_string += '\n'
                 if index == 0:
                     row_string += "|"
                     for y, e in zip(yields, errors):
-                        row_string += '---------|'
+                        if self.args.plotname.find("rawcutflow") != -1 or self.args.plotname.find("rawcounter") != -1 :
+                            row_string += '----------|'
+                        else:
+                            row_string += '----------|'
+                            row_string += '----------|'
                     row_string += '\n'
                 cutflow_file.write(row_string)
                 index += 1
