@@ -781,21 +781,21 @@ class HistogramPainter:
                     errors.append(bine)
                 yields_table.append(yields)
                 errors_table.append(errors)
-            #if totalbkghist:
-            #    yields = []
-            #    errors = []
-            #    yields.append("Total Background")
-            #    errors.append("Total Background")
-            #    for i in xrange(1, totalbkghist.GetNbinsX()+1):
-            #        if self.args.print_cutflow_bins:
-            #            if i not in bins_to_print:
-            #                continue;
-            #        binc = totalbkghist.GetBinContent(i)
-            #        bine = totalbkghist.GetBinError(i)
-            #        yields.append(binc)
-            #        errors.append(bine)
-            #    yields_table.append(yields)
-            #    errors_table.append(errors)
+            if totalbkghist:
+                yields = []
+                errors = []
+                yields.append("Tot. Bkg.")
+                errors.append("Tot. Bkg.")
+                for i in xrange(1, totalbkghist.GetNbinsX()+1):
+                    if self.args.print_cutflow_bins:
+                        if i not in bins_to_print:
+                            continue;
+                    binc = totalbkghist.GetBinContent(i)
+                    bine = totalbkghist.GetBinError(i)
+                    yields.append(binc)
+                    errors.append(bine)
+                yields_table.append(yields)
+                errors_table.append(errors)
             for bkghist in bkghists:
                 yields = []
                 errors = []
