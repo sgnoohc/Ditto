@@ -437,7 +437,7 @@ namespace LoopUtil
     eventlistloaded = true;
   }
 
-  bool failed(std::vector<int> eventid, int cutID, TString message)
+  bool failed(std::vector<int> eventid, float cutID, TString message)
   {
     if (!LoopUtil::eventlistloaded) return false;
     std::vector<std::vector<int> >::iterator it;

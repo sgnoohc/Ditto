@@ -142,7 +142,7 @@ namespace Ditto
     double getFractionOfBookedNEvents();
     void setDoSkim(bool b=true);
     void loadEventListToCheck();
-    bool failed(std::vector<int> eventid, int cutID, TString message="");
+    bool failed(std::vector<int> eventid, float cutID, TString message="");
 
   }
 
