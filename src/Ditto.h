@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cmath>
 #include <functional>
+#include <fstream>
 #include <map>
 #include <string>
 #include <utility>
@@ -20,6 +21,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h> // rand
+#include <sstream>
 
 // ROOT
 #include <TCanvas.h>
@@ -102,6 +104,8 @@ namespace Ditto
     extern bool doskim;
     extern bool doprintprogressbar;
     extern TString output_name;
+    extern bool eventlistloaded;
+    extern std::vector<std::vector<int> > eventlisttocheck;
 
     void loadFileIter();
     void loadTotalNEvents();
@@ -137,6 +141,8 @@ namespace Ditto
     void loadFractionOfBookedNEvents();
     double getFractionOfBookedNEvents();
     void setDoSkim(bool b=true);
+    void loadEventListToCheck();
+    bool failed(std::vector<int> eventid, int cutID, TString message="");
 
   }
 
