@@ -57,6 +57,7 @@ namespace VarUtil
   float DRjj(ObjUtil::AnalysisData& a);
   float Mjj(ObjUtil::AnalysisData& a);
   float MljClosest(ObjUtil::AnalysisData& a);
+  float MjjClosest(ObjUtil::AnalysisData& a);
   float Ptjj(ObjUtil::AnalysisData& a);
   float Mbb(ObjUtil::AnalysisData& a);
   float Ptbb(ObjUtil::AnalysisData& a);

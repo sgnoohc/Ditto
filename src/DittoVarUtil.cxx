@@ -209,7 +209,7 @@ namespace VarUtil
 
   float MljClosest(ObjUtil::AnalysisData& a)
   {
-    // If less than 2 jets just skip
+    // If less than 1 jets just skip
     if (a.jets.size() < 1)
       return -999;
     if (a.leptons.size() < 1)
@@ -226,6 +226,26 @@ namespace VarUtil
         }
     return (jetp4+lepp4).M();
   }
+
+  float MjjClosest(ObjUtil::AnalysisData& a)
+  {
+    // If less than 2 jets just skip
+    if (a.jets.size() < 2)
+      return -999;
+    TLorentzVector jetp40;
+    TLorentzVector jetp41;
+    float dr = 999;
+    for (auto& ijet: a.jets)
+      for (auto& jjet: a.jets)
+        if (&ijet != &jjet)
+          if (dr > ijet.p4.DeltaR(jjet.p4))
+          {
+            jetp40 = ijet.p4;
+            jetp41 = jjet.p4;
+          }
+    return (jetp40+jetp41).M();
+  }
+
 
   float Ptjj(ObjUtil::AnalysisData& a)
   {
