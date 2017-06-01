@@ -40,6 +40,12 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
+  void fillMjjWithMaxDEtajj(string prefix, ObjUtil::AnalysisData& a)
+  {
+    PlotUtil::plot1D("mjjwithmaxdetajj", VarUtil::Mjj(a), a.wgt, a.hist_db , "Mjj [GeV]", 180, 0., 1500., prefix);
+  }
+
+  //______________________________________________________________________________________
   void fillLepMTs(string prefix, ObjUtil::AnalysisData& a)
   {
     float minmt = -999;
