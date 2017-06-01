@@ -271,6 +271,20 @@ namespace VarUtil
     return (a.bjets[0].p4+a.bjets[1].p4).Pt();
   }
 
+  float MaxDEtajj(ObjUtil::AnalysisData& a)
+  {
+    // If less than 2 jets just skip
+    if (a.jets.size() < 2)
+      return -999;
+    float deta = -999;
+    for (auto& ijet : a.jets)
+      for (auto& jjet : a.jets)
+        if (&ijet != & jjet)
+          if (deta < DEta(ijet, jjet))
+            deta = DEta(ijet, jjet);
+    return deta;
+  }
+
   float DEtajj(ObjUtil::AnalysisData& a)
   {
     // If less than 2 jets just skip

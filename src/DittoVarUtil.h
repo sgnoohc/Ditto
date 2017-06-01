@@ -61,6 +61,7 @@ namespace VarUtil
   float Ptjj(ObjUtil::AnalysisData& a);
   float Mbb(ObjUtil::AnalysisData& a);
   float Ptbb(ObjUtil::AnalysisData& a);
+  float MaxDEtajj(ObjUtil::AnalysisData& a);
   float DEtajj(ObjUtil::AnalysisData& a);
   float DEtabb(ObjUtil::AnalysisData& a);
   float Ptll(ObjUtil::AnalysisData& a);
