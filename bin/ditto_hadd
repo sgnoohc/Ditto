@@ -33,8 +33,9 @@ usage() {
   echo "  -1    Signal #1                      (e.g. -1 \'wz,ttv\')"
   echo "  -2    Signal #2                      (e.g. -2 \'wz,ttv\')"
   echo "  -3    Signal #3                      (e.g. -3 \'wz,ttv\')"
-  echo "  -4    Signal #4                      (e.g. -3 \'wz,ttv\')"
-  echo " (-5    Signal #5? What?! Why would you want to create a terrible plot???)"
+  echo "  -4    Signal #4                      (e.g. -4 \'wz,ttv\')"
+  echo "  -5    Signal #5                      (e.g. -5 \'wz,ttv\')"
+  echo " (-6    Signal #6? What?! Why would you want to create a terrible plot???)"
   echo "  -d    /path/to/output/hadds/to       (e.g. -d ./)"
   echo "  -i    /path/to/input/to/hadd         (e.g. -i ./)"
   echo "Options without arguments:"
@@ -44,7 +45,7 @@ usage() {
 }
 
 # Command-line opts
-while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:Dh" OPTION; do
+while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:5:!:@:#:$:%:d:i:Dh" OPTION; do
   case $OPTION in
     r) BKG1STR=${OPTARG};;
     b) BKG2STR=${OPTARG};;
@@ -57,6 +58,7 @@ while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:Dh" OPTION; do
     2) SIG2STR=${OPTARG};;
     3) SIG3STR=${OPTARG};;
     4) SIG4STR=${OPTARG};;
+    5) SIG5STR=${OPTARG};;
     R) BKG1NICENAME=${OPTARG};;
     B) BKG2NICENAME=${OPTARG};;
     Y) BKG3NICENAME=${OPTARG};;
@@ -68,6 +70,7 @@ while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:!:@:#:$:d:i:Dh" OPTION; do
     "@") SIG2NICENAME=${OPTARG};;
     "#") SIG3NICENAME=${OPTARG};;
     "$") SIG4NICENAME=${OPTARG};;
+    "%") SIG5NICENAME=${OPTARG};;
     d) HADDOUTPUTDIR=${OPTARG};;
     i) HADDINPUTDIR=${OPTARG};;
     D) DONTDELETE=TRUE;;
@@ -91,6 +94,7 @@ SIG1s=(${SIG1STR//,/ })
 SIG2s=(${SIG2STR//,/ })
 SIG3s=(${SIG3STR//,/ })
 SIG4s=(${SIG4STR//,/ })
+SIG5s=(${SIG5STR//,/ })
 
 if [ -z ${BKG1STR} ]; then
 if [ -z ${BKG2STR} ]; then
@@ -103,7 +107,9 @@ if [ -z ${SIG1STR} ]; then
 if [ -z ${SIG2STR} ]; then
 if [ -z ${SIG3STR} ]; then
 if [ -z ${SIG4STR} ]; then
+if [ -z ${SIG5STR} ]; then
   usage;
+fi
 fi
 fi
 fi
@@ -141,6 +147,7 @@ echo "SIG 1        : ${SIG1STR}"
 echo "SIG 2        : ${SIG2STR}"
 echo "SIG 3        : ${SIG3STR}"
 echo "SIG 4        : ${SIG4STR}"
+echo "SIG 5        : ${SIG5STR}"
 echo "================================================"
 
 $WARNING "Please be aware that you are hadding by \"(wildcard)pattern(wildcard)root\"!!"
@@ -188,6 +195,7 @@ hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${HADDINPUTDIR}" 1 sig
 hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${HADDINPUTDIR}" 2 sig
 hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${HADDINPUTDIR}" 3 sig
 hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${HADDINPUTDIR}" 4 sig
+hadd_category SIG5s "${SIG5NICENAME}" "sig5" "${HADDINPUTDIR}" 5 sig
 
 # Create output directory if not already
 mkdir -p ${HADDOUTPUTDIR}/
