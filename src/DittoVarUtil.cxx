@@ -240,10 +240,14 @@ namespace VarUtil
         if (&ijet != &jjet)
           if (dr > ijet.p4.DeltaR(jjet.p4))
           {
+            dr = ijet.p4.DeltaR(jjet.p4);
             jetp40 = ijet.p4;
             jetp41 = jjet.p4;
           }
-    return (jetp40+jetp41).M();
+    float mjj = -999;
+    if (dr < 10)
+      mjj = (jetp40+jetp41).M();
+    return mjj;
   }
 
 
