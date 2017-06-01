@@ -526,6 +526,7 @@ namespace Ditto
     string catPrefix(string prefix1, string prefix2);
     void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int& ibin);
     void fillCounter(string prefix, ObjUtil::AnalysisData& a, int ibin);
+    void fillMjj(string prefix, ObjUtil::AnalysisData& a);
     void fillMET(string prefix, ObjUtil::AnalysisData& a);
     void fillLepMTs(string prefix, ObjUtil::AnalysisData& a);
     void fillLepMlvjs(string prefix, ObjUtil::AnalysisData& a);

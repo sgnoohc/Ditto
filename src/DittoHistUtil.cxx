@@ -34,6 +34,12 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
+  void fillMjj(string prefix, ObjUtil::AnalysisData& a)
+  {
+    PlotUtil::plot1D("mjj", VarUtil::Mjj(a), a.wgt, a.hist_db , "Mjj [GeV]", 180, 0., 1500., prefix);
+  }
+
+  //______________________________________________________________________________________
   void fillLepMTs(string prefix, ObjUtil::AnalysisData& a)
   {
     float minmt = -999;
@@ -110,7 +116,7 @@ namespace HistUtil
   //______________________________________________________________________________________
   void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a)
   {
-    PlotUtil::plot1D("lepsumpt", VarUtil::LepSumPt(a), a.wgt, a.hist_db , "MET [GeV]", 180, 0., 500., prefix);
+    PlotUtil::plot1D("lepsumpt", VarUtil::LepSumPt(a), a.wgt, a.hist_db , "#Sum p_{T,lep} [GeV]", 180, 0., 500., prefix);
   }
 
   //______________________________________________________________________________________
