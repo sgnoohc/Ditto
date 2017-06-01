@@ -121,7 +121,7 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
 else
   #echo ${STATUS}
   $ERROR "Error: The $PACKAGEPATH package needs commit"
-  exit
+  exit 1
 #	  git commit -a -m msg
 #	  git push
 #	  PACKAGEVERSION=$(git rev-parse HEAD)
@@ -134,7 +134,7 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
 else
   #echo ${STATUS}
   $ERROR "Error: The Ditto package needs commit"
-  exit
+  exit 1
 #	  git commit -a -m msg
 #	  git push
 #	  DITTOVERSION=$(git rev-parse HEAD)

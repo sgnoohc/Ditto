@@ -181,7 +181,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
-    if [ -z ${SCALE} ]; then SCALE=70; fi
+    if [ -z ${SCALE} ]; then SCALE=35.9; fi
     if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
     if [[ ${THISVAR} == *"rawcounter"* ]]; then SCALE=1; fi
     if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
@@ -211,7 +211,7 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
       if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
-      if [ -z ${SCALE} ]; then SCALE=70; fi
+      if [ -z ${SCALE} ]; then SCALE=35.9; fi
       if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
       if [[ ${THISVAR} == *"rawcounter"* ]]; then SCALE=1; fi
       if [ "x${SHAPECOMPARISON}" == "xTRUE" ]; then SCALE="norm1"; fi
