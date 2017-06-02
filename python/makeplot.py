@@ -979,7 +979,7 @@ class HistogramPainter:
             latex.SetTextFont(42)
             latex.SetTextSize(0.062*self.args.labeltextsize)
             latex.SetTextAlign(11)
-            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'70 fb^{-1} (13 TeV)')
+            latex.DrawLatexNDC(self.args.labelXcoord-0.035,self.args.labelYcoord+0.01,'35.9 fb^{-1} (13 TeV)')
 
 
 
