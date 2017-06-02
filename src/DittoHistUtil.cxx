@@ -204,4 +204,31 @@ namespace HistUtil
     }
   }
 
+  //______________________________________________________________________________________
+  void fillLepIsFromX(string prefix, ObjUtil::AnalysisData& a)
+  {
+    string commonhistname = "lep_isFromX";
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      string histname = TString::Format("lep%d_isFromX", ilep).Data();
+      if      (lepton.isFromX == (1 << 0)) PlotUtil::plot1D(histname, 1, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 1)) PlotUtil::plot1D(histname, 2, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 2)) PlotUtil::plot1D(histname, 3, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 3)) PlotUtil::plot1D(histname, 4, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 4)) PlotUtil::plot1D(histname, 5, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 5)) PlotUtil::plot1D(histname, 6, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == 0       ) PlotUtil::plot1D(histname, 0, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else                                 PlotUtil::plot1D(histname, 7, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      if      (lepton.isFromX == (1 << 0)) PlotUtil::plot1D(commonhistname, 1, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 1)) PlotUtil::plot1D(commonhistname, 2, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 2)) PlotUtil::plot1D(commonhistname, 3, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 3)) PlotUtil::plot1D(commonhistname, 4, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 4)) PlotUtil::plot1D(commonhistname, 5, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == (1 << 5)) PlotUtil::plot1D(commonhistname, 6, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else if (lepton.isFromX == 0       ) PlotUtil::plot1D(commonhistname, 0, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+      else                                 PlotUtil::plot1D(commonhistname, 7, a.wgt, a.hist_db, "", 8, 0., 8., prefix);
+    }
+  }
+
 }

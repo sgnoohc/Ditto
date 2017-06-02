@@ -545,6 +545,7 @@ namespace Ditto
     void fillLepIP(string prefix, ObjUtil::AnalysisData& a);
     void fillLepTightCharge(string prefix, ObjUtil::AnalysisData& a);
     void fillLepNeutrinoNSol(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepIsFromX(string prefix, ObjUtil::AnalysisData& a);
 
   }
 
