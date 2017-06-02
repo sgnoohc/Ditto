@@ -540,6 +540,9 @@ namespace Ditto
     void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
     void fillLepRelIso03EA(string prefix, ObjUtil::AnalysisData& a);
     void fillLepAbsIso03EA(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepRelIso04EA(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepAbsIso04EA(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepIP(string prefix, ObjUtil::AnalysisData& a);
     void fillLepTightCharge(string prefix, ObjUtil::AnalysisData& a);
     void fillLepNeutrinoNSol(string prefix, ObjUtil::AnalysisData& a);
 

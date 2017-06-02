@@ -148,6 +148,41 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
+  void fillLepRelIso04EA(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%d_reliso04EA", ilep).Data(), lepton.relIso04EA, a.wgt, a.hist_db , "", 10000, 0., 0.25, prefix);
+      PlotUtil::plot1D("lep_reliso04EA", lepton.relIso04EA, a.wgt, a.hist_db , "", 10000, 0., 0.25, prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
+  void fillLepAbsIso04EA(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%d_absiso04EA", ilep).Data(), lepton.relIso04EA * lepton.p4.Pt(), a.wgt, a.hist_db , "", 10000, 0., 7., prefix);
+      PlotUtil::plot1D("lep_absiso04EA", lepton.relIso04EA * lepton.p4.Pt(), a.wgt, a.hist_db , "", 10000, 0., 7., prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
+  void fillLepIP(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+    {
+      ObjUtil::Lepton lepton = a.leptons[ilep];
+      PlotUtil::plot1D(TString::Format("lep%d_ip3d"  , ilep).Data() , lepton.ip3d  , a.wgt , a.hist_db , "" , 10000 , 0. , 0.015 , prefix);
+      PlotUtil::plot1D(TString::Format("lep%d_sip3d" , ilep).Data() , lepton.sip3d , a.wgt , a.hist_db , "" , 10000 , 0. , 4.    , prefix);
+      PlotUtil::plot1D("lep_ip3d"  , lepton.ip3d  , a.wgt , a.hist_db , "" , 10000 , 0. , 0.015 , prefix);
+      PlotUtil::plot1D("lep_sip3d" , lepton.sip3d , a.wgt , a.hist_db , "" , 10000 , 0. , 4.    , prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
   void fillLepTightCharge(string prefix, ObjUtil::AnalysisData& a)
   {
     for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
