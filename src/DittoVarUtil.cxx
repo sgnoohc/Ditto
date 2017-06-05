@@ -429,6 +429,13 @@ namespace VarUtil
     return (a.leptons[lepidx].p4 + metp4 + a.jets[jetidx].p4).M();
   }
 
+  float Mlj(ObjUtil::AnalysisData& a, int lepidx, int jetidx)
+  {
+    if (a.leptons.size() < (unsigned int) lepidx+1) return -999;
+    if (a.jets.size() < (unsigned int) jetidx+1) return -999;
+    return (a.leptons[lepidx].p4 + a.jets[jetidx].p4).M();
+  }
+
 //	  float NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx)
 //	  {
 //	    if (adb.leptons.size() < (unsigned int) lepidx + 1) return 0.;

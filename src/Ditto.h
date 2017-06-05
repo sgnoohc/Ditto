@@ -536,6 +536,7 @@ namespace Ditto
     void fillMjjWithMaxDEtajj(string prefix, ObjUtil::AnalysisData& a);
     void fillMET(string prefix, ObjUtil::AnalysisData& a);
     void fillLepMTs(string prefix, ObjUtil::AnalysisData& a);
+    void fillLepMljs(string prefix, ObjUtil::AnalysisData& a);
     void fillLepMlvjs(string prefix, ObjUtil::AnalysisData& a);
     void fillLepSumPt(string prefix, ObjUtil::AnalysisData& a);
     void fillLepRelIso03EA(string prefix, ObjUtil::AnalysisData& a);
