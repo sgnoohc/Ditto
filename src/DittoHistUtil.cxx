@@ -3,6 +3,8 @@
 //  .
 // ..: P. Chang, philip@physics.ucsd.edu
 
+#define NMAX_INDIVD_OBJ_TO_PLOT 6
+
 namespace HistUtil
 {
 
@@ -31,6 +33,17 @@ namespace HistUtil
   void fillMET(string prefix, ObjUtil::AnalysisData& a)
   {
     PlotUtil::plot1D("met", a.met.p4.Pt(), a.wgt, a.hist_db , "MET [GeV]", 180, 0., 500., prefix);
+  }
+
+  //______________________________________________________________________________________
+  void fillLeps(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)
+    {
+      PlotUtil ::plot1D(TString::Format("lep%dpt"  , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]" , ilep).Data() , 180     , 0.      , 200. - ilep * 20 , prefix);
+      PlotUtil ::plot1D(TString::Format("lep%deta" , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"       , ilep).Data() , 180     , -3.     , 3.               , prefix);
+      PlotUtil ::plot1D(TString::Format("lep%dphi" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"       , ilep).Data() , 180     , -3.1416 , 3.1416           , prefix);
+    }
   }
 
   //______________________________________________________________________________________

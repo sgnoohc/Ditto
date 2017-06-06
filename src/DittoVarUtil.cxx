@@ -227,7 +227,7 @@ namespace VarUtil
     return (jetp4+lepp4).M();
   }
 
-  float MjjClosest(ObjUtil::AnalysisData& a)
+  float MjjClosest(ObjUtil::AnalysisData& a, ObjUtil::Jet& jet0, ObjUtil::Jet& jet1)
   {
     // If less than 2 jets just skip
     if (a.jets.size() < 2)
@@ -243,11 +243,20 @@ namespace VarUtil
             dr = ijet.p4.DeltaR(jjet.p4);
             jetp40 = ijet.p4;
             jetp41 = jjet.p4;
+            jet0 = ijet;
+            jet1 = jjet;
           }
     float mjj = -999;
     if (dr < 10)
       mjj = (jetp40+jetp41).M();
     return mjj;
+  }
+
+  float MjjClosest(ObjUtil::AnalysisData& a)
+  {
+    ObjUtil::Jet jet0;
+    ObjUtil::Jet jet1;
+    return MjjClosest(a, jet0, jet1);
   }
 
 
