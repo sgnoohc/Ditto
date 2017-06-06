@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+ls $PACKAGEPATH/src/*.h $DITTOPATH/src/*.h $PACKAGEPATH/src/*.cxx $DITTOPATH/src/*.cxx
+

@@ -2,4 +2,10 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
 
-vim $PACKAGEPATH/src/*.h $DITTOPATH/src/*.h $PACKAGEPATH/src/*.cxx $DITTOPATH/src/*.cxx
+if [ -z $1 ]; then
+  vim $PACKAGEPATH/src/*.h $DITTOPATH/src/*.h $PACKAGEPATH/src/*.cxx $DITTOPATH/src/*.cxx
+else
+  FILE=$(ls $PACKAGEPATH/src/*.h $DITTOPATH/src/*.h $PACKAGEPATH/src/*.cxx $DITTOPATH/src/*.cxx | grep $1)
+  vim ${FILE}
+fi
+
