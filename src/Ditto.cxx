@@ -21,6 +21,15 @@ namespace Ditto
 
   #include "DittoVarUtil.cxx"
 
+  namespace CombUtil
+  {
+    bool MinDRPair(ObjUtil::Jets& jets, ObjUtil::Jet& jet0, ObjUtil::Jet& jet1)
+    {
+      return GetPair<ObjUtil::Jet, ObjUtil::Jet>(jets, jets, jet0, jet1, VarUtil::DR_, MIN);
+    }
+        
+  }
+
   namespace Analyses
   {
 
