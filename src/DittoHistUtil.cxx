@@ -94,6 +94,45 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
+  void fillLepDPhiljs(string prefix, ObjUtil::AnalysisData& a)
+  {
+    float mindphilj = -999;
+    float maxdphilj = -999;
+    float sumdphilj = -999;
+    for (unsigned int ijet = 0; ijet < a.jets.size(); ++ijet)
+    {
+      for (unsigned int ilep = 0; ilep < a.leptons.size(); ++ilep)
+      {
+        ObjUtil::Lepton lepton = a.leptons[ilep];
+        ObjUtil::Jet jet = a.jets[ilep];
+        float tmpdphilj = VarUtil::DPhi(lepton, jet);
+        if (ilep == 0 && ijet == 0)
+        {
+          mindphilj = tmpdphilj;
+          maxdphilj = tmpdphilj;
+          sumdphilj = tmpdphilj;
+        }
+        else
+        {
+          if (tmpdphilj < mindphilj)
+            mindphilj = tmpdphilj;
+          if (tmpdphilj > maxdphilj)
+            maxdphilj = tmpdphilj;
+          sumdphilj += tmpdphilj;
+        }
+        PlotUtil::plot1D(TString::Format("lep%djet%ddphilj", ilep, ijet).Data(), tmpdphilj, a.wgt, a.hist_db , "", 180, 0., 3.1416, prefix);
+      }
+    }
+    if (a.leptons.size() > 1)
+    {
+      PlotUtil::plot1D("lepmindphilj" , mindphilj           , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix);
+      PlotUtil::plot1D("lepmaxdphilj" , maxdphilj           , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix);
+      PlotUtil::plot1D("lepddphilj"   , maxdphilj-mindphilj , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix);
+      PlotUtil::plot1D("lepsumdphilj" , sumdphilj           , a.wgt , a.hist_db , "" , 180 , 0. , 3.1416 , prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
   void fillLepMljs(string prefix, ObjUtil::AnalysisData& a)
   {
     float minmlj = -999;
@@ -105,7 +144,7 @@ namespace HistUtil
       {
         ObjUtil::Lepton lepton = a.leptons[ilep];
         ObjUtil::Jet jet = a.jets[ilep];
-        float tmpmlj = VarUtil::Mlj(a, ilep, ijet);
+        float tmpmlj = VarUtil::Mass(lepton, jet);
         if (ilep == 0 && ijet == 0)
         {
           minmlj = tmpmlj;
@@ -125,10 +164,10 @@ namespace HistUtil
     }
     if (a.leptons.size() > 1)
     {
-      PlotUtil::plot1D("lepminmlj" , minmlj         , a.wgt , a.hist_db , "" , 180 , 0. , 360 , prefix);
-      PlotUtil::plot1D("lepmaxmlj" , maxmlj         , a.wgt , a.hist_db , "" , 180 , 0. , 450 , prefix);
-      PlotUtil::plot1D("lepdmlj"   , maxmlj-minmlj , a.wgt , a.hist_db , "" , 180 , 0. , 360 , prefix);
-      PlotUtil::plot1D("lepsummlj" , summlj         , a.wgt , a.hist_db , "" , 180 , 0. , 700 , prefix);
+      PlotUtil::plot1D("lepminmlj" , minmlj         , a.wgt , a.hist_db , "" , 180 , 0. , 360, prefix);
+      PlotUtil::plot1D("lepmaxmlj" , maxmlj         , a.wgt , a.hist_db , "" , 180 , 0. , 450, prefix);
+      PlotUtil::plot1D("lepdmlj"   , maxmlj-minmlj , a.wgt , a.hist_db , ""  , 180 , 0. , 360, prefix);
+      PlotUtil::plot1D("lepsummlj" , summlj         , a.wgt , a.hist_db , "" , 180 , 0. , 700, prefix);
     }
   }
 

@@ -30,6 +30,7 @@ usage() {
   echo "Options without arguments:"
   echo "  -c    Condor submit"
   echo "  -f    Force run even if tagged output exists"
+  echo "  -g    Force run even if git is not commited"
   echo "  -s    Suppress log output"
   echo "  -k    run skimmed version"
   echo
@@ -37,7 +38,7 @@ usage() {
 }
 
 # Command-line opts
-while getopts ":t:q:e:N:d:l:hfsck" OPTION; do
+while getopts ":t:q:e:N:d:l:hfsckg" OPTION; do
   case $OPTION in
     t) JOBTAG=${OPTARG};;
     d) SAMPLESDIRPATH=${OPTARG};;
@@ -46,6 +47,7 @@ while getopts ":t:q:e:N:d:l:hfsck" OPTION; do
     l) JOBLISTTXTFILEPATH=${OPTARG};;
     N) NEVENTSTOPROCESS=${OPTARG};;
     f) FORCERUN=true;;
+    g) FORCERUNGIT=true;;
     c) CONDORSUBMIT=true;;
     s) SUPPRESSLOG=true;;
     k) USESKIMMED=true;;
@@ -121,7 +123,11 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
 else
   #echo ${STATUS}
   $ERROR "Error: The $PACKAGEPATH package needs commit"
-  exit 1
+  if [ "${FORCERUNGIT}" == true ]; then
+    :
+  else
+    exit 1
+  fi
 #	  git commit -a -m msg
 #	  git push
 #	  PACKAGEVERSION=$(git rev-parse HEAD)
@@ -134,7 +140,11 @@ if [[ ${STATUS} == *"nothing to commit, working directory clean"* ]]; then
 else
   #echo ${STATUS}
   $ERROR "Error: The Ditto package needs commit"
-  exit 1
+  if [ "${FORCERUNGIT}" == true ]; then
+    :
+  else
+    exit 1
+  fi
 #	  git commit -a -m msg
 #	  git push
 #	  DITTOVERSION=$(git rev-parse HEAD)
