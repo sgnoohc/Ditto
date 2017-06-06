@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+cd $DITTOPATH
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "=================================================="
+  e_msg ""
+  e_msg " Ditto git status"
+  e_msg ""
+  e_msg "=================================================="
+  e_msg "Ditto:: Checking git status in ditto package..."
+else
+  echo "=================================================="
+  echo ""
+  echo " Ditto"
+  echo ""
+  echo "=================================================="
+  echo "Ditto:: Checking git status in ditto package..."
+fi
+git status
+
+echo ""
+echo ""
+echo ""
+
+cd $PACKAGEPATH
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "=================================================="
+  e_msg ""
+  e_msg " $PACKAGENAME git status"
+  e_msg ""
+  e_msg "=================================================="
+  e_msg "Ditto:: Checking git status in analysis package path..."
+else
+  echo "=================================================="
+  echo ""
+  echo " $PACKAGENAME git status"
+  echo ""
+  echo "=================================================="
+  echo "Ditto:: Checking git status in analysis package path..."
+fi
+git status
+
+echo ""
+echo ""
+echo ""
+

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+
+if [ -d "$HOME/login" ]; then
+  LOGINEXISTS=true;
+  source ~/login/bash/utils.sh
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+
+usage ()
+{
+  echo "Usage:"
+  echo ""
+  echo "   ditto_git_checkout BRANCHNAME"
+  echo ""
+  echo ""
+  exit
+}
+
+if [ -z $1 ]; then
+  usage;
+fi
+
+cd $DITTOPATH
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "Ditto:: Checkingout branch $1 ..."
+else
+  echo "Ditto:: Checkingout branch $1 ..."
+fi
+git checkout $1
+
+cd $PACKAGEPATH
+if [ "$LOGINEXISTS" = true ]; then
+  e_msg "Ditto:: Checkingout branch $1 ..."
+else
+  echo "Ditto:: Checkingout branch $1 ..."
+fi
+git checkout $1
