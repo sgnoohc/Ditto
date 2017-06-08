@@ -27,7 +27,6 @@ namespace Ditto
     {
       return GetPair<ObjUtil::Jet, ObjUtil::Jet>(jets, jets, jet0, jet1, VarUtil::DR_, MIN);
     }
-        
   }
 
   namespace Analyses
@@ -199,31 +198,10 @@ namespace Ditto
       return true;
     }
 
-
     //______________________________________________________________________________________
-    int removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons)
+    int removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons, float thresh)
     {
-
-      /// return number of jets that are removed
-      int njet_removed = 0;
-
-      ObjUtil::Jets ORedjets;
-      for (auto& jet : jets)
-      {
-        bool pass = true;
-        for (auto& lepton : leptons)
-        {
-          if (jet.p4.DeltaR(lepton.p4) < 0.3)
-            pass = false;
-        }
-        if (pass)
-          ORedjets.push_back(jet);
-        else
-          njet_removed++;
-      }
-      jets = ObjUtil::Jets(ORedjets);
-
-      return njet_removed;
+      return removeOverlap<ObjUtil::Jet, ObjUtil::Lepton>(jets, leptons, thresh);
     }
 
   }

@@ -15,18 +15,28 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
-  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int& ibin)
+  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int& ibin, const char* label)
   {
     PlotUtil::plot1D("cutflow"   , ibin, a.wgt, a.hist_db, "", 20, 0., 20., prefix);
     PlotUtil::plot1D("rawcutflow", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
+    if (strlen(label) != 0)
+    {
+      PlotUtil::get("cutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+      PlotUtil::get("rawcutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+    }
     ibin++;
   }
 
   //______________________________________________________________________________________
-  void fillCounter(string prefix, ObjUtil::AnalysisData& a, int ibin)
+  void fillCounter(string prefix, ObjUtil::AnalysisData& a, int ibin, const char* label)
   {
     PlotUtil::plot1D("counter"   , ibin, a.wgt, a.hist_db, "", 20, 0., 20., prefix);
     PlotUtil::plot1D("rawcounter", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
+    if (strlen(label) != 0)
+    {
+      PlotUtil::get("counter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+      PlotUtil::get("rawcounter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+    }
   }
 
   //______________________________________________________________________________________

@@ -1,3 +1,7 @@
+// vim: tabstop=2:softtabstop=2:shiftwidth=2:expandtab
+
+//  .
+// ..: P. Chang, philip@physics.ucsd.edu
 
 namespace LoopUtil
 {
@@ -455,5 +459,19 @@ namespace LoopUtil
     return false;
   }
 
+  bool pass(std::vector<std::function<void (bool&, float&, string&, std::vector<int>&)> >& cuts)
+  {
+    for (auto& cut : cuts)
+    {
+      bool pass;
+      float val;
+      string cutname;
+      std::vector<int> eventid;
+      cut(pass, val, cutname, eventid);
+      if (!pass)
+        return failed(eventid, 0, val, cutname);
+    }
+    return true;
+  }
 
 }

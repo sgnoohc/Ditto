@@ -1,3 +1,8 @@
+// vim: tabstop=2:softtabstop=2:shiftwidth=2:expandtab
+
+//  .
+// ..: P. Chang, philip@physics.ucsd.edu
+
 namespace PlotUtil
 {
 
@@ -208,6 +213,26 @@ namespace PlotUtil
     outfile.Close();
 
     return;
+  }
+
+  TH1* get(string name, Hist_DB &h_1d, string prefix)
+  {
+    // If prefix exists add prefix
+    if (prefix != "") name = TString::Format("%s_%s", prefix.c_str(), name.c_str()).Data();
+
+    // Find whether a histogram with the name already exists
+    std::map<string, TH1*>::iterator iter= h_1d.find(name);
+
+    // If the histogram is not found, make a new one.
+    if(iter == h_1d.end())
+    {
+      PrintUtil::warning(TString::Format("PlotUtil::get() Asked for %s but did not find a histogram with that name", name.c_str()).Data());
+    }
+    else
+    {
+      return (*iter).second;
+    }
+    return 0;
   }
 
 }

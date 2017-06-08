@@ -13,7 +13,7 @@ namespace VarUtil
   float DPt (TLorentzVector, TLorentzVector);
   float Mass(TLorentzVector, TLorentzVector);
   float Pt  (TLorentzVector, TLorentzVector);
-  float MT  (TLorentzVector, TLorentzVector); // defined below
+  float MT  (TLorentzVector, TLorentzVector);
 
   /// calculator with objects
   float DEta(ObjUtil::Particle, ObjUtil::Particle);
@@ -41,45 +41,6 @@ namespace VarUtil
   float Mass(ObjUtil::Particle, TLorentzVector);
   float Pt  (ObjUtil::Particle, TLorentzVector);
   float MT  (ObjUtil::Particle, TLorentzVector);
-
-//	  /// Two object containers
-//	  float MinDR(ObjUtil::Leptons&, ObjUtil::Jets&);
-//	  float MinDR(ObjUtil::Jets&, ObjUtil::Leptons&);
-//	
-//	  /// calculator with some additional arguments
-//	  float MjjCloseToX(ObjUtil::AnalysisData& a, float X);
-//	  float MTNthLep(ObjUtil::AnalysisData& a, int lep_idx);
-//	  /// calculator with just analysis data
-//	  float HT(ObjUtil::AnalysisData& a);
-//	  float METHTRatio(ObjUtil::AnalysisData& a);
-//	  float DRjjWmass(ObjUtil::AnalysisData& a);
-//	  float MjjWmass(ObjUtil::AnalysisData& a);
-//	  float DRjj(ObjUtil::AnalysisData& a);
-//	  float Mjj(ObjUtil::AnalysisData& a);
-//	  float MljClosest(ObjUtil::AnalysisData& a);
-//	  float MjjClosest(ObjUtil::AnalysisData& a);
-//	  float MjjClosest(ObjUtil::AnalysisData& a, ObjUtil::Jet& jet0, ObjUtil::Jet& jet1);
-//	  float Ptjj(ObjUtil::AnalysisData& a);
-//	  float Mbb(ObjUtil::AnalysisData& a);
-//	  float Ptbb(ObjUtil::AnalysisData& a);
-//	  float MjjWithMaxDEtajj(ObjUtil::AnalysisData& a);
-//	  float MaxDEtajj(ObjUtil::AnalysisData& a);
-//	  float DEtajj(ObjUtil::AnalysisData& a);
-//	  float DEtabb(ObjUtil::AnalysisData& a);
-//	  float Ptll(ObjUtil::AnalysisData& a);
-//	  float Mll(ObjUtil::AnalysisData& a);
-//	  float DPhill(ObjUtil::AnalysisData& a);
-//	  float DPhiLepMET(ObjUtil::AnalysisData& a);
-//	  float MT(ObjUtil::AnalysisData& a);
-//	  float MTll(ObjUtil::AnalysisData& a);
-//	  float Mtt(ObjUtil::AnalysisData& a);
-//	//	  float Mlvjj(ObjUtil::AnalysisData& a, int lepidx = 0, int jetidx0 = 0, int jetidx1 = 1);
-//	  float Mlvj(ObjUtil::AnalysisData& a, int lepidx = 0, int jetidx = 0);
-//	//	  float NeutrinoSolver(ObjUtil::AnalysisData& a, int lepidx = 0);
-//	  int NeutrinoSolver(ObjUtil::AnalysisData& adb, int lepidx, float& metpz_sol0, float& metpz_sol1);
-//	  bool isOSEEChannel(ObjUtil::AnalysisData& a);
-//	  bool isOSMMChannel(ObjUtil::AnalysisData& a);
-//	  bool isOSEMChannel(ObjUtil::AnalysisData& a);
 
   /// Math stuff
   double Rndm();
@@ -136,5 +97,3 @@ namespace VarUtil
     }
 
 }
-
-//eof
