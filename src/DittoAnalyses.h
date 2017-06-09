@@ -40,30 +40,31 @@ namespace Analyses
 
   /// Overlap Removal
   int removeJetsOverlappingLeptons(ObjUtil::Jets& jets, ObjUtil::Leptons& leptons, float thresh=0.3);
+
   template <class V, class K> // 'V'ictim and 'K'iller
-    int removeOverlap(std::vector<V>& victims, std::vector<K>& killers, float thresh=0.3)
+  int removeOverlap(std::vector<V>& victims, std::vector<K>& killers, float thresh=0.3)
+  {
+
+    /// return number of jets that are removed
+    int nvictims_killed = 0;
+
+    std::vector<V> survivors;
+    for (auto& victim : victims)
     {
-
-      /// return number of jets that are removed
-      int nvictims_killed = 0;
-
-      std::vector<V> survivors;
-      for (auto& victim : victims)
+      bool pass = true;
+      for (auto& killer : killers)
       {
-        bool pass = true;
-        for (auto& killer : killers)
-        {
-          if (victim.p4.DeltaR(killer.p4) < thresh)
-            pass = false;
-        }
-        if (pass)
-          survivors.push_back(victim);
-        else
-          nvictims_killed++;
+        if (victim.p4.DeltaR(killer.p4) < thresh)
+          pass = false;
       }
-      victims = std::vector<V>(survivors);
-
-      return nvictims_killed;
+      if (pass)
+        survivors.push_back(victim);
+      else
+        nvictims_killed++;
     }
+    victims = std::vector<V>(survivors);
+
+    return nvictims_killed;
+  }
 
 }

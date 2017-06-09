@@ -52,6 +52,7 @@ namespace Ditto
 #include "DittoAnalyses.h"
 #include "DittoCombUtil.h"
 #include "DittoTreeUtil.h"
+#include "DittoHistUtil.h"
 
 }
 
