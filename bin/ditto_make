@@ -7,5 +7,5 @@ if [ -e makefile ]; then
 else
   cp $DITTOPATH/template/makefile .
 fi
-make -j4
+make -j20
 rm makefile

@@ -116,7 +116,8 @@ function is_number() {
 # $ echo "a b c d e" | tr ' ' '\n' | tail -1
 # e
 
-BKGCOLORARRAY=(7001 7002 7003 7004 7005 7006 7007)
+BKGCOLORARRAY=(7001 7002 7003 7004 7005 7006 7007 7011 7012 7013 7014 7015 7016 7017)
+#BKGCOLORARRAY=(15002 15003 15004 15005 15006 15007 15008 15009 15010 15011 15012 15013 15014 15015)
 SIGCOLORARRAY=(1 2 4 8 9 6 7)
 
 echo "" > /tmp/plotjobs.txt
@@ -129,7 +130,7 @@ for item in $(ls ${INPUTDIR}/hist*root); do
   COLORINDEX=$(grep -Po $NAME'_\K[^.]+' <<<${ITEMNAME})
   if [[ ${item} != *"${FILTERPATTERN}"* ]]; then continue; fi
   if [ "x${CATEGORY}" == "xsig" ]; then
-    if [ "x${COLORINDEX}" == "x1" ]; then
+    if [ "x${COLORINDEX}" == "x2" ]; then
       REFFILE=$item; break;
     fi
   fi
@@ -149,6 +150,9 @@ cd ${OUTPUTDIR}/
 ln -sf ~/syncfiles/miscfiles/index.php
 if [ "x${DELETEANDPLOT}" == "xTRUE" ]; then rm *pdf *png *csv; fi
 cd -
+
+# echo REFFILE
+echo "Reading histogram list from $REFFILE"
 
 for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep TH | awk '{print $3}'); do
 
@@ -176,10 +180,12 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
     if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
     #if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
     #if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
-    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
-    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
-    if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
-    if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+#	    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
+#	    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
+    if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORINDEX}; fi
+    if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORINDEX}; fi
+#	    if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+#	    if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
     if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
     if [ -z ${SCALE} ]; then SCALE=35.9; fi
     if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi
@@ -206,10 +212,12 @@ for vars in $(root -l -b -q $DIR/../macros/print_th1s.C\(\"$REFFILE\"\) | grep T
       if [ "x${CATEGORY}" == "xsig" ]; then SIGCOUNTER=$((SIGCOUNTER+1)); fi
       #if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${BKGCOUNTER}]}; fi
       #if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${SIGCOUNTER}]}; fi
-      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
-      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
-      if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
-      if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+#	      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${BKGCOLORARRAY[${COLORINDEX}]}; fi
+#	      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${SIGCOLORARRAY[${COLORINDEX}]}; fi
+      if [ "x${CATEGORY}" == "xbkg" ]; then COLOR=${COLORINDEX}; fi
+      if [ "x${CATEGORY}" == "xsig" ]; then COLOR=${COLORINDEX}; fi
+#	      if [ "${BKGCOUNTER}" -ge "7" ]; then too_many_entries; fi
+#	      if [ "${SIGCOUNTER}" -ge "7" ]; then too_many_entries; fi
       if [ -z ${PRETTYNAME} ]; then PRETTYNAME=${NAME}; fi
       if [ -z ${SCALE} ]; then SCALE=35.9; fi
       if [[ ${THISVAR} == *"rawcutflow"* ]]; then SCALE=1; fi

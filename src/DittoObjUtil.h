@@ -30,6 +30,7 @@ namespace ObjUtil
     int   charge;
     int   pdgId;
     int   id;
+    int   mc_Id;
     // Isolation related
     float ptRatio;
     float ptRel;
@@ -102,6 +103,7 @@ namespace ObjUtil
       charge = -999;
       pdgId = -999;
       id = -999;
+      mc_Id = -999;
       // Isolation related
       ptRatio = -999;
       ptRel = -999;

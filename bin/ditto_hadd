@@ -23,58 +23,70 @@ usage() {
   echo
   echo "Options with arguments:"
   echo "  -h    Help                           (Display this message)"
-  echo "  -r    Red color category             (e.g. -r \'wz,ttv\')"
-  echo "  -b    Blue color category            (e.g. -b \'wz,ttv\')"
-  echo "  -y    Yellow color category          (e.g. -y \'wz,ttv\')"
-  echo "  -g    Green color category           (e.g. -g \'wz,ttv\')"
-  echo "  -k    Sky blue color category        (e.g. -k \'wz,ttv\')"
-  echo "  -o    Orange color category          (e.g. -o \'wz,ttv\')"
-  echo "  -p    Purple color category          (e.g. -p \'wz,ttv\')"
-  echo "  -1    Signal #1                      (e.g. -1 \'wz,ttv\')"
-  echo "  -2    Signal #2                      (e.g. -2 \'wz,ttv\')"
-  echo "  -3    Signal #3                      (e.g. -3 \'wz,ttv\')"
-  echo "  -4    Signal #4                      (e.g. -4 \'wz,ttv\')"
-  echo "  -5    Signal #5                      (e.g. -5 \'wz,ttv\')"
-  echo " (-6    Signal #6? What?! Why would you want to create a terrible plot???)"
-  echo "  -d    /path/to/output/hadds/to       (e.g. -d ./)"
-  echo "  -i    /path/to/input/to/hadd         (e.g. -i ./)"
+  echo "  -a to n Background #1 to #14         (e.g. -a \'wz,ttv\')"
+  echo "  -A to N Background #1 to #14         (e.g. -a \'wz,ttv\')"
+  echo "  -1 to 5 Signal     #1 to #5          (e.g. -1 \'wz,ttv\')"
+  echo "  -! to % Signal     #1 to #5          (e.g. -! \'wz,ttv\')"
+  echo "  -o    /path/to/input/to/hadd         (e.g. -o analysis/output)"
+  echo "  -O    /path/to/output/hadds/to       (e.g. -O analysis/haddoutput)"
   echo "Options without arguments:"
-  echo "  -D    Don't delete"
+  echo "  -X    Don't delete"
   echo
   exit
 }
 
+#    r(ed)         dark  e
+#    b(lue)        dark  v
+#    y(ellow)      dark  t
+#    g(reen)       dark  f
+# (s)k(y blue)     dark  j
+#    o(range)      dark  u
+
+
 # Command-line opts
-while getopts ":r:b:y:g:k:o:p:R:B:Y:G:K:O:P:1:2:3:4:5:!:@:#:$:%:d:i:Dh" OPTION; do
+while getopts ":a:b:c:d:e:f:g:h:i:j:k:l:m:n:A:B:C:D:E:F:G:H:I:J:K:L:M:N:1:2:3:4:5:!:@:#:$:%:O:o:X" OPTION; do
   case $OPTION in
-    r) BKG1STR=${OPTARG};;
+    a) BKG1STR=${OPTARG};;
     b) BKG2STR=${OPTARG};;
-    y) BKG3STR=${OPTARG};;
-    g) BKG4STR=${OPTARG};;
-    k) BKG5STR=${OPTARG};;
-    o) BKG6STR=${OPTARG};;
-    p) BKG7STR=${OPTARG};;
+    c) BKG3STR=${OPTARG};;
+    d) BKG4STR=${OPTARG};;
+    e) BKG5STR=${OPTARG};;
+    f) BKG6STR=${OPTARG};;
+    g) BKG7STR=${OPTARG};;
+    h) BKG8STR=${OPTARG};;
+    i) BKG9STR=${OPTARG};;
+    j) BKG10STR=${OPTARG};;
+    k) BKG11STR=${OPTARG};;
+    l) BKG12STR=${OPTARG};;
+    m) BKG13STR=${OPTARG};;
+    n) BKG14STR=${OPTARG};;
     1) SIG1STR=${OPTARG};;
     2) SIG2STR=${OPTARG};;
     3) SIG3STR=${OPTARG};;
     4) SIG4STR=${OPTARG};;
     5) SIG5STR=${OPTARG};;
-    R) BKG1NICENAME=${OPTARG};;
-    B) BKG2NICENAME=${OPTARG};;
-    Y) BKG3NICENAME=${OPTARG};;
-    G) BKG4NICENAME=${OPTARG};;
-    K) BKG5NICENAME=${OPTARG};;
-    O) BKG6NICENAME=${OPTARG};;
-    P) BKG7NICENAME=${OPTARG};;
-    "!") SIG1NICENAME=${OPTARG};;
-    "@") SIG2NICENAME=${OPTARG};;
-    "#") SIG3NICENAME=${OPTARG};;
-    "$") SIG4NICENAME=${OPTARG};;
-    "%") SIG5NICENAME=${OPTARG};;
-    d) HADDOUTPUTDIR=${OPTARG};;
-    i) HADDINPUTDIR=${OPTARG};;
-    D) DONTDELETE=TRUE;;
-    h) usage;;
+    A) BKG1DEFSTR=${OPTARG};;
+    B) BKG2DEFSTR=${OPTARG};;
+    C) BKG3DEFSTR=${OPTARG};;
+    D) BKG4DEFSTR=${OPTARG};;
+    E) BKG5DEFSTR=${OPTARG};;
+    F) BKG6DEFSTR=${OPTARG};;
+    G) BKG7DEFSTR=${OPTARG};;
+    H) BKG8DEFSTR=${OPTARG};;
+    I) BKG9DEFSTR=${OPTARG};;
+    J) BKG10DEFSTR=${OPTARG};;
+    K) BKG11DEFSTR=${OPTARG};;
+    L) BKG12DEFSTR=${OPTARG};;
+    M) BKG13DEFSTR=${OPTARG};;
+    N) BKG14DEFSTR=${OPTARG};;
+    "!") SIG1DEFSTR=${OPTARG};;
+    "@") SIG2DEFSTR=${OPTARG};;
+    "#") SIG3DEFSTR=${OPTARG};;
+    "$") SIG4DEFSTR=${OPTARG};;
+    "%") SIG5DEFSTR=${OPTARG};;
+    O) HADDOUTPUTDIR=${OPTARG};;
+    o) HADDINPUTDIR=${OPTARG};;
+    X) DONTDELETE=TRUE;;
     :) usage;;
   esac
 done
@@ -82,7 +94,7 @@ done
 # Shift away option strings
 shift $(($OPTIND - 1))
 
-# unflatten exclude pattern separated by commas
+# Unflatten exclude pattern separated by commas
 BKG1s=(${BKG1STR//,/ })
 BKG2s=(${BKG2STR//,/ })
 BKG3s=(${BKG3STR//,/ })
@@ -90,11 +102,81 @@ BKG4s=(${BKG4STR//,/ })
 BKG5s=(${BKG5STR//,/ })
 BKG6s=(${BKG6STR//,/ })
 BKG7s=(${BKG7STR//,/ })
+BKG8s=(${BKG8STR//,/ })
+BKG9s=(${BKG9STR//,/ })
+BKG10s=(${BKG10STR//,/ })
+BKG11s=(${BKG11STR//,/ })
+BKG12s=(${BKG12STR//,/ })
+BKG13s=(${BKG13STR//,/ })
+BKG14s=(${BKG14STR//,/ })
 SIG1s=(${SIG1STR//,/ })
 SIG2s=(${SIG2STR//,/ })
 SIG3s=(${SIG3STR//,/ })
 SIG4s=(${SIG4STR//,/ })
 SIG5s=(${SIG5STR//,/ })
+
+# Unflatten category
+BKG1DEF=(${BKG1DEFSTR//,/ })
+BKG2DEF=(${BKG2DEFSTR//,/ })
+BKG3DEF=(${BKG3DEFSTR//,/ })
+BKG4DEF=(${BKG4DEFSTR//,/ })
+BKG5DEF=(${BKG5DEFSTR//,/ })
+BKG6DEF=(${BKG6DEFSTR//,/ })
+BKG7DEF=(${BKG7DEFSTR//,/ })
+BKG8DEF=(${BKG8DEFSTR//,/ })
+BKG9DEF=(${BKG9DEFSTR//,/ })
+BKG10DEF=(${BKG10DEFSTR//,/ })
+BKG11DEF=(${BKG11DEFSTR//,/ })
+BKG12DEF=(${BKG12DEFSTR//,/ })
+BKG13DEF=(${BKG13DEFSTR//,/ })
+BKG14DEF=(${BKG14DEFSTR//,/ })
+SIG1DEF=(${SIG1DEFSTR//,/ })
+SIG2DEF=(${SIG2DEFSTR//,/ })
+SIG3DEF=(${SIG3DEFSTR//,/ })
+SIG4DEF=(${SIG4DEFSTR//,/ })
+SIG5DEF=(${SIG5DEFSTR//,/ })
+
+# Parse the name
+BKG1NICENAME=${BKG1DEF[1]}
+BKG2NICENAME=${BKG2DEF[1]}
+BKG3NICENAME=${BKG3DEF[1]}
+BKG4NICENAME=${BKG4DEF[1]}
+BKG5NICENAME=${BKG5DEF[1]}
+BKG6NICENAME=${BKG6DEF[1]}
+BKG7NICENAME=${BKG7DEF[1]}
+BKG8NICENAME=${BKG8DEF[1]}
+BKG9NICENAME=${BKG9DEF[1]}
+BKG10NICENAME=${BKG10DEF[1]}
+BKG11NICENAME=${BKG11DEF[1]}
+BKG12NICENAME=${BKG12DEF[1]}
+BKG13NICENAME=${BKG13DEF[1]}
+BKG14NICENAME=${BKG14DEF[1]}
+SIG1NICENAME=${SIG1DEF[1]}
+SIG2NICENAME=${SIG2DEF[1]}
+SIG3NICENAME=${SIG3DEF[1]}
+SIG4NICENAME=${SIG4DEF[1]}
+SIG5NICENAME=${SIG5DEF[1]}
+
+# Parse the colors
+BKG1COLOR=${BKG1DEF[0]}
+BKG2COLOR=${BKG2DEF[0]}
+BKG3COLOR=${BKG3DEF[0]}
+BKG4COLOR=${BKG4DEF[0]}
+BKG5COLOR=${BKG5DEF[0]}
+BKG6COLOR=${BKG6DEF[0]}
+BKG7COLOR=${BKG7DEF[0]}
+BKG8COLOR=${BKG8DEF[0]}
+BKG9COLOR=${BKG9DEF[0]}
+BKG10COLOR=${BKG10DEF[0]}
+BKG11COLOR=${BKG11DEF[0]}
+BKG12COLOR=${BKG12DEF[0]}
+BKG13COLOR=${BKG13DEF[0]}
+BKG14COLOR=${BKG14DEF[0]}
+SIG1COLOR=${SIG1DEF[0]}
+SIG2COLOR=${SIG2DEF[0]}
+SIG3COLOR=${SIG3DEF[0]}
+SIG4COLOR=${SIG4DEF[0]}
+SIG5COLOR=${SIG5DEF[0]}
 
 if [ -z ${BKG1STR} ]; then
 if [ -z ${BKG2STR} ]; then
@@ -103,12 +185,26 @@ if [ -z ${BKG4STR} ]; then
 if [ -z ${BKG5STR} ]; then
 if [ -z ${BKG6STR} ]; then
 if [ -z ${BKG7STR} ]; then
+if [ -z ${BKG8STR} ]; then
+if [ -z ${BKG9STR} ]; then
+if [ -z ${BKG10STR} ]; then
+if [ -z ${BKG11STR} ]; then
+if [ -z ${BKG12STR} ]; then
+if [ -z ${BKG13STR} ]; then
+if [ -z ${BKG14STR} ]; then
 if [ -z ${SIG1STR} ]; then
 if [ -z ${SIG2STR} ]; then
 if [ -z ${SIG3STR} ]; then
 if [ -z ${SIG4STR} ]; then
 if [ -z ${SIG5STR} ]; then
   usage;
+fi
+fi
+fi
+fi
+fi
+fi
+fi
 fi
 fi
 fi
@@ -183,19 +279,26 @@ hadd_category(){
 }
 
 # Now write each category hadd command to tmp area
-hadd_category BKG1s "${BKG1NICENAME}" "red"     "${HADDINPUTDIR}" 6 bkg
-hadd_category BKG2s "${BKG2NICENAME}" "blue"    "${HADDINPUTDIR}" 5 bkg
-hadd_category BKG3s "${BKG3NICENAME}" "yellow"  "${HADDINPUTDIR}" 4 bkg
-hadd_category BKG4s "${BKG4NICENAME}" "green"   "${HADDINPUTDIR}" 3 bkg
-hadd_category BKG5s "${BKG5NICENAME}" "skyblue" "${HADDINPUTDIR}" 2 bkg
-hadd_category BKG6s "${BKG6NICENAME}" "orange"  "${HADDINPUTDIR}" 1 bkg
-hadd_category BKG7s "${BKG7NICENAME}" "purple"  "${HADDINPUTDIR}" 0 bkg
+hadd_category BKG1s  "${BKG1NICENAME}"  "00" "${HADDINPUTDIR}" "${BKG1COLOR}" bkg
+hadd_category BKG2s  "${BKG2NICENAME}"  "01" "${HADDINPUTDIR}" "${BKG2COLOR}" bkg
+hadd_category BKG3s  "${BKG3NICENAME}"  "02" "${HADDINPUTDIR}" "${BKG3COLOR}" bkg
+hadd_category BKG4s  "${BKG4NICENAME}"  "03" "${HADDINPUTDIR}" "${BKG4COLOR}" bkg
+hadd_category BKG5s  "${BKG5NICENAME}"  "04" "${HADDINPUTDIR}" "${BKG5COLOR}" bkg
+hadd_category BKG6s  "${BKG6NICENAME}"  "05" "${HADDINPUTDIR}" "${BKG6COLOR}" bkg
+hadd_category BKG7s  "${BKG7NICENAME}"  "06" "${HADDINPUTDIR}" "${BKG7COLOR}" bkg
+hadd_category BKG8s  "${BKG8NICENAME}"  "07" "${HADDINPUTDIR}" "${BKG8COLOR}" bkg
+hadd_category BKG9s  "${BKG9NICENAME}"  "08" "${HADDINPUTDIR}" "${BKG9COLOR}" bkg
+hadd_category BKG10s "${BKG10NICENAME}" "09" "${HADDINPUTDIR}" "${BKG10COLOR}" bkg
+hadd_category BKG11s "${BKG11NICENAME}" "10" "${HADDINPUTDIR}" "${BKG11COLOR}" bkg
+hadd_category BKG12s "${BKG12NICENAME}" "11" "${HADDINPUTDIR}" "${BKG12COLOR}" bkg
+hadd_category BKG13s "${BKG13NICENAME}" "12" "${HADDINPUTDIR}" "${BKG13COLOR}" bkg
+hadd_category BKG14s "${BKG13NICENAME}" "13" "${HADDINPUTDIR}" "${BKG14COLOR}" bkg
 
-hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${HADDINPUTDIR}" 1 sig
-hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${HADDINPUTDIR}" 2 sig
-hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${HADDINPUTDIR}" 3 sig
-hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${HADDINPUTDIR}" 4 sig
-hadd_category SIG5s "${SIG5NICENAME}" "sig5" "${HADDINPUTDIR}" 5 sig
+hadd_category SIG1s "${SIG1NICENAME}" "sig1" "${HADDINPUTDIR}" "${SIG1COLOR}" sig
+hadd_category SIG2s "${SIG2NICENAME}" "sig2" "${HADDINPUTDIR}" "${SIG2COLOR}" sig
+hadd_category SIG3s "${SIG3NICENAME}" "sig3" "${HADDINPUTDIR}" "${SIG3COLOR}" sig
+hadd_category SIG4s "${SIG4NICENAME}" "sig4" "${HADDINPUTDIR}" "${SIG4COLOR}" sig
+hadd_category SIG5s "${SIG5NICENAME}" "sig5" "${HADDINPUTDIR}" "${SIG5COLOR}" sig
 
 # Create output directory if not already
 mkdir -p ${HADDOUTPUTDIR}/

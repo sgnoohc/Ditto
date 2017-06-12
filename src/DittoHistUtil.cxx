@@ -3,7 +3,7 @@
 //  .
 // ..: P. Chang, philip@physics.ucsd.edu
 
-#define NMAX_INDIVD_OBJ_TO_PLOT 6
+#define NMAX_INDIVD_OBJ_TO_PLOT 3
 
 namespace HistUtil
 {
@@ -15,16 +15,15 @@ namespace HistUtil
   }
 
   //______________________________________________________________________________________
-  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int& ibin, const char* label)
+  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int ibin, const char* label)
   {
     PlotUtil::plot1D("cutflow"   , ibin, a.wgt, a.hist_db, "", 20, 0., 20., prefix);
     PlotUtil::plot1D("rawcutflow", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
     if (strlen(label) != 0)
     {
-      PlotUtil::get("cutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
-      PlotUtil::get("rawcutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+      PlotUtil::get("cutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin+1, label);
+      PlotUtil::get("rawcutflow", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin+1, label);
     }
-    ibin++;
   }
 
   //______________________________________________________________________________________
@@ -34,8 +33,8 @@ namespace HistUtil
     PlotUtil::plot1D("rawcounter", ibin,    1., a.hist_db, "", 20, 0., 20., prefix);
     if (strlen(label) != 0)
     {
-      PlotUtil::get("counter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
-      PlotUtil::get("rawcounter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin, label);
+      PlotUtil::get("counter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin+1, label);
+      PlotUtil::get("rawcounter", a.hist_db, prefix)->GetXaxis()->SetBinLabel(ibin+1, label);
     }
   }
 
@@ -50,10 +49,70 @@ namespace HistUtil
   {
     for (unsigned int ilep = 0; ilep < a.leptons.size() && ilep < NMAX_INDIVD_OBJ_TO_PLOT; ++ilep)
     {
-      PlotUtil ::plot1D(TString::Format("lep%dpt"  , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]" , ilep).Data() , 180     , 0.      , 200. - ilep * 20 , prefix);
-      PlotUtil ::plot1D(TString::Format("lep%deta" , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"       , ilep).Data() , 180     , -3.     , 3.               , prefix);
-      PlotUtil ::plot1D(TString::Format("lep%dphi" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"       , ilep).Data() , 180     , -3.1416 , 3.1416           , prefix);
+      PlotUtil::plot1D(TString::Format("lep%dpt"    , ilep).Data() , a.leptons[ilep].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, lep%d} [GeV]" , ilep).Data() , 180     , 0.      , 200. - ilep * 20 , prefix);
+      PlotUtil::plot1D(TString::Format("lep%deta"   , ilep).Data() , a.leptons[ilep].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{lep%d}"       , ilep).Data() , 180     , -3.     , 3.               , prefix);
+      PlotUtil::plot1D(TString::Format("lep%dphi"   , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{lep%d}"       , ilep).Data() , 180     , -3.1416 , 3.1416           , prefix);
+      PlotUtil::plot1D(TString::Format("lep%dpdgid" , ilep).Data() , a.leptons[ilep].p4.Phi() , a.wgt , a.hist_db , TString::Format("pdgid_{lep%d}"      , ilep).Data() ,  32     , -16     , 16               , prefix);
     }
+  }
+
+  //______________________________________________________________________________________
+  void fillJets(string prefix, ObjUtil::AnalysisData& a)
+  {
+    for (unsigned int ijet = 0; ijet < a.jets.size() && ijet < NMAX_INDIVD_OBJ_TO_PLOT; ++ijet)
+    {
+      PlotUtil::plot1D(TString::Format("jet%dpt"  , ijet).Data() , a.jets[ijet].p4.Pt()  , a.wgt , a.hist_db , TString::Format("p_{T, jet%d} [GeV]" , ijet).Data() , 180     , 0.      , 200. - ijet * 20 , prefix);
+      PlotUtil::plot1D(TString::Format("jet%deta" , ijet).Data() , a.jets[ijet].p4.Eta() , a.wgt , a.hist_db , TString::Format("#eta_{jet%d}"       , ijet).Data() , 180     , -3.     , 3.               , prefix);
+      PlotUtil::plot1D(TString::Format("jet%dphi" , ijet).Data() , a.jets[ijet].p4.Phi() , a.wgt , a.hist_db , TString::Format("#phi_{jet%d}"       , ijet).Data() , 180     , -3.1416 , 3.1416           , prefix);
+    }
+  }
+
+  //______________________________________________________________________________________
+  void fillDiLepVars(string prefix, ObjUtil::AnalysisData& a, unsigned int ilep, unsigned int jlep)
+  {
+    if (a.leptons.size() < ilep || a.leptons.size() < jlep)
+      return;
+    PlotUtil::plot1D(TString::Format("mll%d%d"   , ilep, jlep).Data() , VarUtil::Mass(a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("detall%d%d", ilep, jlep).Data() , VarUtil::DEta(a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,  5.    , prefix);
+    PlotUtil::plot1D(TString::Format("dphill%d%d", ilep, jlep).Data() , VarUtil::DPhi(a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,  3.1416, prefix);
+    PlotUtil::plot1D(TString::Format("drll%d%d"  , ilep, jlep).Data() , VarUtil::DR  (a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,  9.    , prefix);
+    PlotUtil::plot1D(TString::Format("ptll%d%d"  , ilep, jlep).Data() , VarUtil::Pt  (a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("dptll%d%d" , ilep, jlep).Data() , VarUtil::DPt (a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("mtll%d%d"  , ilep, jlep).Data() , VarUtil::MT  (a.leptons[ilep], a.leptons[jlep]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+  }
+
+  //______________________________________________________________________________________
+  void fillDiJetVars(string prefix, ObjUtil::AnalysisData& a, unsigned int ijet, unsigned int jjet)
+  {
+    if (a.jets.size() < ijet || a.jets.size() < jjet)
+      return;
+    PlotUtil::plot1D(TString::Format("mjj%d%d"   , ijet, jjet).Data() , VarUtil::Mass(a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("detajj%d%d", ijet, jjet).Data() , VarUtil::DEta(a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,  5.    , prefix);
+    PlotUtil::plot1D(TString::Format("dphijj%d%d", ijet, jjet).Data() , VarUtil::DPhi(a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,  3.1416, prefix);
+    PlotUtil::plot1D(TString::Format("drjj%d%d"  , ijet, jjet).Data() , VarUtil::DR  (a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,  9.    , prefix);
+    PlotUtil::plot1D(TString::Format("ptjj%d%d"  , ijet, jjet).Data() , VarUtil::Pt  (a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("dptjj%d%d" , ijet, jjet).Data() , VarUtil::DPt (a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+    PlotUtil::plot1D(TString::Format("mtjj%d%d"  , ijet, jjet).Data() , VarUtil::MT  (a.jets[ijet], a.jets[jjet]), a.wgt , a.hist_db , "", 180, 0.,180.    , prefix);
+  }
+
+  //______________________________________________________________________________________
+  void fillDiLepChan(string prefix, ObjUtil::AnalysisData& a)
+  {
+    if (a.leptons.size() < 2)
+      return;
+    int pdgidprod = a.leptons[0].pdgId * a.leptons[1].pdgId;
+    int pdgidprodcategory = -1;
+    switch (pdgidprod)
+    {
+      case -121: pdgidprodcategory = 0; break;
+      case -143: pdgidprodcategory = 1; break;
+      case -169: pdgidprodcategory = 2; break;
+      case  121: pdgidprodcategory = 3; break;
+      case  143: pdgidprodcategory = 4; break;
+      case  169: pdgidprodcategory = 5; break;
+      default:   pdgidprodcategory = 6; break;
+    }
+    PlotUtil::plot1D("pdgIdProductTwoLead", pdgidprodcategory, a.wgt , a.hist_db , "", 7, 0, 7, prefix);
   }
 
   //______________________________________________________________________________________

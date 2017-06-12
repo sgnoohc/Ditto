@@ -7,12 +7,17 @@ namespace HistUtil
 {
 
   string catPrefix(string prefix1, string prefix2);
-  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int& ibin, const char* label="");
+  void fillCutflow(string prefix, ObjUtil::AnalysisData& a, int ibin, const char* label="");
   void fillCounter(string prefix, ObjUtil::AnalysisData& a, int ibin, const char* label="");
-  void fillMjj(string prefix, ObjUtil::AnalysisData& a);
-  void fillMjjWithMaxDEtajj(string prefix, ObjUtil::AnalysisData& a);
   void fillMET(string prefix, ObjUtil::AnalysisData& a);
   void fillLeps(string prefix, ObjUtil::AnalysisData& a);
+  void fillJets(string prefix, ObjUtil::AnalysisData& a);
+  void fillDiLepVars(string prefix, ObjUtil::AnalysisData& a, unsigned int ilep, unsigned int jlep);
+  void fillDiJetVars(string prefix, ObjUtil::AnalysisData& a, unsigned int ijet, unsigned int jjet);
+  void fillDiLepChan(string prefix, ObjUtil::AnalysisData& a);
+
+  void fillMjj(string prefix, ObjUtil::AnalysisData& a);
+  void fillMjjWithMaxDEtajj(string prefix, ObjUtil::AnalysisData& a);
   void fillLepMTs(string prefix, ObjUtil::AnalysisData& a);
   void fillLepDPhiljs(string prefix, ObjUtil::AnalysisData& a);
   void fillLepMljs(string prefix, ObjUtil::AnalysisData& a);

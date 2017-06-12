@@ -230,6 +230,12 @@ for SAMPLE in $(ls $SAMPLESDIRPATH); do
 
 done
 
+$MSG "Creating ${JOBTAG}output/ and ${JOBTAG}log/ in the local area, if it hasn't been done so."
+mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
+echo "ditto git $DITTOVERSION" > ${JOBTAG}/gitversion
+echo "ditto git $PACKAGEVERSION" > ${JOBTAG}/gitversion
+
+
 if [ "${CONDORSUBMIT}" == "true" ]; then
   $MSG "Submitting condor jobs..."
   CONDORJOBCOUNTER=0
@@ -240,6 +246,7 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     ITEMS=($LINE)
     ANALYSIS=${ITEMS[0]//ditto_ana_}
     HADOOPDIR=${ITEMS[1]}
+    SAMPLEFILEPATH=$PWD/${JOBTAG}/output/${ITEMS[2]//${JOBTAG}\/.\/}
     SAMPLEFILENAME=${ITEMS[2]//${JOBTAG}\/.\/}
     NEVENTS=${ITEMS[3]//2>&1}
     CONDORJOBNAME=${ANALYSIS}_${SAMPLEFILENAME}
@@ -267,11 +274,12 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
     cp $DITTOPATH/condor/submit_template.cmd /tmp/phchang/temp.cmd
     sed "s/ANALYSIS/${ANALYSIS}/"                              /tmp/phchang/temp.cmd  > /tmp/phchang/temp1.cmd
     sed "s~HADOOPDIR~${HADOOPDIR}~"                            /tmp/phchang/temp1.cmd > /tmp/phchang/temp2.cmd
-    sed "s/SAMPLEFILENAME/${SAMPLEFILENAME}/"                  /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
-    sed "s/JOBTAG/${JOBTAG}/"                                  /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
-    sed "s/NEVENTS/${NEVENTS}/"                                /tmp/phchang/temp4.cmd > /tmp/phchang/temp5.cmd
-    sed "s~DITTOPATH~${DITTOPATH}~"                            /tmp/phchang/temp5.cmd > /tmp/phchang/temp6.cmd
-    sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp6.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
+    sed "s~SAMPLEFILENAME~${SAMPLEFILENAME}~"                  /tmp/phchang/temp2.cmd > /tmp/phchang/temp3.cmd
+    sed "s~SAMPLEFILEPATH~${SAMPLEFILEPATH}~"                  /tmp/phchang/temp3.cmd > /tmp/phchang/temp4.cmd
+    sed "s/JOBTAG/${JOBTAG}/"                                  /tmp/phchang/temp4.cmd > /tmp/phchang/temp5.cmd
+    sed "s/NEVENTS/${NEVENTS}/"                                /tmp/phchang/temp5.cmd > /tmp/phchang/temp6.cmd
+    sed "s~DITTOPATH~${DITTOPATH}~"                            /tmp/phchang/temp6.cmd > /tmp/phchang/temp7.cmd
+    sed "s~INPUTFILES~${DITTOPATH}/bin/ditto_ana_${ANALYSIS}~" /tmp/phchang/temp7.cmd > /tmp/phchang/${CONDORJOBNAME}.cmd
 
     # Submitting the job
     $MSG "Submitting "${CONDORJOBNAME}
@@ -287,11 +295,6 @@ if [ "${CONDORSUBMIT}" == "true" ]; then
   $MSG "Submitted all N=$CONDORJOBCOUNTER condor jobs!"
   exit
 fi
-
-$MSG "Creating ${JOBTAG}output/ and ${JOBTAG}log/ in the local area, if it hasn't been done so."
-mkdir -p ${JOBTAG}/output/ ${JOBTAG}/log/
-echo "ditto git $DITTOVERSION" > ${JOBTAG}/gitversion
-echo "ditto git $PACKAGEVERSION" > ${JOBTAG}/gitversion
 
 if [ -z ${COREPATH} ]; then
   :

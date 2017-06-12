@@ -1,7 +1,7 @@
 universe=Vanilla
-+DESIRED_Sites="T2_US_UCSD"
++DESIRED_Sites="UAF"
 executable=DITTOPATH/condor/executable.sh
-arguments=ANALYSIS HADOOPDIR SAMPLEFILENAME JOBTAG NEVENTS
+arguments=ANALYSIS HADOOPDIR SAMPLEFILEPATH JOBTAG NEVENTS
 transfer_executable=True
 transfer_input_files=INPUTFILES
 transfer_output_files = ""

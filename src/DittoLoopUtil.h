@@ -26,8 +26,7 @@ namespace LoopUtil
   extern bool doskim;
   extern bool doprintprogressbar;
   extern TString output_name;
-  extern bool eventlistloaded;
-  extern std::vector<std::vector<int> > eventlisttocheck;
+  extern TString last_tfile_name;
 
   void loadFileIter();
   void loadTotalNEvents();
@@ -63,7 +62,4 @@ namespace LoopUtil
   void loadFractionOfBookedNEvents();
   double getFractionOfBookedNEvents();
   void setDoSkim(bool b=true);
-  void loadEventListToCheck();
-  bool failed(std::vector<int> eventid, int cutID,  float cutval=-999, TString message="");
-  bool pass(std::vector<std::function<void (bool&, float&, string&, std::vector<int>&)> >& cuts);
 }

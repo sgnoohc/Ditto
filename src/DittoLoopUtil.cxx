@@ -26,8 +26,7 @@ namespace LoopUtil
   bool doskim                            = false;
   TStopwatch my_timer;
   TString output_name                    = "output";
-  bool eventlistloaded                   = false;
-  std::vector<std::vector<int> > eventlisttocheck;
+  TString last_tfile_name                = "";
 
   TTree* getCurrentTTree()
   {
@@ -262,6 +261,7 @@ namespace LoopUtil
   void setCurrentTFileByPath(const char* path)
   {
     //PrintUtil::print("LoopUtil::setCurrentTFileByPath(): set current tfile");
+    last_tfile_name = path;
     current_tfile = new TFile(path);
   }
 
@@ -410,68 +410,5 @@ namespace LoopUtil
     doskim = b;
   }
 
-
-  void loadEventListToCheck()
-  {
-    // https://stackoverflow.com/questions/9570991/how-to-read-space-and-newline-separated-integers-into-a-2d-array-in-c
-
-    // Replace 'Plop' with your file name.
-    std::ifstream file("eventlist.txt");
-
-    std::string line;
-    // Read one line at a time into the variable line:
-    while(std::getline(file, line))
-    {
-      std::vector<int> lineData;
-      std::stringstream lineStream(line);
-
-      int value;
-      // Read an integer at a time from the line
-      while (lineStream >> value)
-      {
-        // Add the integers from a line to a 1D array (vector)
-        lineData.push_back(value);
-      }
-      // When all the integers have been read, add the 1D array
-      // into a 2D array (as one line in the 2D array)
-      eventlisttocheck.push_back(lineData);
-    }
-
-    // set the eventlist loaded variable to true
-    eventlistloaded = true;
-  }
-
-  bool failed(std::vector<int> eventid, int cutID, float cutval, TString message)
-  {
-    if (!LoopUtil::eventlistloaded) return false;
-    std::vector<std::vector<int> >::iterator it;
-    it = std::find(eventlisttocheck.begin(), eventlisttocheck.end(), eventid);
-    if (it != eventlisttocheck.end())
-    {
-      std::cout << "event id = ";
-      for (auto& id : eventid)
-        std::cout << id << " ";
-      std::cout << "cut id = " << cutID;
-      if (!message.IsNull())
-        std::cout << " failed for reason = " << message.Data();
-      std::cout << std::endl;
-    }
-    return false;
-  }
-
-  bool pass(std::vector<std::function<void (bool&, float&, string&, std::vector<int>&)> >& cuts)
-  {
-    for (auto& cut : cuts)
-    {
-      bool pass;
-      float val;
-      string cutname;
-      std::vector<int> eventid;
-      cut(pass, val, cutname, eventid);
-      if (!pass)
-        return failed(eventid, 0, val, cutname);
-    }
-    return true;
-  }
 
 }

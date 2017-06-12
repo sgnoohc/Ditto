@@ -5,13 +5,12 @@
 
 #include "Ditto.h"
 
-#define NMAX_INDIVD_OBJ_TO_PLOT 6
-
 namespace Ditto
 {
-  #include "DittoPlotUtil.cxx"
-  #include "DittoPrintUtil.cxx"
-  #include "DittoLoopUtil.cxx"
+
+#include "DittoPlotUtil.cxx"
+#include "DittoPrintUtil.cxx"
+#include "DittoLoopUtil.cxx"
 
   namespace ObjUtil
   {
@@ -19,7 +18,7 @@ namespace Ditto
     void setAnalysisData(AnalysisData& a) { ana_data = &a; }
   }
 
-  #include "DittoVarUtil.cxx"
+#include "DittoVarUtil.cxx"
 
   namespace CombUtil
   {
@@ -206,8 +205,9 @@ namespace Ditto
 
   }
 
-  #include "DittoHistUtil.cxx"
-  #include "DittoTreeUtil.cxx"
+#include "DittoHistUtil.cxx"
+#include "DittoTreeUtil.cxx"
+#include "DittoCutUtil.cxx"
 
 }
 

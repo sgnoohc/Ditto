@@ -190,20 +190,40 @@ mycolors.append(ROOT.TColor(5003 , 204 / 255. , 235 / 255. , 197 / 255.))
 mycolors.append(ROOT.TColor(5004 , 222 / 255. , 203 / 255. , 228 / 255.))
 mycolors.append(ROOT.TColor(5005 , 254 / 255. , 217 / 255. , 166 / 255.))
 
-mycolors.append(ROOT.TColor(7001 ,   0/255. ,   0/255. ,   0/255.))
-mycolors.append(ROOT.TColor(7002 , 230/255. , 159/255. ,   0/255.))
-mycolors.append(ROOT.TColor(7003 ,  86/255. , 180/255. , 233/255.))
-mycolors.append(ROOT.TColor(7004 ,   0/255. , 158/255. , 115/255.))
-mycolors.append(ROOT.TColor(7005 , 240/255. , 228/255. ,  66/255.))
-mycolors.append(ROOT.TColor(7006 ,   0/255. , 114/255. , 178/255.))
-mycolors.append(ROOT.TColor(7007 , 213/255. ,  94/255. ,   0/255.))
-mycolors.append(ROOT.TColor(7008 , 204/255. , 121/255. , 167/255.))
+mycolors.append(ROOT.TColor(7000 ,   0/255. ,   0/255. ,   0/255.))
+mycolors.append(ROOT.TColor(7001 , 213/255. ,  94/255. ,   0/255.)) #r
+mycolors.append(ROOT.TColor(7002 , 230/255. , 159/255. ,   0/255.)) #o
+mycolors.append(ROOT.TColor(7003 , 240/255. , 228/255. ,  66/255.)) #y
+mycolors.append(ROOT.TColor(7004 ,   0/255. , 158/255. , 115/255.)) #g
+mycolors.append(ROOT.TColor(7005 ,   0/255. , 114/255. , 178/255.)) #b
+mycolors.append(ROOT.TColor(7006 ,  86/255. , 180/255. , 233/255.)) #k
+mycolors.append(ROOT.TColor(7007 , 204/255. , 121/255. , 167/255.)) #p
+mycolors.append(ROOT.TColor(7011 , 110/255. ,  54/255. ,   0/255.)) #alt r
+mycolors.append(ROOT.TColor(7012 , 161/255. , 117/255. ,   0/255.)) #alt o
+mycolors.append(ROOT.TColor(7013 , 163/255. , 155/255. ,  47/255.)) #alt y
+mycolors.append(ROOT.TColor(7014 ,   0/255. , 102/255. ,  79/255.)) #alt g
+mycolors.append(ROOT.TColor(7015 ,   0/255. ,  93/255. , 135/255.)) #alt b
+mycolors.append(ROOT.TColor(7016 , 153/255. , 153/255. , 153/255.)) #alt k
+mycolors.append(ROOT.TColor(7017 , 140/255. ,  93/255. , 119/255.)) #alt p
 
 mycolors.append(ROOT.TColor(9001 ,  60/255. , 186/255. ,  84/255.))
 mycolors.append(ROOT.TColor(9002 , 244/255. , 194/255. ,  13/255.))
 mycolors.append(ROOT.TColor(9003 , 219/255. ,  50/255. ,  54/255.))
 mycolors.append(ROOT.TColor(9004 ,  72/255. , 133/255. , 237/255.))
 
+# Color schemes from Hannsjoerg for WWW analysis
+mycolors.append(ROOT.TColor(2001 , 91  / 255. , 187 / 255. , 241 / 255.)) #light-blue
+mycolors.append(ROOT.TColor(2002 , 60  / 255. , 144 / 255. , 196 / 255.)) #blue
+mycolors.append(ROOT.TColor(2003 , 230 / 255. , 159 / 255. , 0   / 255.)) #orange
+mycolors.append(ROOT.TColor(2004 , 180 / 255. , 117 / 255. , 0   / 255.)) #brown
+mycolors.append(ROOT.TColor(2005 , 245 / 255. , 236 / 255. , 69  / 255.)) #yellow
+mycolors.append(ROOT.TColor(2006 , 215 / 255. , 200 / 255. , 0   / 255.)) #dark yellow
+mycolors.append(ROOT.TColor(2007 , 70  / 255. , 109 / 255. , 171 / 255.)) #blue-violet
+mycolors.append(ROOT.TColor(2008 , 70  / 255. , 90  / 255. , 134 / 255.)) #violet
+mycolors.append(ROOT.TColor(2009 , 55  / 255. , 65  / 255. , 100 / 255.)) #dark violet
+mycolors.append(ROOT.TColor(2010 , 120 / 255. , 160 / 255. , 0   / 255.)) #light green
+mycolors.append(ROOT.TColor(2011 , 0   / 255. , 158 / 255. , 115 / 255.)) #green
+mycolors.append(ROOT.TColor(2012 , 204 / 255. , 121 / 255. , 167 / 255.)) #pink?
 
 
 
@@ -895,6 +915,10 @@ class HistogramPainter:
             print datahist
             datahist.Print("all")
         self.objs.append(datahist)
+        if self.args.plotname.find("cutflow") != -1 or self.args.plotname.find("counter") != -1 :
+            print "here test"
+            stacked.GetXaxis().LabelsOption("v")
+            stacked.GetXaxis().SetLabelSize(0.04)
         if self.args.do_cutflow_style:
             ROOT.gStyle.SetPaintTextFormat("3.1f")
             stacked.Draw('histtext0')
