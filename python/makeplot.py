@@ -786,17 +786,17 @@ class HistogramPainter:
             yields_table = []
             errors_table = []
 
-            for sighist in sighists:
+            for bkghist in bkghists:
                 yields = []
                 errors = []
-                yields.append(sighist.GetName())
-                errors.append(sighist.GetName())
-                for i in xrange(1, sighist.GetNbinsX()+1):
+                yields.append(bkghist.GetName())
+                errors.append(bkghist.GetName())
+                for i in xrange(1, bkghist.GetNbinsX()+1):
                     if self.args.print_cutflow_bins:
                         if i not in bins_to_print:
                             continue;
-                    binc = sighist.GetBinContent(i)
-                    bine = sighist.GetBinError(i)
+                    binc = bkghist.GetBinContent(i)
+                    bine = bkghist.GetBinError(i)
                     yields.append(binc)
                     errors.append(bine)
                 yields_table.append(yields)
@@ -816,17 +816,17 @@ class HistogramPainter:
                     errors.append(bine)
                 yields_table.append(yields)
                 errors_table.append(errors)
-            for bkghist in bkghists:
+            for sighist in sighists:
                 yields = []
                 errors = []
-                yields.append(bkghist.GetName())
-                errors.append(bkghist.GetName())
-                for i in xrange(1, bkghist.GetNbinsX()+1):
+                yields.append(sighist.GetName())
+                errors.append(sighist.GetName())
+                for i in xrange(1, sighist.GetNbinsX()+1):
                     if self.args.print_cutflow_bins:
                         if i not in bins_to_print:
                             continue;
-                    binc = bkghist.GetBinContent(i)
-                    bine = bkghist.GetBinError(i)
+                    binc = sighist.GetBinContent(i)
+                    bine = sighist.GetBinError(i)
                     yields.append(binc)
                     errors.append(bine)
                 yields_table.append(yields)
