@@ -1,8 +1,7 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
-
-echo ${PACKAGEPATH}
+#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; $DIR/ditto_setup_check QUIET; if [ $? -eq 1 ]; then exit; fi
+#echo ${PACKAGEPATH}
 
 usage(){
   echo "Usage:"
@@ -29,7 +28,7 @@ ROOTFILE=$('cd' $(dirname ${ROOTFILE}); pwd)/$(basename $1)
 #echo "  tree->MakeClass(\"${MAKECLASSNAME}\");" >> /tmp/makeclass.C
 #echo "}" >> /tmp/makeclass.C
 
-cd ${PACKAGEPATH}/src/
+#cd ${PACKAGEPATH}/src/
 
 #root -l -b -q /tmp/makeclass.C
 if [ -e ~/cmstas/Software/makeCMS3ClassFiles/makeCMS3ClassFiles.C ]; then
@@ -39,6 +38,6 @@ else
   root -l -b -q Software/makeCMS3ClassFiles/makeCMS3ClassFiles.C\(\"${ROOTFILE}\",\"${TTREENAME}\",\"${MAKECLASSNAME}\",\"tas\",\"mytree\"\)
 fi
 
-mv ${MAKECLASSNAME}.cc ${MAKECLASSNAME}.cxx
-rm doAll*
-rm ScanChain*
+#mv ${MAKECLASSNAME}.cc ${MAKECLASSNAME}.cxx
+#rm doAll*
+#rm ScanChain*

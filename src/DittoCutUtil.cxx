@@ -27,13 +27,21 @@ namespace CutUtil
       std::vector<int> lineData;
       std::stringstream lineStream(line);
 
+      // debug printing
+      std::cout << "eventlist.txt : ";
+
       int value;
       // Read an integer at a time from the line
       while (lineStream >> value)
       {
         // Add the integers from a line to a 1D array (vector)
         lineData.push_back(value);
+
+        // Print for debug purpose
+        std::cout << value << " ";
       }
+      // debug printing
+      std::cout << std::endl;
       // When all the integers have been read, add the 1D array
       // into a 2D array (as one line in the 2D array)
       eventlisttocheck.push_back(lineData);
