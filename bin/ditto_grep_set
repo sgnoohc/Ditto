@@ -1,0 +1,32 @@
+#!/bin/env python
+
+import sys
+
+def help():
+    print 'Usage:'
+    print ''
+    print '  %s TEXTFILE'%(sys.argv[0])
+    print ''
+    print '  This will open up the TEXTFILE and parse each line as a "set" in python'
+    print ''
+    print ''
+    sys.exit(1)
+
+try:
+    inputfile = open(sys.argv[1])
+except:
+    print 'Failed to open the input text file'
+
+filter_pattern = ""
+try:
+    filter_pattern = sys.argv[2]
+except:
+    pass
+
+for item in set([ x.strip() for x in inputfile.readlines()]):
+    if filter_pattern != "":
+        if item.find(filter_pattern) != -1:
+            print item
+    else:
+        print item
+
